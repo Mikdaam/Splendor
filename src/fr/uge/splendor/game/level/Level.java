@@ -1,4 +1,4 @@
-package fr.uge.splendor.level;
+package fr.uge.splendor.game.level;
 
 public enum Level {
   LEVEL_1,

@@ -11,6 +11,8 @@ public interface Card {
 	
 	HashMap<Color, Integer> price();
 	
+	Color color();
+	
 	Level level();
 	
 	String image();

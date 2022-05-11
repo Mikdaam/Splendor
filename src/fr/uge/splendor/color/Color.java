@@ -6,5 +6,6 @@ public enum Color {
   GOLD,
   ONYX,
   RUBY,
-  SAPPHIRE
+  SAPPHIRE,
+  NOBLE
 }

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public final class HumanPlayer implements Player {
-  
+  /*TODO: Add a proper type for ownedCards and reservedCard like */
   private final int id;
   private final String name;
   private final HashMap<Color, ArrayList<Card>> ownedCards;

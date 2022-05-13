@@ -14,6 +14,4 @@ public interface Card {
 	Color color();
 	
 	Level level();
-	
-	String image();
 }

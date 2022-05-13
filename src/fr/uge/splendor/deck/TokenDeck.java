@@ -5,7 +5,12 @@ import java.util.Objects;
 
 import fr.uge.splendor.token.Token;
 
-public record TokenDeck(HashMap<Token, Integer> deck) {
+public class TokenDeck {
+  private final HashMap<Token, Integer> deck;
+  
+  public TokenDeck() {
+    this.deck = new HashMap<Token, Integer>();
+  }
  
   public void add(HashMap<Token, Integer> tokens) {
     Objects.requireNonNull(tokens, "You have to add at least 1 token, your list cannot be null!");

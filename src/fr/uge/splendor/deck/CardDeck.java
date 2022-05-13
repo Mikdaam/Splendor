@@ -1,11 +1,18 @@
 package fr.uge.splendor.deck;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
+import fr.uge.splendor.color.Color;
 
-public record CardDeck(ArrayList<Card> deck) {
+public class CardDeck {
+  private final ArrayList<Card> deck;
+  
+  public CardDeck() {
+    this.deck = new ArrayList<Card>();
+  }
   
   public void add(Card card) {
     Objects.requireNonNull(card, "The card to add to the deck cannot be null!");
@@ -32,5 +39,14 @@ public record CardDeck(ArrayList<Card> deck) {
     
     return deck.remove(deck.size() - 1);    
   }
+  
+  public HashMap<Color, Integer> getColorNumbers() {
+    var res = new HashMap<Color, Integer>();
+    
+    deck.forEach(card -> res.merge(card.color(), 1, (oldValue, newValue) -> oldValue + newValue));
+    
+    return res;    
+  }
+
 
 }

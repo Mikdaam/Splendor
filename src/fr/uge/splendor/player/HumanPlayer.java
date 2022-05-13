@@ -1,20 +1,19 @@
 package fr.uge.splendor.player;
 
 import fr.uge.splendor.card.*;
+import fr.uge.splendor.color.Color;
 import fr.uge.splendor.token.*;
-import fr.uge.splendor.color.*;
+import fr.uge.splendor.deck.CardDeck;
+import fr.uge.splendor.deck.TokenDeck;
 
-import java.util.Objects;
 import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.Objects;
 
 public final class HumanPlayer implements Player {
-  /*TODO: Add a proper type for ownedCards and reservedCard like */
   private final int id;
   private final String name;
-  private final HashMap<Color, ArrayList<Card>> ownedCards;
-  //private final HashMap<Color, ArrayList<Card>> reservedCards;
-  private final HashMap<Color, ArrayList<Token>> ownedTokens;
+  private final CardDeck ownedCards;
+  private final TokenDeck ownedTokens;
   
   
   public HumanPlayer(int id, String name) {
@@ -26,24 +25,30 @@ public final class HumanPlayer implements Player {
     
     this.id = id;
     this.name = name;
-    this.ownedCards = new HashMap<Color, ArrayList<Card>>();
-    //this.reservedCards = new HashMap<Color, ArrayList<Card>>();
-    this.ownedTokens = new HashMap<Color, ArrayList<Token>>();
+    this.ownedCards = new CardDeck(); 
+    this.ownedTokens = new TokenDeck();
   }
   
   @Override
-  public boolean takeToken() {
+  public boolean takeToken(Token token) {
+    ownedTokens.add(null);
     return true;
   }
   
-  /*@Override
-  public boolean reserveCard() {
+  @Override
+  public boolean canBuyCard(Card card) {
     return true;
-  }*/
+  }
   
   @Override
-  public boolean buyCard() {
-    return true;
+  public HashMap<Color, Integer> buyCard(Card card) {
+    var tokensToGiveBack = new HashMap<Color, Integer>();
+    var cardAmounts = ownedCards.getColorNumbers();
+    
+    
+    ownedCards.add(card);
+    //ownedTokens.remove(tokensToGiveBack);
+    return tokensToGiveBack;
   }
   
   @Override

@@ -16,18 +16,18 @@ public class CardDeck {
   
   public void add(Card card) {
     Objects.requireNonNull(card, "The card to add to the deck cannot be null!");
-    //deck.putIfAbsent(card.color(), new ArrayList<Card>()).add(card);
     deck.add(card);
   }
 
   
   public Card remove(Card card) {
     Objects.requireNonNull(card, "The card to remove from the deck cannot be null!");
+    
     if (deck.remove(card)) {
       return card;
     }
     
-    throw new IllegalArgumentException("The card wasn't in your CardDeck");
+    throw new IllegalArgumentException("The card wasn't in the CardDeck");
   }
   
   
@@ -40,12 +40,34 @@ public class CardDeck {
     return deck.remove(deck.size() - 1);    
   }
   
-  public HashMap<Color, Integer> getColorNumbers() {
+  
+  public HashMap<Color, Integer> getDeckSummary() {
     var res = new HashMap<Color, Integer>();
     
-    deck.forEach(card -> res.merge(card.color(), 1, (oldValue, newValue) -> oldValue + newValue));
+    deck.forEach(card -> res.merge(card.color(), 1, Integer::sum));
     
     return res;    
+  }
+  
+  
+  @Override
+  public String toString() {
+    var line = "------------------";
+    var sb = new StringBuilder(line);
+    
+    sb.append("\nCARD DECK :\n\n");
+    
+    var deckSummary = this.getDeckSummary();
+    deckSummary.forEach((color, cardNumber) -> {
+      sb.append(color)
+        .append(" : ")
+        .append(cardNumber)
+        .append("\n");
+    });
+    
+    sb.append(line);
+    
+    return sb.toString();
   }
 
 

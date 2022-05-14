@@ -6,4 +6,6 @@ import fr.uge.splendor.color.*;
 public interface Token {
   
   Color color();
+  
+  String toString();
 }

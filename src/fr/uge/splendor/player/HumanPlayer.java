@@ -37,17 +37,21 @@ public final class HumanPlayer implements Player {
   
   @Override
   public boolean canBuyCard(Card card) {
-    return true;
+    return true; //to put in DevCard instead? We give the carddeck and tokendeck of the player
   }
   
   @Override
   public HashMap<Color, Integer> buyCard(Card card) {
     var tokensToGiveBack = new HashMap<Color, Integer>();
-    var cardAmounts = ownedCards.getColorNumbers();
+    var deckSummary = ownedCards.getDeckSummary();
+    
+    card.price().forEach((color, price) -> {
+      tokensToGiveBack.put(color, price - deckSummary.getOrDefault(color, 0));
+    });
     
     
     ownedCards.add(card);
-    //ownedTokens.remove(tokensToGiveBack);
+    ownedTokens.remove(tokensToGiveBack);
     return tokensToGiveBack;
   }
   

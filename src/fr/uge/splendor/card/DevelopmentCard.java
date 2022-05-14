@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.HashMap;
 
 import fr.uge.splendor.color.*;
-import fr.uge.splendor.game.level.Level;
+import fr.uge.splendor.game.level.*;
 
 public record DevelopmentCard(int prestigePoint, 
                               HashMap<Color, Integer> price,
@@ -23,22 +23,23 @@ public record DevelopmentCard(int prestigePoint,
 	  var sb = new StringBuilder("------------\n");
 	  
 	  /* Display the price within the following format -> "COLOR: PRICE" */
-    price.forEach((color, price) -> {
-      if (price != 0) {
-        sb.append(color).append(": ").append(price).append("\n");
-      }
-    });
+	  price.forEach((color, price) -> {
+	    if (price != 0) {
+	      sb.append(color).append(": ").append(price).append("\n");
+	    }
+   });
      
-    /* 
-     * Since a card has a price of maximum 4 different colors, we add the missing lines
-     * to have cards of equal height.
-     */
-    for (var line = 4 - price.size(); line > 0; line--) {
-      sb.append("           \n");
-    }
+   /* 
+    * Since a card has a price of maximum 4 different colors, we add the missing lines
+    * to have cards of equal height.
+    */
+   for (var line = 4 - price.size(); line > 0; line--) {
+     sb.append("           \n");
+   }
 	  
 	  return sb.toString();
 	}
+	
 	
 	@Override
 	public String toString() {
@@ -56,4 +57,5 @@ public record DevelopmentCard(int prestigePoint,
 	  
 	  return sb.append("------------").toString();
 	}
+	
 }

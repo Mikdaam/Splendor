@@ -1,5 +1,9 @@
 package fr.uge.splendor.game;
 
-public interface Game {
+import fr.uge.splendor.deck.CardDeck;
 
+public interface Game {
+	CardDeck setupCards();
+	
+	
 }

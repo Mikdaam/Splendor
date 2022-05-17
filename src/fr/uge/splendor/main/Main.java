@@ -1,26 +1,28 @@
 package fr.uge.splendor.main;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import fr.uge.splendor.card.*;
-import fr.uge.splendor.game.level.*;
+import fr.uge.splendor.game.SimpleGame;
+import fr.uge.splendor.level.*;
 import fr.uge.splendor.token.*;
 import fr.uge.splendor.color.*;
 import fr.uge.splendor.deck.*;
 
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
      var price = new HashMap<Color, Integer>();
      price.put(Color.SAPPHIRE, 5);
      price.put(Color.RUBY, 7);
      price.put(Color.ONYX, 6);
      
-     var card = new DevelopmentCard(3, price, Level.LEVEL_3, Color.DIAMOND);
+     var card = new DevelopmentCard(Level.LEVEL_3, Color.DIAMOND, 3, price);
      System.out.println(card);
      
      System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
      
-     var card2 = new DevelopmentCard(0, new HashMap<Color, Integer>(), Level.LEVEL_1, Color.RUBY);
+     var card2 = new DevelopmentCard(Level.LEVEL_1, Color.RUBY, 0, new HashMap<Color, Integer>());
      System.out.println(card2);
      
      var diamondToken = new BaseToken(Color.DIAMOND);
@@ -34,11 +36,11 @@ public class Main {
      var deck = new CardDeck();
      deck.add(card);
      deck.add(card2);
-     deck.add(new DevelopmentCard(0, new HashMap<Color, Integer>(), Level.LEVEL_1, Color.RUBY));
-     deck.add(new DevelopmentCard(0, new HashMap<Color, Integer>(), Level.LEVEL_1, Color.RUBY));
-     deck.add(new DevelopmentCard(0, new HashMap<Color, Integer>(), Level.LEVEL_1, Color.EMERALD));
-     deck.add(new DevelopmentCard(0, new HashMap<Color, Integer>(), Level.LEVEL_1, Color.EMERALD));
-     deck.add(new DevelopmentCard(0, new HashMap<Color, Integer>(), Level.LEVEL_1, Color.SAPPHIRE));
+     deck.add(new DevelopmentCard(Level.LEVEL_1, Color.RUBY, 0, new HashMap<Color, Integer>()));
+     deck.add(new DevelopmentCard(Level.LEVEL_1, Color.RUBY, 0, new HashMap<Color, Integer>()));
+     deck.add(new DevelopmentCard(Level.LEVEL_1, Color.EMERALD, 0, new HashMap<Color, Integer>()));
+     deck.add(new DevelopmentCard(Level.LEVEL_1, Color.EMERALD, 0, new HashMap<Color, Integer>()));
+     deck.add(new DevelopmentCard(Level.LEVEL_1, Color.SAPPHIRE, 0, new HashMap<Color, Integer>()));
      
      System.out.println(deck);
      
@@ -62,5 +64,12 @@ public class Main {
      
      tokenDeck.remove(tokentoRemove);
      System.out.println(tokenDeck);
+     
+     var game = new SimpleGame();
+     var deckCardsGame = game.setupCards();
+     System.out.println(deckCardsGame);
+     
+     deckCardsGame.displayCards();
+     
   }
 }

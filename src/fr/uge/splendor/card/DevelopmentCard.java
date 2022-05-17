@@ -4,12 +4,12 @@ import java.util.Objects;
 import java.util.HashMap;
 
 import fr.uge.splendor.color.*;
-import fr.uge.splendor.game.level.*;
+import fr.uge.splendor.level.*;
 
-public record DevelopmentCard(int prestigePoint, 
-                              HashMap<Color, Integer> price,
-                              Level level,
-                              Color color)
+public record DevelopmentCard(Level level, 
+                              Color color,
+                              int prestigePoint, 
+                              HashMap<Color, Integer> price)
                               implements Card {
 	
 	public DevelopmentCard {

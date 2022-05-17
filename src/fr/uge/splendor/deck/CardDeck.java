@@ -49,6 +49,10 @@ public class CardDeck {
     return res;    
   }
   
+  public void displayCards() {
+    deck.forEach(card ->System.out.println(card));
+  }
+  
   
   @Override
   public String toString() {

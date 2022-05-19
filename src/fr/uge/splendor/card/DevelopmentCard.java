@@ -19,43 +19,80 @@ public record DevelopmentCard(Level level,
 	}
 	
 	
-	private String priceToString() {
-	  var sb = new StringBuilder("------------\n");
+	private String priceToCardString() {
+	  var sb = new StringBuilder();
 	  
-	  /* Display the price within the following format -> "COLOR: PRICE" */
 	  price.forEach((color, price) -> {
+	    var colorText = color.toString();
+	    var maxLength = Integer.min(colorText.length(), 5);
 	    if (price != 0) {
-	      sb.append(color).append(": ").append(price).append("\n");
+	      sb.append("│ ").append(colorText.substring(0, maxLength)).append(": ").append(price);
+	      
+	      /*To add the missing spaces*/
+	      for (var i = 8 - maxLength - 3; i >= 0; i--) {
+	        sb.append(" ");
+	      }
+	        sb.append(" ░│\n");
 	    }
    });
-     
-   /* 
-    * Since a card has a price of maximum 4 different colors, we add the missing lines
-    * to have cards of equal height.
-    */
-   for (var line = 4 - price.size(); line > 0; line--) {
-     sb.append("           \n");
+	  
+	  var nonNullPrices = price.keySet().stream().filter(color -> price.get(color) != 0) .count();
+   for (var line = 4 - nonNullPrices; line > 0; line--) {
+     sb.append("│           ░│\n");
    }
 	  
 	  return sb.toString();
 	}
 	
+	private String colorToCardString() {
+	  var sb = new StringBuilder("│ ");
+	  var colorText = color.toString();
+	  
+	  sb.append(colorText);
+	  
+	  for (var i = 8 - colorText.length(); i > 0; i--) {
+	    sb.append(" ");
+	  }
+	  
+	  sb.append("  ░│\n");
+	  return sb.toString();
+	}
+	
+	private String prestigeToCardString() {
+   var sb = new StringBuilder("│         ");
+   
+   if (prestigePoint != 0) {
+     sb.append(prestigePoint);
+   } else {
+     sb.append(" ");
+   }
+   
+   sb.append(" ░│\n");
+   
+   
+   return sb.toString();
+ }
+	
+	public static String emptyCardToString() {
+	  var sb = new StringBuilder();
+	  
+	  for (var i = 0; i < 8; i++) {
+	    sb.append("              \n");
+	  }
+	    
+	  return sb.append("              ").toString();
+	}
 	
 	@Override
 	public String toString() {
-	  var sb = new StringBuilder("------------\n");
+	  var sb = new StringBuilder("╭────────────╮\n");
 	  
-	  sb.append(color).append("\n");
+	  sb.append(this.colorToCardString())
+	    .append(this.prestigeToCardString())
+	    .append("├────────────┤\n")
+	    .append(this.priceToCardString());
 	  
-	  if (prestigePoint != 0) {
-	    sb.append("           ").append(prestigePoint).append("\n");
-	  } else {
-	    sb.append("           \n");
-	  }
-	  
-	  sb.append(this.priceToString());
-	  
-	  return sb.append("------------").toString();
+	  return sb.append("╰────────────╯").toString();
 	}
 	
 }

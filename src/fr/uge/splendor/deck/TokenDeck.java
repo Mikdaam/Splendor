@@ -12,6 +12,9 @@ public class TokenDeck {
   
   public TokenDeck() {
     this.deck = new HashMap<Color, Integer>();
+    
+    Color.getTokensColorsList().stream()
+                               .forEach(color -> deck.put(color, 0));
   }
  
   public void add(Map<Token, Integer> tokens) {
@@ -44,23 +47,60 @@ public class TokenDeck {
     return res;    
   }
   
+   
   
-  @Override
-  public String toString() {
-    var line = "------------------";
-    var sb = new StringBuilder(line);
+  private String colorsToString() {
+    var sb = new StringBuilder();
     
-    sb.append("\nTOKEN DECK :\n\n");
-    
-    var deckSummary = this.getDeckSummary();
-    deckSummary.forEach((color, cardNumber) -> {
-      sb.append(color)
-        .append(" : ")
-        .append(cardNumber)
-        .append("\n");
+    Color.getTokensColorsList().forEach(color -> {
+      var colorText = color.toString();
+      sb.append("│ ").append(colorText);
+      
+      for (var i = 10 - colorText.length(); i > 0; i--) {
+        sb.append(" ");
+      }
     });
     
-    sb.append(line);
+    sb.append("│\n");
+    return sb.toString();
+  }
+
+  
+  private String valuesToString() {
+    var sb = new StringBuilder();
+    
+    Color.getTokensColorsList().forEach(color -> {
+      
+      sb.append("│     ").append(deck.get(color)).append("     ");
+    });
+    
+    sb.append("│\n");
+    return sb.toString();
+  }
+  
+  
+  private String lineToString(String start, String mid, String end) {
+    var sb = new StringBuilder(start);
+    sb.append("───────────");
+    
+    for (var i = deck.size() - 1; i > 0; i--) {
+      sb.append(mid).append("───────────");
+    }
+    
+    sb.append(end).append("\n");
+    return sb.toString(); 
+  }
+  
+  
+  @Override
+  public String toString() {    
+    var sb = new StringBuilder();
+    
+    sb.append(lineToString("┌", "┬", "┐"))
+      .append(colorsToString())
+      .append(lineToString("├", "┼", "┤"))
+      .append(valuesToString())
+      .append(lineToString("└", "┴", "┘"));
     
     return sb.toString();
   }

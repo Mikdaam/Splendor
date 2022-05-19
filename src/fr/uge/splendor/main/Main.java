@@ -7,6 +7,7 @@ import fr.uge.splendor.card.*;
 import fr.uge.splendor.game.SimpleGame;
 import fr.uge.splendor.level.*;
 import fr.uge.splendor.token.*;
+import fr.uge.splendor.utils.Utils;
 import fr.uge.splendor.color.*;
 import fr.uge.splendor.deck.*;
 
@@ -33,7 +34,7 @@ public class Main {
      System.out.println(emeraldToken);
      System.out.println(goldToken);
      
-     var deck = new CardDeck(Level.LEVEL_1);
+     var deck = new CardDeck();
      deck.add(card);
      deck.add(card2);
      deck.add(new DevelopmentCard(Level.LEVEL_1, Color.RUBY, 0, new HashMap<Color, Integer>()));
@@ -71,5 +72,12 @@ public class Main {
      
      deckCardsGame.displayCards();
      
+     System.out.println("=====================================================");
+     
+     var deck2 = new CardDeck();
+     deck2.add(card);
+     deck2.add(card2);
+     deck2.add(card);
+     deck2.displayCards();
   }
 }

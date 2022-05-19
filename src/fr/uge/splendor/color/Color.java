@@ -1,5 +1,16 @@
 package fr.uge.splendor.color;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * 
+ * 
+ * @author Mikdaam Badarou
+ * @author Yunen Snacel
+ *
+ */
 public enum Color {
   DIAMOND,
   EMERALD,
@@ -20,5 +31,11 @@ public enum Color {
       case "NOBLE" -> NOBLE;
       default -> throw new IllegalArgumentException("Unexpected value: " + colorString);
     };
+  }
+  
+  public static List<Color> getTokensColorsList() {
+    return Arrays.stream(Color.values())
+                 .filter(color -> color != NOBLE)
+                 .collect(Collectors.toList());
   }
 }

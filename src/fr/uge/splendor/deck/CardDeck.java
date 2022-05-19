@@ -5,24 +5,20 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
+import fr.uge.splendor.card.DevelopmentCard;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.level.Level;
+import fr.uge.splendor.utils.Utils;
 
 public class CardDeck {
   private final ArrayList<Card> deck;
-  private final Level level;
   
-  public CardDeck(Level level) {
-    Objects.requireNonNull(level, "Tu ne sais pas lire ? Un niveau on a dit!!!!!!!!!!!!!!!!!!!");
+  public CardDeck() {
     this.deck = new ArrayList<Card>();
-    this.level = level;
   }
   
   public void add(Card card) {
     Objects.requireNonNull(card, "The card to add to the deck cannot be null!");
-    if (!isOfLevel(card.level())) {
-      throw new IllegalArgumentException("You cannot add this card at this level");
-    }
     deck.add(card);
   }
   
@@ -34,6 +30,10 @@ public class CardDeck {
     }
     
     throw new IllegalArgumentException("The card wasn't in the CardDeck");
+  }
+  
+  public long size() {
+    return deck.size();
   }
   
   
@@ -56,16 +56,38 @@ public class CardDeck {
   }
   
   public void displayCards() {
-    deck.forEach(card ->System.out.println(card));
+    var rows = 1;
+    
+    if (deck.size() > 4) {
+      rows = deck.size() / 4;
+    }
+    
+    var deckStrings = new String[rows][4];
+    var i = 0;
+    var j = 0;
+    
+    for (var card : deck) {
+      if (j == 4) {
+        j = 0;
+        i++;
+      }
+      
+      deckStrings[i][j] = card.toString();
+      j++;
+    }
+    while (j < 4) {
+      deckStrings[i][j] = DevelopmentCard.emptyCardToString();
+      j++;
+    }
+    
+    
+    for (var row = 0; row < deckStrings.length; row++) {
+      System.out.println(Utils.computeStringsToLine(deckStrings[row]));
+    }
   }
   
-  public boolean isOfLevel(Level level) {
-    return this.level.equals(level);
-  }
   
-  
-  @Override
-  public String toString() {
+  public String displayDeckSummary() {
     var line = "------------------";
     var sb = new StringBuilder(line);
     
@@ -80,6 +102,22 @@ public class CardDeck {
     });
     
     sb.append(line);
+    
+    return sb.toString();
+  }
+  
+  @Override
+  public String toString() {
+    var sb = new StringBuilder("╭────────────╮\n");
+
+    sb.append("│           ░│\n")
+      .append("│           ░│\n")
+      .append("│    DECK   ░│\n")
+      .append("│           ░│\n")
+      .append("│  ").append(String.format("%02d", deck.size())).append(" CARDS ░│\n")
+      .append("│           ░│\n")
+      .append("│           ░│\n")
+      .append("╰────────────╯");
     
     return sb.toString();
   }

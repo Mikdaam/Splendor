@@ -6,19 +6,25 @@ import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
 import fr.uge.splendor.color.Color;
+import fr.uge.splendor.level.Level;
 
 public class CardDeck {
   private final ArrayList<Card> deck;
+  private final Level level;
   
-  public CardDeck() {
+  public CardDeck(Level level) {
+    Objects.requireNonNull(level, "Tu ne sais pas lire ? Un niveau on a dit!!!!!!!!!!!!!!!!!!!");
     this.deck = new ArrayList<Card>();
+    this.level = level;
   }
   
   public void add(Card card) {
     Objects.requireNonNull(card, "The card to add to the deck cannot be null!");
+    if (!isOfLevel(card.level())) {
+      throw new IllegalArgumentException("You cannot add this card at this level");
+    }
     deck.add(card);
   }
-
   
   public Card remove(Card card) {
     Objects.requireNonNull(card, "The card to remove from the deck cannot be null!");
@@ -51,6 +57,10 @@ public class CardDeck {
   
   public void displayCards() {
     deck.forEach(card ->System.out.println(card));
+  }
+  
+  public boolean isOfLevel(Level level) {
+    return this.level.equals(level);
   }
   
   

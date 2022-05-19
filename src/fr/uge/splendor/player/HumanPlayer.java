@@ -25,7 +25,7 @@ public final class HumanPlayer implements Player {
     
     this.id = id;
     this.name = name;
-    this.ownedCards = new CardDeck(); 
+    this.ownedCards = new CardDeck(null); /*a voir apres*/
     this.ownedTokens = new TokenDeck();
   }
   

@@ -33,7 +33,7 @@ public class Main {
      System.out.println(emeraldToken);
      System.out.println(goldToken);
      
-     var deck = new CardDeck();
+     var deck = new CardDeck(Level.LEVEL_1);
      deck.add(card);
      deck.add(card2);
      deck.add(new DevelopmentCard(Level.LEVEL_1, Color.RUBY, 0, new HashMap<Color, Integer>()));

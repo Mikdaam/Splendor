@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 public enum Color {
   DIAMOND,
   EMERALD,
-  GOLD,
   ONYX,
   RUBY,
   SAPPHIRE,
+  GOLD,
   NOBLE;
   
   public static Color getColor(String colorString) {
@@ -38,4 +38,6 @@ public enum Color {
                  .filter(color -> color != NOBLE)
                  .collect(Collectors.toList());
   }
+  
+  /*TODO: add a getGameVersionToken*/
 }

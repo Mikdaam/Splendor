@@ -47,11 +47,11 @@ public class Main {
      
      
      var tokenDeck = new TokenDeck();
-     var tokenMap = new HashMap<Token, Integer>();
+     var tokenMap = new HashMap<Color, Integer>();
      
-     tokenMap.put(diamondToken, 3);
-     tokenMap.put(emeraldToken, 1);
-     tokenMap.put(goldToken, 5);
+     tokenMap.put(diamondToken.color(), 3);
+     tokenMap.put(emeraldToken.color(), 1);
+     tokenMap.put(goldToken.color(), 5);
      
      tokenDeck.add(tokenMap);
      

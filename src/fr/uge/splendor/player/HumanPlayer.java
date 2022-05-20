@@ -30,6 +30,10 @@ public final class HumanPlayer implements Player {
     this.ownedTokens = new TokenDeck();
   }
   
+  public int getPrestigePoints() {
+    return ownedCards.getPrestigePoints();
+  }
+  
   /*Replace Token with Color?*/
   @Override
   public void takeToken(Token token) {
@@ -37,8 +41,15 @@ public final class HumanPlayer implements Player {
   }
   
   @Override
-  public boolean canBuyCard(Card card) {
-    return true; //to put in DevCard instead? We give the carddeck and tokendeck of the player
+  public boolean canBuyCard(Card card) {    
+    for (var color: card.price().keySet()) {
+      var price = card.price().get(color);
+      if (ownedCards.getColorNumber(color) + ownedTokens.getColorNumber(color) < price) {
+        return false;
+      }
+    }
+    
+    return true;
   }
   
   @Override
@@ -56,8 +67,45 @@ public final class HumanPlayer implements Player {
     return tokensToGiveBack;
   }
   
+  
+  private String firstRowToString() {
+    var sb = new StringBuilder("┌───────────────────────────────────┐\n");
+    
+    sb.append("│  PLAYER ").append(id)
+      .append("  │  ").append(String.format("%02d", this.getPrestigePoints()))
+      .append(" PRESTIGE POINTS  │\n")
+      .append("└───────────────────────────────────┘\n");
+    
+    return sb.toString();
+  }
+  
+  private String tokensToString() {
+    var sb = new StringBuilder(" TOKENS:\n");
+    sb.append(ownedTokens.toString())
+      .append("\n");
+    
+    return sb.toString();
+  }
+  
+  private String ownedCardToString() {
+    var sb = new StringBuilder();
+    
+    sb.append(" CARDS:\n")
+      .append(ownedCards.deckSummaryToString())
+      .append("\n");
+    
+    return sb.toString();
+  }
+    
   @Override
   public String toString() {
-    return "";
+    var sb = new StringBuilder();
+    
+    sb.append(firstRowToString())
+      .append(tokensToString())
+      .append(ownedCardToString())
+      .append("\n");
+    
+    return sb.toString();
   }
 }

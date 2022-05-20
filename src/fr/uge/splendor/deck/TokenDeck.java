@@ -150,6 +150,16 @@ public class TokenDeck {
     
     return sb.toString();
   }
+  
+  /**
+   * This method returns the number of tokens associated to a color.
+   * 
+   * @param color - The color from which we want to get the number of tokens.
+   * @return The number of tokens associated with this color
+   */
+  public int getColorNumber(Color color) {
+    return deck.getOrDefault(color, 0);
+  }
 
 
 }

@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import fr.uge.splendor.card.*;
+import fr.uge.splendor.game.Game;
 import fr.uge.splendor.game.SimpleGame;
 import fr.uge.splendor.level.*;
+import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.token.*;
-import fr.uge.splendor.utils.Utils;
 import fr.uge.splendor.color.*;
 import fr.uge.splendor.deck.*;
 
@@ -67,7 +68,7 @@ public class Main {
      System.out.println(tokenDeck);
      
      var game = new SimpleGame();
-     var deckCardsGame = game.setupCards();
+     var deckCardsGame = Game.setupCards();
      System.out.println(deckCardsGame);
      
      deckCardsGame.displayCards();
@@ -79,5 +80,43 @@ public class Main {
      deck2.add(card2);
      deck2.add(card);
      deck2.displayCards();
+     
+     System.out.println(deck2.deckSummaryToString());
+     
+     var player = new HumanPlayer(0, "Yunen");
+     
+     System.out.println(player);
+     System.out.println("Player can buy free card? " + player.canBuyCard(card2));
+     System.out.println("Player can buy expensive card? " + player.canBuyCard(card));
+     player.buyCard(card2);
+     System.out.println(player);
+     
+     player.takeToken(new BaseToken(Color.SAPPHIRE));
+     player.takeToken(new BaseToken(Color.SAPPHIRE));
+     player.takeToken(new BaseToken(Color.SAPPHIRE));
+     player.takeToken(new BaseToken(Color.SAPPHIRE));
+     player.takeToken(new BaseToken(Color.SAPPHIRE));
+     
+     player.takeToken(new BaseToken(Color.ONYX));
+     player.takeToken(new BaseToken(Color.ONYX));
+     player.takeToken(new BaseToken(Color.ONYX));
+     player.takeToken(new BaseToken(Color.ONYX));
+     player.takeToken(new BaseToken(Color.ONYX));
+     player.takeToken(new BaseToken(Color.ONYX));
+     
+     player.takeToken(new BaseToken(Color.RUBY));
+     player.takeToken(new BaseToken(Color.RUBY));
+     player.takeToken(new BaseToken(Color.RUBY));
+     player.takeToken(new BaseToken(Color.RUBY));
+     player.takeToken(new BaseToken(Color.RUBY));
+     player.takeToken(new BaseToken(Color.RUBY));
+     player.takeToken(new BaseToken(Color.RUBY));
+     
+     System.out.println(player);
+     System.out.println("Player can buy expensive card? " + player.canBuyCard(card));
+     player.buyCard(card);
+     System.out.println(player);
+     
+     
   }
 }

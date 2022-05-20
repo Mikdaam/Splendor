@@ -62,6 +62,18 @@ public class CardDeck {
     Collections.shuffle(deck);
   }
   
+  public long getColorNumber(Color color) {
+    return deck.stream().filter(card -> card.color().equals(color)).count();
+  }
+
+  public int getPrestigePoints() {
+    return deck.stream()
+               .map(card -> card.prestigePoint())
+               .reduce(0, Integer::sum);
+  }
+  
+  
+  
   public void displayCards() {
     var rows = 1;
     
@@ -92,26 +104,62 @@ public class CardDeck {
       System.out.println(Utils.computeStringsToLine(deckStrings[row]));
     }
   }
-  
-  
-  public String displayDeckSummary() {
-    var line = "------------------";
-    var sb = new StringBuilder(line);
     
-    sb.append("\nCARD DECK :\n\n");
+  private String colorsToString() {
+    var sb = new StringBuilder();
     
-    var deckSummary = this.getDeckSummary();
-    deckSummary.forEach((color, cardNumber) -> {
-      sb.append(color)
-        .append(" : ")
-        .append(cardNumber)
-        .append("\n");
+    Color.getCardsColorsList().forEach(color -> {
+      var colorText = color.toString();
+      sb.append("│ ").append(colorText);
+      
+      for (var i = 10 - colorText.length(); i > 0; i--) {
+        sb.append(" ");
+      }
     });
     
-    sb.append(line);
-    
+    sb.append("│\n");
     return sb.toString();
   }
+
+  private String valuesToString() {
+    var sb = new StringBuilder();
+    var deckSummary = this.getDeckSummary();
+    
+    Color.getCardsColorsList().forEach(color -> {
+      
+      sb.append("│     ").append(deckSummary.getOrDefault(color, 0)).append("     ");
+    });
+    
+    sb.append("│\n");
+    return sb.toString();
+  }
+  
+  private String rowToString(String start, String mid, String end) {
+    var sb = new StringBuilder(start);
+    sb.append("───────────");
+    
+    var colors = Color.getCardsColorsList();
+    
+    for (var i = colors.size() - 1; i > 0; i--) {
+      sb.append(mid).append("───────────");
+    }
+    
+    sb.append(end).append("\n");
+    return sb.toString(); 
+  }
+  
+  public String deckSummaryToString() {
+    var sb = new StringBuilder(); 
+     
+    sb.append(rowToString("┌", "┬", "┐"))
+      .append(colorsToString())
+      .append(rowToString("├", "┼", "┤"))
+      .append(valuesToString())
+      .append(rowToString("└", "┴", "┘"));
+
+    return sb.toString();
+  }
+  
   
   @Override
   public String toString() {
@@ -128,6 +176,5 @@ public class CardDeck {
     
     return sb.toString();
   }
-
 
 }

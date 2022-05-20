@@ -39,5 +39,11 @@ public enum Color {
                  .collect(Collectors.toList());
   }
   
+  public static List<Color> getCardsColorsList() {
+    return Arrays.stream(Color.values())
+                 .filter(color -> color != GOLD)
+                 .collect(Collectors.toList());
+  }
+  
   /*TODO: add a getGameVersionToken*/
 }

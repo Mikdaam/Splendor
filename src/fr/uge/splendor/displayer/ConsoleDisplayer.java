@@ -52,13 +52,14 @@ public final class ConsoleDisplayer implements Displayer {
         "- Acheter 1 carte développement face visible au centre de la table ou préalablement réservée."
     };
     
-    String subactions[] = {
+    String boughtActions[] = {
         "- Prendre les jetons : ",
-        "- Choisir les colonnes de la carte : "
-    };
+        "- Carte FV ou FC",
+        "- Carte reservé ou carte FV"
+    }; 
     
     /**
-     * TODO: Must be finishied this nigth 
+     * TODO: Must be finished this night 
      */
     Arrays.stream(actions).forEach(action -> System.out.println(action));
   }

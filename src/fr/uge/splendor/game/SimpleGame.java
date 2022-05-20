@@ -15,7 +15,7 @@ import fr.uge.splendor.player.Player;
 
 public class SimpleGame implements Game {
   private final Board board;
-  private final CardDeck decks;
+  private final CardDeck[] decks;
   private final TokenDeck tokens;
   private final Player[] players;
   
@@ -23,16 +23,15 @@ public class SimpleGame implements Game {
   
   
   public SimpleGame() {
-    this.board = null;
-    this.decks = null;
-    this.tokens = null;
-    this.players = null;
+    this.board = new Board(3, 4);
+    this.decks = new CardDeck[3];
+    this.tokens = new TokenDeck();
+    this.players = new Player[2];
     this.displayer = new ConsoleDisplayer();
   }
   
-  
-  public void shuffleCard() {
-    
+  public void initGame() throws IOException {
+    Game.setupCards();
   }
   
   public void buyCard() {
@@ -57,9 +56,5 @@ public class SimpleGame implements Game {
      * -> doTour(player);
      * */
   }
-  
-  @Override
-  public CardDeck setupCards() throws IOException {
-    return FileLoader.createCards(Path.of("res").resolve("base_game_cards.csv"));
-  }
+ 
 }

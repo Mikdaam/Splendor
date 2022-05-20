@@ -1,18 +1,18 @@
 package fr.uge.splendor.deck;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
 import fr.uge.splendor.card.DevelopmentCard;
 import fr.uge.splendor.color.Color;
-import fr.uge.splendor.level.Level;
 import fr.uge.splendor.utils.Utils;
 
 public class CardDeck {
   private final ArrayList<Card> deck;
-  
+  /* TODO: Add a name */
   public CardDeck() {
     this.deck = new ArrayList<Card>();
   }
@@ -53,6 +53,13 @@ public class CardDeck {
     deck.forEach(card -> res.merge(card.color(), 1, Integer::sum));
     
     return res;    
+  }
+  
+  /**
+   * Shuffle the card Deck
+   */
+  public void shuffleCardDeck() {
+    Collections.shuffle(deck);
   }
   
   public void displayCards() {

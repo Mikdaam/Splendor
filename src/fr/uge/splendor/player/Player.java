@@ -8,8 +8,8 @@ import fr.uge.splendor.token.Token;
 
 public sealed interface Player permits HumanPlayer {
   
-  
-  boolean takeToken(Token token);
+  /*Check if we need bool*/
+  void takeToken(Token token);
   
   //boolean reserveCard();
   
@@ -17,10 +17,5 @@ public sealed interface Player permits HumanPlayer {
   
   HashMap<Color, Integer> buyCard(Card card);
   
-  boolean doAction();
-  
   String toString();
-  
-  void display(boolean isASCII);
-  
 }

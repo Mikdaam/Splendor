@@ -7,6 +7,7 @@ import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public final class HumanPlayer implements Player {
@@ -29,10 +30,10 @@ public final class HumanPlayer implements Player {
     this.ownedTokens = new TokenDeck();
   }
   
+  /*Replace Token with Color?*/
   @Override
-  public boolean takeToken(Token token) {
-    ownedTokens.add(null);
-    return true;
+  public void takeToken(Token token) {
+    ownedTokens.add(Map.of(token.color(), 1));
   }
   
   @Override
@@ -56,21 +57,7 @@ public final class HumanPlayer implements Player {
   }
   
   @Override
-  public boolean doAction() {
-    return true;
-  }
-  
-  @Override
   public String toString() {
     return "";
-  }
-  
-  private String displayASCII() {
-    return "";
-  }
-  
-  @Override
-  public void display(boolean isASCII) {
-    
   }
 }

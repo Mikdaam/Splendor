@@ -47,10 +47,10 @@ public class TokenDeck {
   public void remove(Map<Color, Integer> tokens) {
     Objects.requireNonNull(tokens, "Your map of tokens to remove cannot be null");
     
-    tokens.forEach((token, number) -> {
+    tokens.forEach((color, number) -> {
       
-      if (number > 0 && number <= deck.get(token)) {
-        deck.computeIfPresent(token, (key, oldValue) -> oldValue - number);
+      if (number >= 0 && number <= deck.get(color)) {
+        deck.computeIfPresent(color, (key, oldValue) -> oldValue - number);
       } else {
         throw new IllegalArgumentException("You're trying to withdraw too much or too less from your TokenDeck!");
       }

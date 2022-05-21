@@ -15,7 +15,16 @@ public sealed interface Player permits HumanPlayer {
   
   boolean canBuyCard(Card card);
   
+  int id();
+  
+  int prestigePoints();
+  
   HashMap<Color, Integer> buyCard(Card card);
   
   String toString();
+
+  int getNumberOfTokens();
+
+  void removeTokensColor(Color gold);
+
 }

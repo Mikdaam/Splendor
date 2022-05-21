@@ -1,8 +1,11 @@
 package fr.uge.splendor.displayer;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
+import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
+import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
 import fr.uge.splendor.player.Player;
@@ -23,8 +26,9 @@ public final class ConsoleDisplayer implements Displayer {
   
   /* TODO: Add a clear to clean the console */
   public void clear() {
-  	System.out.print("\b");
-	}
+    System.out.print("\033[H\033[2J");  
+    System.out.flush();
+	 }
   
   private void displayPlayers(Player[] players) {
     Arrays.stream(players)
@@ -56,10 +60,10 @@ public final class ConsoleDisplayer implements Displayer {
    */
   private void displayActions() {
     String actions[] = {
-        "- Prendre 3 jetons pierre précieuse de couleur différente.",
-        "- Prendre 2 jetons pierre précieuse de la même couleur.",
-        "- Réserver 1 carte développement et prendre 1 or (joker).",
-        "- Acheter 1 carte développement face visible au centre de la table ou préalablement réservée."
+        "1. Prendre 3 jetons pierre précieuse de couleur différente.",
+        "2. Prendre 2 jetons pierre précieuse de la même couleur.",
+        "3. Acheter 1 carte développement face visible au centre de la table ou préalablement réservée.",
+        "4. Réserver 1 carte développement et prendre 1 or (joker)."
     };
     
     String boughtActions[] = {
@@ -74,8 +78,53 @@ public final class ConsoleDisplayer implements Displayer {
     Arrays.stream(actions).forEach(action -> System.out.println(action));
   }
   
-  public void getUserAction() {
+  
+  public int[] getCoordinates() {
+    var coordinates = new int[2];
+    var scan = new Scanner(System.in);
     
+    System.out.println("Enter your card's row number (starting from zero, from bottom to top): ");
+    var row = scan.nextInt();
+    System.out.println("Enter your card's column number (starting from zero, from left to right): ");
+    var col = scan.nextInt();
+    
+    coordinates[0] = row;
+    coordinates[1] = col;
+    
+    return coordinates;
+  }
+  
+  public Color getUniqueColor() {
+    var scan = new Scanner(System.in);
+    System.out.println("Enter the color you want to take 2 tokens from: ");
+    var colorText = scan.nextLine();
+    
+    return switch (colorText.toUpperCase()) {
+           case "DIAMOND" -> Color.DIAMOND;
+           case "EMERALD" -> Color.EMERALD;
+           case "ONYX" -> Color.ONYX;
+           case "RUBY" -> Color.RUBY;
+           case "SAPPHIRE" -> Color.SAPPHIRE;
+           default -> Color.UNKNOWN;
+    };
+    
+  }
+  
+  public ActionType getUserAction() {
+    
+    this.displayActions();
+    System.out.print("Enter your action: ");
+    
+    var scanner = new Scanner(System.in);
+    var opt = scanner.next();
+    
+    return switch(opt) {
+             case "1" -> ActionType.THREE_TOKENS;
+             case "2" -> ActionType.TWO_TOKENS;
+             case "3" -> ActionType.BUY_CARD;
+             case "4" -> ActionType.RESERVE_CARD;
+             default -> ActionType.UNKNOWN;
+    };
   }
   
 }

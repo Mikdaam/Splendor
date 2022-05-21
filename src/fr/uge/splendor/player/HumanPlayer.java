@@ -30,7 +30,19 @@ public final class HumanPlayer implements Player {
     this.ownedTokens = new TokenDeck();
   }
   
-  public int getPrestigePoints() {
+  public void removeTokensColor(Color color) {
+    ownedTokens.removeColor(color);
+  }
+  
+  public int getNumberOfTokens() {
+    return ownedTokens.getDeckSummary().values().stream().reduce(0, Integer::sum);
+  }
+  
+  public int id() {
+    return id;
+  }
+  
+  public int prestigePoints() {
     return ownedCards.getPrestigePoints();
   }
   
@@ -67,12 +79,11 @@ public final class HumanPlayer implements Player {
     return tokensToGiveBack;
   }
   
-  
   private String firstRowToString() {
     var sb = new StringBuilder("┌───────────────────────────────────┐\n");
     
     sb.append("│  PLAYER ").append(id)
-      .append("  │  ").append(String.format("%02d", this.getPrestigePoints()))
+      .append("  │  ").append(String.format("%02d", this.prestigePoints()))
       .append(" PRESTIGE POINTS  │\n")
       .append("└───────────────────────────────────┘\n");
     

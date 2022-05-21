@@ -71,8 +71,14 @@ public class TokenDeck {
     return res;    
   }
   
-  
-  
+  /**
+   * This method remove a given color from the tokenDeck.
+   * 
+   * @param color
+   */
+  public void removeColor(Color color) {
+		deck.remove(color);
+	}
   
   /**
    * This method computes a TokenDeck's colors into a row for the TokenDeck's String format.
@@ -82,7 +88,7 @@ public class TokenDeck {
   private String colorsToString() {
     var sb = new StringBuilder();
     
-    Color.getTokensColorsList().forEach(color -> {
+    deck.keySet().forEach(color -> {
       var colorText = color.toString();
       sb.append("│ ").append(colorText);
       
@@ -104,7 +110,7 @@ public class TokenDeck {
   private String valuesToString() {
     var sb = new StringBuilder();
     
-    Color.getTokensColorsList().forEach(color -> {
+    deck.keySet().forEach(color -> {
       
       sb.append("│     ").append(deck.get(color)).append("     ");
     });

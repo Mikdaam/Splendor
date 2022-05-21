@@ -32,8 +32,6 @@ public class FileLoader {
      try (var csvReader = Files.newBufferedReader(cardsFile)) {
        String line;
        while ((line = csvReader.readLine()) != null) {
-         
-         System.out.println(line);
          var cardComponents = line.split(",");
          int cardPrestige = Integer.parseInt(cardComponents[2]);
          var price = parsePrice(cardComponents[3]);

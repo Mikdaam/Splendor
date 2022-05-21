@@ -15,12 +15,12 @@ import fr.uge.splendor.player.Player;
 
 public class SimpleGame implements Game {
 	/*TODO: Add an HashMap to the player deck*/
-  private final Board board;
+  private final Board board;	 /* Model */
   private final CardDeck[] decks;
   private final TokenDeck tokens;
   private final Player[] players;
   
-  private final Displayer displayer;
+  private final Displayer displayer; /* View */
   
   public SimpleGame() {
 	  /*TODO: Clean code for the constructor*/
@@ -40,6 +40,10 @@ public class SimpleGame implements Game {
   
   public void displayGame() {
 		displayer.display(players, decks, tokens, board);
+	}
+  
+  public Displayer getDisplayer() {
+		return displayer;
 	}
   
   private void initBoard() {

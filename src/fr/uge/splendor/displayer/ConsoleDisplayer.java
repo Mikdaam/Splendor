@@ -21,6 +21,10 @@ public final class ConsoleDisplayer implements Displayer {
 		displayBoard(gameBoard);
   }
   
+  /* TODO: Add a clear to clean the console */
+  public void clear() {
+  	System.out.print("\b");
+	}
   
   private void displayPlayers(Player[] players) {
     Arrays.stream(players)

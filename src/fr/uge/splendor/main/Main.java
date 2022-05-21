@@ -140,5 +140,6 @@ public class Main {
   	var mainGame = new SimpleGame();
   	mainGame.initGame();
   	mainGame.displayGame();
+  	mainGame.getDisplayer().clear();
   }
 }

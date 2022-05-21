@@ -7,4 +7,7 @@ import fr.uge.splendor.player.Player;
 
 public sealed interface Displayer permits ConsoleDisplayer {
   public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard);
+  
+  void clear();
+  
 }

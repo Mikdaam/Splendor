@@ -172,7 +172,7 @@ public class CardDeck {
       .append("│  ").append(String.format("%02d", deck.size())).append(" CARDS ░│\n")
       .append("│           ░│\n")
       .append("│           ░│\n")
-      .append("╰────────────╯");
+      .append("╰────────────╯\n");
     
     return sb.toString();
   }

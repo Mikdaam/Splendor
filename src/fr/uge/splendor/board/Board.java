@@ -3,15 +3,20 @@ package fr.uge.splendor.board;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
+import fr.uge.splendor.utils.Utils;
 
 public class Board {
   private final Card[][] board;
+  private final int rows;
+  private final int columns;
   
   public Board(int rows, int columns) {
     if (rows <= 0 || columns <= 0) {
       throw new IllegalArgumentException("Your rows and columns number must be strictly positive");
     }
     
+    this.rows = rows;
+    this.columns = columns;
     this.board = new Card[rows][columns];
   }
   
@@ -42,12 +47,30 @@ public class Board {
     return card;
   }
   
+  public int rows() {
+	  return rows;
+  }
   
-  /*Méthode pour afficher une ligne de cartes*/
+  public int colums() {
+	  return columns;
+  }
+  
+  /*TODO: Refactor this method*/
   
   @Override
   public String toString() {
-    return "Board";
+    /*return Arrays.stream(board)
+    		.flatMap(rowCard -> rowCard.)*/
+	var cardString = new StringBuilder();
+	for (Card[] cards : board) {
+		String tab[] = new String[cards.length];
+		for (int i = 0; i < cards.length; i++) {
+			tab[i] = (cards[i] == null) ? Card.emptyCardToString() : cards[i].toString();
+		}
+		cardString.append(Utils.computeStringsToLine(tab));
+	}
+	
+	return cardString.toString();
   }
 
 

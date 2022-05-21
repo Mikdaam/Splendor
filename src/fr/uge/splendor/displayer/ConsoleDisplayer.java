@@ -1,8 +1,5 @@
 package fr.uge.splendor.displayer;
 
-import java.io.BufferedReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 
 import fr.uge.splendor.board.Board;

@@ -3,16 +3,22 @@ package fr.uge.splendor.displayer;
 import java.util.Arrays;
 
 import fr.uge.splendor.board.Board;
-import fr.uge.splendor.card.Card;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
-import fr.uge.splendor.game.Game;
 import fr.uge.splendor.player.Player;
 
 public final class ConsoleDisplayer implements Displayer {
   
-  public void display(Game game) {
+	/*public ConsoleDisplayer(Player[] players, CardDeck[] cardDecks, TokenDeck[] tokenDecks, Board gameBoard) {
+		display(players, cardDecks, tokenDecks, gameBoard);
+	}*/
+	
+  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard) {
     System.out.println("I'm printing the game");
+    displayPlayers(players);
+		displayCardDecks(cardDecks);
+		displayTokenDecks(tokenDecks);
+		displayBoard(gameBoard);
   }
   
   
@@ -33,12 +39,12 @@ public final class ConsoleDisplayer implements Displayer {
    * @implNote Same thing here
    * @param tokens
    */
-  private void displayTokenDecks(TokenDeck[] tokens) {
-    Arrays.stream(tokens).forEach(token -> System.out.println(token));
+  private void displayTokenDecks(TokenDeck tokens) {
+    System.out.println(tokens);
   }
   
-  private void displayBord(Board gameBord) {
-    System.out.println(gameBord.toString());
+  private void displayBoard(Board gameBoard) {
+    System.out.println(gameBoard.toString());
   }
   
   /* The above code is temporary i will refactor it later

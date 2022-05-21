@@ -1,5 +1,8 @@
 package fr.uge.splendor.displayer;
 
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import fr.uge.splendor.board.Board;
@@ -75,7 +78,9 @@ public final class ConsoleDisplayer implements Displayer {
   }
   
   public void getUserAction() {
-    
+  	/* TODO: Find a better way to read in the console without java.io.packeges*/
+  	
+  	
   }
   
 }

@@ -1,8 +1,10 @@
 package fr.uge.splendor.main;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 
+import fr.uge.splendor.board.Board;
 import fr.uge.splendor.card.*;
 import fr.uge.splendor.game.Game;
 import fr.uge.splendor.game.SimpleGame;
@@ -14,7 +16,7 @@ import fr.uge.splendor.deck.*;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-     var price = new HashMap<Color, Integer>();
+     /*var price = new HashMap<Color, Integer>();
      price.put(Color.SAPPHIRE, 5);
      price.put(Color.RUBY, 7);
      price.put(Color.ONYX, 6);
@@ -68,7 +70,8 @@ public class Main {
      System.out.println(tokenDeck);
      
      var game = new SimpleGame();
-     var deckCardsGame = Game.setupCards();
+     Path pathOfFile = Path.of("res").resolve("base_game_cards.csv");
+     var deckCardsGame = Game.setupCards(pathOfFile);
      System.out.println(deckCardsGame);
      
      deckCardsGame.displayCards();
@@ -81,9 +84,9 @@ public class Main {
      deck2.add(card);
      deck2.displayCards();
      
-     System.out.println(deck2.deckSummaryToString());
+     System.out.println(deck2.deckSummaryToString());*/
      
-     var player = new HumanPlayer(0, "Yunen");
+     /*var player = new HumanPlayer(0, "Yunen");
      
      System.out.println(player);
      System.out.println("Player can buy free card? " + player.canBuyCard(card2));
@@ -115,8 +118,27 @@ public class Main {
      System.out.println(player);
      System.out.println("Player can buy expensive card? " + player.canBuyCard(card));
      player.buyCard(card);
-     System.out.println(player);
+     System.out.println(player);*/
      
      
+     /*var board = new Board(3, 4);
+     board.add(deckCardsGame.removeFirstCard(), 0, 0);
+     board.add(deckCardsGame.removeFirstCard(), 0, 1);
+     board.add(deckCardsGame.removeFirstCard(), 0, 2);
+     board.add(deckCardsGame.removeFirstCard(), 0, 3);
+     board.add(deckCardsGame.removeFirstCard(), 1, 0);
+     board.add(deckCardsGame.removeFirstCard(), 1, 1);
+     board.add(deckCardsGame.removeFirstCard(), 1, 2);
+     board.add(deckCardsGame.removeFirstCard(), 1, 3);
+     board.add(deckCardsGame.removeFirstCard(), 2, 0);
+     board.add(deckCardsGame.removeFirstCard(), 2, 1);
+     board.add(deckCardsGame.removeFirstCard(), 2, 2);
+     board.add(deckCardsGame.removeFirstCard(), 2, 3);
+     
+     System.out.println(board.toString());*/
+  	
+  	var mainGame = new SimpleGame();
+  	mainGame.initGame();
+  	mainGame.displayGame();
   }
 }

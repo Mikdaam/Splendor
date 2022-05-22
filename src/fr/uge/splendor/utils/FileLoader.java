@@ -52,14 +52,15 @@ public class FileLoader {
   public static CardDeck createCards(Path cardsFile) throws IOException {
     var gameCards = new CardDeck();
     
-     try (var csvReader = Files.newBufferedReader(cardsFile)) {
-       String line;
-       while ((line = csvReader.readLine()) != null) {
-         var cardComponents = line.split(",");
-         int cardPrestige = Integer.parseInt(cardComponents[2]);
-         var price = parsePrice(cardComponents[3]);
-         gameCards.add(new DevelopmentCard(Level.getLevel(cardComponents[0]), Color.getColor(cardComponents[1]), cardPrestige, price)); 
-       }
+     try (var csvReader = Files.newBufferedReader(cardsFile)) {	 
+    	 csvReader.lines()
+    	 				.skip(1) /* Skip the first line of the file */
+    	 				.forEach(line -> {
+    	 					var cardComponents = line.split(",");
+    	          int cardPrestige = Integer.parseInt(cardComponents[2]);
+    	          var price = parsePrice(cardComponents[3]);
+    	          gameCards.add(new DevelopmentCard(Level.getLevel(cardComponents[0]), Color.getColor(cardComponents[1]), cardPrestige, price));
+    	 				});
      }
      
      return gameCards;

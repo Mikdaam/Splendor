@@ -74,6 +74,19 @@ public final class HumanPlayer implements Player {
     ownedTokens.add(Map.of(token.color(), 1));
   }
   
+  public boolean canGetNoble(Card noble) {
+  	Objects.requireNonNull(noble);
+    
+    for (var color: noble.price().keySet()) {
+      var price = noble.price().get(color);
+      if (ownedCards.getColorNumber(color) < price) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
   @Override
   public boolean canBuyCard(Card card) {
     Objects.requireNonNull(card);

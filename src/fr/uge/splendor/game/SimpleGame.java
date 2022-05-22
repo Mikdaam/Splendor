@@ -127,7 +127,7 @@ public class SimpleGame implements Game {
    * This method calls the SimpleGame's Displayer to display it.
    */
   private void displayGame() {
-		  displayer.display(players, decks, tokens, board, cardsColorsList());
+		  displayer.display(players, decks, new Board(1, 1),tokens, board, cardsColorsList());
 	 }
   
   /**

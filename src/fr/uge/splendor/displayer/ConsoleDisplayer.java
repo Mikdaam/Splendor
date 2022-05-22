@@ -81,11 +81,12 @@ public final class ConsoleDisplayer implements Displayer {
    * @param colors - the list of cards colors allowed in the game.
    */
   @Override
-  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard, List<Color> colors) {
+  public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenDeck tokenDecks, Board gameBoard, List<Color> colors) {
     displayPlayers(players, colors);
     displayCardDecks(cardDecks);
-    displayTokenDecks(tokenDecks);
+    displayBoard(noblesCards);
     displayBoard(gameBoard);
+    displayTokenDecks(tokenDecks);
   }
   
   /**

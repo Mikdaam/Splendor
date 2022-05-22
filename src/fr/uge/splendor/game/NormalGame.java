@@ -36,7 +36,9 @@ public class NormalGame implements Game {
 	private final static int NUMBER_OF_GOLD_TOKEN = 5;
 	private static int NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER;
 	
-	private final Board board;	 /* Model */
+	/* Model */
+	private final Board board;
+	private final Board noblesCards;
 	private final CardDeck[] decks;
 	private final TokenDeck tokens;
 	private final Player[] players;
@@ -44,21 +46,22 @@ public class NormalGame implements Game {
 	
 	private final Displayer displayer; /* View */
 	
-	public NormalGame(int numberOfPlayer) {
-		if(numberOfPlayer < 2) {
+	public NormalGame(int numberOfPlayers) {
+		if(numberOfPlayers < 2 && numberOfPlayers > 4) {
 			throw new IllegalArgumentException("Number of player should be greater than 2.");
 		}
 		
 		this.board = new Board(3, 4);
+		this.noblesCards = new Board(1, numberOfPlayers + 1);
     this.decks = new CardDeck[3];
     this.tokens = new TokenDeck();
-    this.players = new Player[numberOfPlayer];
+    this.players = new Player[numberOfPlayers];
     this.displayer = new ConsoleDisplayer();
     actions = new Action[3];
     
-    if (numberOfPlayer == 2) {
+    if (numberOfPlayers == 2) {
     	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 3;
-    } else if (numberOfPlayer == 3) {
+    } else if (numberOfPlayers == 3) {
     	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 2;
     } else {
     	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 0;
@@ -88,6 +91,14 @@ public class NormalGame implements Game {
     decks[0] = cardDeckByLevel.get(Level.LEVEL_3);
     decks[1] = cardDeckByLevel.get(Level.LEVEL_2);
     decks[2] = cardDeckByLevel.get(Level.LEVEL_1);
+    initNobles(cardDeckByLevel.get(Level.LEVEL_NOBLE));
+  }
+  
+  private void initNobles(CardDeck nobles) {
+  	nobles.shuffleCardDeck();
+  	for (int i = 0; i < noblesCards.colums(); i++) {
+  		noblesCards.add(nobles.removeFirstCard(), 0, i);
+		}
   }
   
   private void initTokens() {
@@ -124,7 +135,7 @@ public class NormalGame implements Game {
    * This method calls the SimpleGame's Displayer to display it.
    */
   private void displayGame() {
-		  displayer.display(players, decks, tokens, board, cardsColorsList());
+		  displayer.display(players, decks, noblesCards, tokens, board, cardsColorsList());
 	 }
   
   /**
@@ -303,6 +314,18 @@ public class NormalGame implements Game {
     return true;
   }
   
+  private void visitOfNobles(int playerID) {
+  	for (int i = 0; i < noblesCards.colums(); i++) {
+    	var noble = noblesCards.remove(0, i);
+    	if (players[playerID].canGetNoble(noble)) {
+    		players[playerID].buyCard(noble, Color.getCardsColorsList());
+    		break;
+    	} else {
+    		noblesCards.add(noble, 0, i);
+    	}
+		}
+	}
+  
   /**
    * This method allows the player, described by its ID, to choose an Action.
    * 
@@ -360,6 +383,7 @@ public class NormalGame implements Game {
     while (getMaxPrestige() < 1) {
     	displayGame();
       chooseAction(playerID);
+      visitOfNobles(playerID);
       playerID = (playerID + 1) % players.length;
     }
     
@@ -367,6 +391,7 @@ public class NormalGame implements Game {
     for(var i = 0; i < players.length; i++) {
       displayGame();
       chooseAction(playerID);
+      visitOfNobles(playerID);
       playerID = (playerID + 1) % players.length;
     }
     

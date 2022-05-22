@@ -16,6 +16,8 @@ public sealed interface Player permits HumanPlayer {
   
   boolean canBuyCard(Card card);
   
+  boolean canGetNoble(Card noble);
+  
   int id();
   
   String name();

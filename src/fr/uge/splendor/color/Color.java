@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  */
 public enum Color {
   UNKNOWN,
+  EMPTY,
   DIAMOND,
   EMERALD,
   ONYX,
@@ -36,13 +37,13 @@ public enum Color {
   
   public static List<Color> getTokensColorsList() {
     return Arrays.stream(Color.values())
-                 .filter(color -> color != NOBLE && color != UNKNOWN)
+                 .filter(color -> color != NOBLE && color != UNKNOWN && color != EMPTY)
                  .collect(Collectors.toList());
   }
   
   public static List<Color> getCardsColorsList() {
     return Arrays.stream(Color.values())
-                 .filter(color -> color != GOLD && color != UNKNOWN)
+                 .filter(color -> color != GOLD && color != UNKNOWN && color != EMPTY)
                  .collect(Collectors.toList());
   }
 }

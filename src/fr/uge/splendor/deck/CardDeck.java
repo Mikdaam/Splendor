@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
 import fr.uge.splendor.card.DevelopmentCard;
+import fr.uge.splendor.card.EmptyCard;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.utils.Utils;
@@ -15,6 +16,7 @@ import fr.uge.splendor.utils.Utils;
 public class CardDeck {
   private final ArrayList<Card> deck;
   /* TODO: Add a name */
+  
   public CardDeck() {
     this.deck = new ArrayList<Card>();
   }
@@ -46,8 +48,7 @@ public class CardDeck {
   
   public Card removeFirstCard() {
     if (deck.size() == 0) {
-      System.out.println("The deck is empty.");
-      return null;
+      return new EmptyCard();
     }
     
     return deck.remove(deck.size() - 1);    

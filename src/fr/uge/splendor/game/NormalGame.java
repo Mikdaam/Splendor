@@ -22,6 +22,9 @@ import fr.uge.splendor.player.Player;
 import fr.uge.splendor.token.BaseToken;
 import fr.uge.splendor.action.Action;
 import fr.uge.splendor.action.BuyCardBoardAction;
+import fr.uge.splendor.action.BuyReservedCardAction;
+import fr.uge.splendor.action.ReserveCardBoardAction;
+import fr.uge.splendor.action.ReserveCardDeckAction;
 import fr.uge.splendor.action.ThreeTokensAction;
 import fr.uge.splendor.action.TwoTokensAction;
 
@@ -57,7 +60,7 @@ public class NormalGame implements Game {
     this.tokens = new TokenDeck();
     this.players = new Player[numberOfPlayers];
     this.displayer = new ConsoleDisplayer();
-    actions = new Action[3];
+    actions = new Action[6];
     
     if (numberOfPlayers == 2) {
     	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 3;
@@ -119,6 +122,9 @@ public class NormalGame implements Game {
     actions[0] = new ThreeTokensAction();
     actions[1] = new TwoTokensAction();
     actions[2] = new BuyCardBoardAction();
+    actions[3] = new BuyReservedCardAction();
+    actions[4] = new ReserveCardBoardAction();
+    actions[5] = new ReserveCardDeckAction();
   }
   
   public void initGame() throws IOException {
@@ -153,6 +159,28 @@ public class NormalGame implements Game {
   /* -- ACTIONS -- */
   
   /**
+   * This method checks if the given coordinates are correct in the context of a 2D array defined by
+   * its number of rows and columns.
+   * 
+   * @param coordinates - the coordinates to check.
+   * @param rows - the rows of the array we want to use the coordinates on.
+   * @param cols - the columns of the array we want to use the coordinates on.
+   * @return true if the coordinates are correct, false otherwise
+   */
+  private boolean checkCoordinates(int[] coordinates, int rows, int cols) {
+    if (coordinates[0] < 0 || coordinates[0] >= rows) {
+      displayer.displayActionError("You've entered a wrong row number");
+      return false;
+    } else if (coordinates[1] < 0 || coordinates[1] >= cols) {
+      displayer.displayActionError("You've entered a wrong column number");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  
+  /**
    * This method executes the action of buying a Card for a player, described by its ID.
    * 
    * @param playerID - The player's ID.
@@ -161,21 +189,114 @@ public class NormalGame implements Game {
   private boolean buyCard(int playerID) {
     var coordinates = displayer.getCoordinates();
     
-    if (coordinates[0] != 0) {
-      displayer.displayActionError("You've entered a wrong row number");
-      return false;
-    } else if (coordinates[1] < 0 || coordinates[1] >= 4) {
-      displayer.displayActionError("You've entered a wrong column number");
+    if(!checkCoordinates(coordinates, board.rows(), board.colums())) {
       return false;
     }
     
     var card = board.remove(coordinates[0], coordinates[1]);
+    
     if (players[playerID].canBuyCard(card)) {
       tokens.add(players[playerID].buyCard(card, cardsColorsList()));
       board.add(decks[0].removeFirstCard(), coordinates[0], coordinates[1]);
     } else {
       board.add(card, coordinates[0], coordinates[1]);
       displayer.displayActionError("You are not able to buy the Card.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * This method executes the action of buying a Card for a player, described by its ID.
+   * 
+   * @param playerID - The player's ID.
+   * @return true if the action has been performed correctly, false otherwise.
+   */
+  private boolean buyReservedCard(int playerID) {
+    var coordinates = displayer.getCoordinates();
+    
+    if(!checkCoordinates(coordinates, 1, players[playerID].numberOfReservedCards())) {
+      return false;
+    }
+    
+    var card = players[playerID].removeFromReserved(coordinates[0], coordinates[1]);
+    
+    if (players[playerID].canBuyCard(card)) {
+      tokens.add(players[playerID].buyCard(card, cardsColorsList()));
+    } else {
+      players[playerID].addToReserved(card, coordinates[0], coordinates[1]);
+      displayer.displayActionError("You are not able to buy the Card.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  private void givePlayerGoldToken(int playerID) {
+    if (tokens.getColorNumber(Color.GOLD) > 0) {
+      players[playerID].takeToken(new BaseToken(Color.GOLD));
+      tokens.remove(Map.of(Color.GOLD, 1));
+    }
+  }
+  
+  private boolean reserveCardBoard(int playerID) {
+    var coordinates = displayer.getCoordinates();
+    
+    if(!checkCoordinates(coordinates, board.rows(), board.colums())) {
+      return false;
+    }
+    
+    var card = board.remove(coordinates[0], coordinates[1]);
+    
+    if (players[playerID].numberOfReservedCards() < 3) {
+      players[playerID].pushToReserved(card);
+      givePlayerGoldToken(playerID);
+      board.add(decks[coordinates[0]].removeFirstCard(), coordinates[0], coordinates[1]);
+    } else {
+      board.add(card, coordinates[0], coordinates[1]);
+      displayer.displayActionError("You cannot reserve any more Card.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  
+  private boolean checkDeckLevel(Level level) {
+    if (level != Level.LEVEL_1 && level != Level.LEVEL_2 && level != Level.LEVEL_3) {
+      displayer.displayActionError("The level you have chosen doesn't exist.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  private int convertLevelToIndex(Level level) {
+    if (level == Level.LEVEL_1) {
+      return 2;
+    } else if (level == Level.LEVEL_2) {
+      return 1;
+    } 
+    
+    return 0;
+  }
+  
+  private boolean reserveCardDeck(int playerID) {
+    var level = displayer.getDeckLevel();
+    
+    if(!checkDeckLevel(level)) {
+      return false;
+    }
+    
+    var card = decks[convertLevelToIndex(level)].removeFirstCard();
+    
+    if (players[playerID].numberOfReservedCards() < 3) {
+      players[playerID].pushToReserved(card);
+      givePlayerGoldToken(playerID);
+    } else {
+      decks[convertLevelToIndex(level)].add(card);
+      displayer.displayActionError("You cannot reserve any more Card.");
       return false;
     }
     
@@ -339,6 +460,9 @@ public class NormalGame implements Game {
         case THREE_TOKENS -> takeThreeTokens(playerID);
         case TWO_TOKENS -> takeTwoTokens(playerID);
         case BUY_CARD_BOARD -> buyCard(playerID);
+        case BUY_RESERVED_CARD -> buyReservedCard(playerID);
+        case RESERVE_CARD_BOARD -> reserveCardBoard(playerID);
+        case RESERVE_CARD_DECK -> reserveCardDeck(playerID);
         default -> {displayer.displayActionError("Unkown Action."); yield false;}
       };
     }

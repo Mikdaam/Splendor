@@ -147,6 +147,27 @@ public class SimpleGame implements Game {
   /* -- ACTIONS -- */
   
   /**
+   * This method checks if the given coordinates are correct in the context of a 2D array defined by
+   * its number of rows and columns.
+   * 
+   * @param coordinates - the coordinates to check.
+   * @param rows - the rows of the array we want to use the coordinates on.
+   * @param cols - the columns of the array we want to use the coordinates on.
+   * @return true if the coordinates are correct, false otherwise
+   */
+  private boolean checkCoordinates(int[] coordinates, int rows, int cols) {
+    if (coordinates[0] < 0 || coordinates[0] >= rows) {
+      displayer.displayActionError("You've entered a wrong row number");
+      return false;
+    } else if (coordinates[1] < 0 || coordinates[1] >= cols) {
+      displayer.displayActionError("You've entered a wrong column number");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
    * This method executes the action of buying a Card for a player, described by its ID.
    * 
    * @param playerID - The player's ID.
@@ -155,11 +176,7 @@ public class SimpleGame implements Game {
   private boolean buyCard(int playerID) {
     var coordinates = displayer.getCoordinates();
     
-    if (coordinates[0] != 0) {
-      displayer.displayActionError("You've entered a wrong row number");
-      return false;
-    } else if (coordinates[1] < 0 || coordinates[1] >= 4) {
-      displayer.displayActionError("You've entered a wrong column number");
+    if (!checkCoordinates(coordinates, board.rows(), board.colums())) {
       return false;
     }
     

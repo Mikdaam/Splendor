@@ -33,4 +33,12 @@ public sealed interface Player permits HumanPlayer {
   void removeTokensColor(Color gold);
   
   int numberOfDevelopmentCards(List<Color> colors);
+  
+  Card removeFromReserved(int row, int col);
+  
+  void addToReserved(Card card, int row, int col);
+  
+  void pushToReserved(Card card);
+  
+  int numberOfReservedCards();
 }

@@ -49,7 +49,7 @@ public class TokenDeck {
     
     tokens.forEach((color, number) -> {
       
-      if (number >= 0 && number <= deck.get(color)) {
+      if (number >= 0 && number <= deck.getOrDefault(color, 0)) {
         deck.computeIfPresent(color, (key, oldValue) -> oldValue - number);
       } else {
         throw new IllegalArgumentException("You're trying to withdraw too much or too less from your TokenDeck!");
@@ -72,13 +72,23 @@ public class TokenDeck {
   }
   
   /**
+   * This method returns the number of tokens associated to a color.
+   * 
+   * @param color - The color from which we want to get the number of tokens.
+   * @return The number of tokens associated with this color
+   */
+  public int getColorNumber(Color color) {
+    return deck.getOrDefault(color, 0);
+  }
+  
+  /**
    * This method remove a given color from the tokenDeck.
    * 
    * @param color
    */
   public void removeColor(Color color) {
-		deck.remove(color);
-	}
+		  deck.remove(color);
+	 }
   
   /**
    * This method computes a TokenDeck's colors into a row for the TokenDeck's String format.
@@ -156,16 +166,4 @@ public class TokenDeck {
     
     return sb.toString();
   }
-  
-  /**
-   * This method returns the number of tokens associated to a color.
-   * 
-   * @param color - The color from which we want to get the number of tokens.
-   * @return The number of tokens associated with this color
-   */
-  public int getColorNumber(Color color) {
-    return deck.getOrDefault(color, 0);
-  }
-
-
 }

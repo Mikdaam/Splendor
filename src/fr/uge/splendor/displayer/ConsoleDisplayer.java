@@ -11,6 +11,7 @@ import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 
 /**
@@ -129,7 +130,7 @@ public final class ConsoleDisplayer implements Displayer {
     var coordinates = new int[2];
     var scanner = new Scanner(System.in);
     
-    System.out.println("Enter your card's row number (starting from zero, from bottom to top): ");
+    System.out.println("Enter your card's row number (starting from zero, from top to bottom): ");
     var row = scanner.nextInt();
     System.out.println("Enter your card's column number (starting from zero, from left to right): ");
     var col = scanner.nextInt();
@@ -178,6 +179,25 @@ public final class ConsoleDisplayer implements Displayer {
 	 }
   
   /**
+   * This method gets and returns the user's input for a deck level.
+   * 
+   * @return the deck's level chose by the user.
+   */
+  @Override
+  public Level getDeckLevel() {
+    var scanner = new Scanner(System.in);
+    System.out.println("Enter the level of the deck: ");
+    var colorText = scanner.nextLine();
+    
+    return switch (colorText.toUpperCase()) {
+           case "1" -> Level.LEVEL_1;
+           case "2" -> Level.LEVEL_2;
+           case "3" -> Level.LEVEL_3;
+           default -> Level.UNKNOWN;
+    };
+  }
+  
+  /**
    * This method asks the player for their action and returns the ActionType for the Action they've chosen.
    * 
    * @param actions - the array of Actions possible.
@@ -195,7 +215,9 @@ public final class ConsoleDisplayer implements Displayer {
              case "1" -> ActionType.THREE_TOKENS;
              case "2" -> ActionType.TWO_TOKENS;
              case "3" -> ActionType.BUY_CARD_BOARD;
-             //case "4" -> ActionType.RESERVE_CARD_BOARD;
+             case "4" -> ActionType.BUY_RESERVED_CARD;
+             case "5" -> ActionType.RESERVE_CARD_BOARD;
+             case "6" -> ActionType.RESERVE_CARD_DECK;
              default -> ActionType.UNKNOWN;
     };
   }  

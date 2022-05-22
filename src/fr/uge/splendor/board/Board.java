@@ -3,6 +3,8 @@ package fr.uge.splendor.board;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
+import fr.uge.splendor.card.EmptyCard;
+import fr.uge.splendor.color.Color;
 import fr.uge.splendor.utils.Utils;
 
 public class Board {
@@ -17,34 +19,81 @@ public class Board {
     
     this.rows = rows;
     this.columns = columns;
-    this.board = new Card[rows][columns];
+    board = new Card[rows][columns];
+    
+    initBoard();
   }
   
-  public void add(Card card, int row, int column) {
+  private void initBoard() {
+    for (var i = 0; i < rows; i++) {
+      for (var j = 0; j < columns; j++) {
+        board[i][j] = new EmptyCard();
+      }
+    }
+  }
+  
+  public boolean add(Card card, int row, int column) {
     Objects.requireNonNull(card);
     
-    if (board[row][column] == null) {
-      board[row][column] = card;
-    } else {
-      throw new IllegalArgumentException("There is already a Card at (" + row + ", " + column +")");
+    if (row < 0 || row >= rows) {
+      throw new IllegalArgumentException("Your row's index is out of scope");
+    }
+    if (column < 0 || column >= columns) {
+      throw new IllegalArgumentException("Your column's index is out of scope");
     }
     
+    if (board[row][column].color() == Color.EMPTY) {
+      board[row][column] = card;
+    } else {
+      return false;
+    }
+    
+    return true;    
+  }
+  
+  public boolean push(Card card) {
+    Objects.requireNonNull(card);
+    
+    for (var i = 0; i < rows; i++) {
+      for (var j = 0; j < columns; j++) {
+        if (board[i][j].color() == Color.EMPTY) {
+          board[i][j] = card;
+          return true;
+        }
+      }
+    }
+    
+    return false;
   }
   
   public Card remove(int row, int column) {
-    if (row < 0 || row >= board.length) {
+    if (row < 0 || row >= rows) {
       throw new IllegalArgumentException("Your row's index is out of scope");
     }
-    if (column < 0 || column >= board[0].length) {
+    if (column < 0 || column >= columns) {
       throw new IllegalArgumentException("Your column's index is out of scope");
     }
     
     Objects.requireNonNull(board[row][column]);
     
     var card = board[row][column];
-    board[row][column] = null; /*To flag an empty cell*/
+    board[row][column] = new EmptyCard();
     
     return card;
+  }
+  
+  public int numberOfCards() {
+    var res = 0;
+    
+    for (var i = 0; i < rows; i++) {
+      for (var j = 0; j < columns; j++) {
+        if (board[i][j].color() != Color.EMPTY) {
+          res++;
+        }
+      }
+    }
+    
+    return res;
   }
   
   public int rows() {
@@ -54,24 +103,19 @@ public class Board {
   public int colums() {
 	  return columns;
   }
-  
-  /*TODO: Refactor this method*/
-  
+    
   @Override
   public String toString() {
-    /*return Arrays.stream(board)
-    		.flatMap(rowCard -> rowCard.)*/
-	var cardString = new StringBuilder();
-	for (Card[] cards : board) {
-		String tab[] = new String[cards.length];
-		for (int i = 0; i < cards.length; i++) {
-			tab[i] = (cards[i] == null) ? Card.emptyCardToString() : cards[i].toString();
-		}
-		cardString.append(Utils.computeStringsToLine(tab));
-	}
-	
-	return cardString.toString();
+   	var cardString = new StringBuilder();
+   	
+   	for (Card[] cards : board) {
+    		String tab[] = new String[cards.length];
+    		for (int i = 0; i < cards.length; i++) {
+    			  tab[i] = cards[i].toString();
+    		}
+    		cardString.append(Utils.computeStringsToLine(tab));
+   	}
+   	
+   	return cardString.toString();
   }
-
-
 }

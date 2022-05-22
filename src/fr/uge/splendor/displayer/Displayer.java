@@ -8,6 +8,7 @@ import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 
 
@@ -28,7 +29,7 @@ public sealed interface Displayer permits ConsoleDisplayer {
    * @param gameBoard - the Board to display.
    * @param colors - the list of cards colors allowed in the game.
    */
-  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard, List<Color> colors);
+  void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard, List<Color> colors);
   
   /**
    * This method displays the error for an action, mostly caused by a player's mistake.
@@ -43,7 +44,7 @@ public sealed interface Displayer permits ConsoleDisplayer {
    * @param players - the array of players of the Game.
    * @param winnerID - the winner's ID.
    */
-  public void displayWinner(Player[] players, int winnerID);
+  void displayWinner(Player[] players, int winnerID);
   
   /**
    * This method clears the output.
@@ -55,21 +56,28 @@ public sealed interface Displayer permits ConsoleDisplayer {
    * 
    * @return A couple of coordinates stored into an int array.
    */
-  public int[] getCoordinates();
+  int[] getCoordinates();
   
   /**
    * This method gets and returns the player's input for a unique Color.
    * 
    * @return the Color chosen by the user.
    */
-  public Color getUniqueColor();
+  Color getUniqueColor();
   
   /**
    * This method gets and returns the user's input for a list of three Colors.
    * 
    * @return the List of Colors chosen by the user.
    */
-  public List<Color> getThreeColor();
+  List<Color> getThreeColor();
+  
+  /**
+   * This method gets and returns the user's input for a deck level.
+   * 
+   * @return the deck's level chose by the user.
+   */
+  Level getDeckLevel();
   
   /**
    * This method asks the player for their action and returns the ActionType for the Action they've chosen.
@@ -77,6 +85,6 @@ public sealed interface Displayer permits ConsoleDisplayer {
    * @param actions - the array of Actions possible.
    * @param name - the player's name.
    */
-  public ActionType getPlayerAction(Action[] actions, String name);
+  ActionType getPlayerAction(Action[] actions, String name);
   
 }

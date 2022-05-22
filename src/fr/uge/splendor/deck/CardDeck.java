@@ -3,6 +3,7 @@ package fr.uge.splendor.deck;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
@@ -53,10 +54,15 @@ public class CardDeck {
   }
   
   
-  public HashMap<Color, Integer> getDeckSummary() {
+  public HashMap<Color, Integer> getDeckSummary(List<Color> colors) {
+    Objects.requireNonNull(colors);
     var res = new HashMap<Color, Integer>();
     
-    deck.forEach(card -> res.merge(card.color(), 1, Integer::sum));
+    deck.forEach(card -> {
+      if (colors.contains(card.color())) {
+        res.merge(card.color(), 1, Integer::sum);
+      } 
+    });
     
     return res;    
   }
@@ -111,10 +117,10 @@ public class CardDeck {
     }
   }
     
-  private String colorsToString() {
+  private String colorsToString(List<Color> colors) {
     var sb = new StringBuilder();
     
-    Color.getCardsColorsList().forEach(color -> {
+    colors.forEach(color -> {
       var colorText = color.toString();
       sb.append("│ ").append(colorText);
       
@@ -127,12 +133,11 @@ public class CardDeck {
     return sb.toString();
   }
 
-  private String valuesToString() {
+  private String valuesToString(List<Color> colors) {
     var sb = new StringBuilder();
-    var deckSummary = this.getDeckSummary();
+    var deckSummary = this.getDeckSummary(colors);
     
-    Color.getCardsColorsList().forEach(color -> {
-      
+    colors.forEach(color -> {
       sb.append("│     ").append(deckSummary.getOrDefault(color, 0)).append("     ");
     });
     
@@ -140,11 +145,9 @@ public class CardDeck {
     return sb.toString();
   }
   
-  private String rowToString(String start, String mid, String end) {
+  private String rowToString(List<Color> colors, String start, String mid, String end) {
     var sb = new StringBuilder(start);
     sb.append("───────────");
-    
-    var colors = Color.getCardsColorsList();
     
     for (var i = colors.size() - 1; i > 0; i--) {
       sb.append(mid).append("───────────");
@@ -154,14 +157,14 @@ public class CardDeck {
     return sb.toString(); 
   }
   
-  public String deckSummaryToString() {
+  public String deckSummaryToString(List<Color> colors) {
     var sb = new StringBuilder(); 
      
-    sb.append(rowToString("┌", "┬", "┐"))
-      .append(colorsToString())
-      .append(rowToString("├", "┼", "┤"))
-      .append(valuesToString())
-      .append(rowToString("└", "┴", "┘"));
+    sb.append(rowToString(colors, "┌", "┬", "┐"))
+      .append(colorsToString(colors))
+      .append(rowToString(colors, "├", "┼", "┤"))
+      .append(valuesToString(colors))
+      .append(rowToString(colors, "└", "┴", "┘"));
 
     return sb.toString();
   }

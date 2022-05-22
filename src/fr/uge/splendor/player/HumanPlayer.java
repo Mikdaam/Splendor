@@ -7,6 +7,7 @@ import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,6 +32,7 @@ public final class HumanPlayer implements Player {
   }
   
   public void removeTokensColor(Color color) {
+    Objects.requireNonNull(color);
     ownedTokens.removeColor(color);
   }
   
@@ -42,23 +44,40 @@ public final class HumanPlayer implements Player {
     return id;
   }
   
-	@Override
-	public String name() {
-		return name;
-	}
+ 	@Override
+ 	public String name() {
+ 	  return name;
+ 	}
   
   public int prestigePoints() {
     return ownedCards.getPrestigePoints();
   }
   
+  @Override
+  public int numberOfDevelopmentCards(List<Color> colors) {
+    var summary = ownedCards.getDeckSummary(colors);
+    var res = 0;
+    
+    for (var color: summary.keySet()) {
+      if (color != Color.NOBLE) {
+        res += summary.getOrDefault(color, 0);
+      }
+    }
+    
+    return res;
+  }
+  
   /*Replace Token with Color?*/
   @Override
   public void takeToken(Token token) {
+    Objects.requireNonNull(token);
     ownedTokens.add(Map.of(token.color(), 1));
   }
   
   @Override
-  public boolean canBuyCard(Card card) {    
+  public boolean canBuyCard(Card card) {
+    Objects.requireNonNull(card);
+    
     for (var color: card.price().keySet()) {
       var price = card.price().get(color);
       if (ownedCards.getColorNumber(color) + ownedTokens.getColorNumber(color) < price) {
@@ -70,9 +89,11 @@ public final class HumanPlayer implements Player {
   }
   
   @Override
-  public HashMap<Color, Integer> buyCard(Card card) {
+  public HashMap<Color, Integer> buyCard(Card card, List<Color> colors) {
+    Objects.requireNonNull(card);
+    
     var tokensToGiveBack = new HashMap<Color, Integer>();
-    var deckSummary = ownedCards.getDeckSummary();
+    var deckSummary = ownedCards.getDeckSummary(colors);
     
     card.price().forEach((color, price) -> {
       tokensToGiveBack.put(color, price - deckSummary.getOrDefault(color, 0));
@@ -103,23 +124,26 @@ public final class HumanPlayer implements Player {
     return sb.toString();
   }
   
-  private String ownedCardToString() {
+  private String ownedCardToString(List<Color> colors) {
     var sb = new StringBuilder();
     
     sb.append(" CARDS:\n")
-      .append(ownedCards.deckSummaryToString())
+      .append(ownedCards.deckSummaryToString(colors))
       .append("\n");
     
     return sb.toString();
   }
-    
+  
+  
   @Override
-  public String toString() {
+  public String toString(List<Color> colors) {
+    Objects.requireNonNull(colors);
+    
     var sb = new StringBuilder();
     
     sb.append(firstRowToString())
       .append(tokensToString())
-      .append(ownedCardToString())
+      .append(ownedCardToString(colors))
       .append("\n");
     
     return sb.toString();

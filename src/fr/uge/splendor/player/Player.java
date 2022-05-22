@@ -1,6 +1,7 @@
 package fr.uge.splendor.player;
 
 import java.util.HashMap;
+import java.util.List;
 
 import fr.uge.splendor.card.Card;
 import fr.uge.splendor.color.Color;
@@ -21,12 +22,13 @@ public sealed interface Player permits HumanPlayer {
   
   int prestigePoints();
   
-  HashMap<Color, Integer> buyCard(Card card);
+  HashMap<Color, Integer> buyCard(Card card, List<Color> colors);
   
-  String toString();
+  String toString(List<Color> colors);
 
   int getNumberOfTokens();
 
   void removeTokensColor(Color gold);
-
+  
+  int numberOfDevelopmentCards(List<Color> colors);
 }

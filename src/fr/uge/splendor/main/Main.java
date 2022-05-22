@@ -1,20 +1,8 @@
 package fr.uge.splendor.main;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Scanner;
 
-import fr.uge.splendor.board.Board;
-import fr.uge.splendor.card.*;
-import fr.uge.splendor.game.Game;
-import fr.uge.splendor.game.NormalGame;
-import fr.uge.splendor.game.SimpleGame;
-import fr.uge.splendor.level.*;
-import fr.uge.splendor.player.HumanPlayer;
-import fr.uge.splendor.token.*;
-import fr.uge.splendor.color.*;
-import fr.uge.splendor.deck.*;
+import fr.uge.splendor.game.*;
 
 public class Main {
   public static void main(String[] args) throws IOException {
@@ -155,5 +143,8 @@ public class Main {
     
     game.initGame();
   	var winners = game.run();
+  	var mainGame = new SimpleGame();
+  	mainGame.initGame();
+  	mainGame.run();
   }
 }

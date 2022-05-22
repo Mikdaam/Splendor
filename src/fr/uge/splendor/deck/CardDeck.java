@@ -8,6 +8,7 @@ import java.util.Objects;
 import fr.uge.splendor.card.Card;
 import fr.uge.splendor.card.DevelopmentCard;
 import fr.uge.splendor.color.Color;
+import fr.uge.splendor.level.Level;
 import fr.uge.splendor.utils.Utils;
 
 public class CardDeck {
@@ -36,6 +37,11 @@ public class CardDeck {
     return deck.size();
   }
   
+  public HashMap<Level, CardDeck> groupByLevel() {
+		var groupBy = new HashMap<Level, CardDeck>();
+		deck.forEach(card -> groupBy.computeIfAbsent(card.level(), level -> new CardDeck()).add(card));
+		return groupBy;
+	}
   
   public Card removeFirstCard() {
     if (deck.size() == 0) {

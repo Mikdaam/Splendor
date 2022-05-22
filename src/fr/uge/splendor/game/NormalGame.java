@@ -1,15 +1,15 @@
+/**
+ * 
+ */
 package fr.uge.splendor.game;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import fr.uge.splendor.board.Board;
-import fr.uge.splendor.card.DevelopmentCard;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
@@ -19,7 +19,6 @@ import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.token.BaseToken;
-import fr.uge.splendor.action.ActionType;
 
 /**
  * 
@@ -27,28 +26,39 @@ import fr.uge.splendor.action.ActionType;
  * @author Mikdaam BADAROU
  * @author Yunen SNACEL
  */
-public class SimpleGame implements Game {
-	/*TODO: Add an HashMap to the player deck*/
-  private final Board board;	 /* Model */
-  private final CardDeck[] decks;
-  private final TokenDeck tokens;
-  private final Player[] players;
-  
-  private final Displayer displayer; /* View */
-  
-  public SimpleGame() {
-	  /*TODO: Clean code for the constructor*/
-    this.board = new Board(1, 4);
-    this.decks = new CardDeck[1];
+public class NormalGame implements Game {
+	private final static int NUMBER_OF_TOKEN_PER_COLOR = 7;
+	private final static int NUMBER_OF_GOLD_TOKEN = 5;
+	private static int NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER;
+	
+	private final Board board;	 /* Model */
+	private final CardDeck[] decks;
+	private final TokenDeck tokens;
+	private final Player[] players;
+	
+	private final Displayer displayer; /* View */
+	
+	public NormalGame(int numberOfPlayer) {
+		if(numberOfPlayer < 2) {
+			throw new IllegalArgumentException("Number of player should be greater than 2.");
+		}
+		
+		this.board = new Board(3, 4);
+    this.decks = new CardDeck[3];
     this.tokens = new TokenDeck();
-    this.players = new Player[2];
+    this.players = new Player[numberOfPlayer];
     this.displayer = new ConsoleDisplayer();
-  }
-  
-  /**
-   * 
-   */
-  private void initBoard() {
+    
+    if (numberOfPlayer == 2) {
+    	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 3;
+    } else if (numberOfPlayer == 3) {
+    	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 2;
+    } else {
+    	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 0;
+    }
+	}
+	
+	private void initBoard() {
     for (int i = 0; i < board.rows(); i++) {
       for (int j = 0; j < board.colums(); j++) {
         decks[0].shuffleCardDeck();
@@ -57,37 +67,33 @@ public class SimpleGame implements Game {
     }
   }
   
-  /**
-   * 
-   */
   private void initPlayers() {
     for (int i = 0; i < players.length; i++) {
       players[i] = new HumanPlayer(i + 1, "Player "+(i+1));
-      players[i].removeTokensColor(Color.GOLD);
     }
   }
   
-  /**
-   * 
-   * @throws IOException
-   */
   private void initCardDecks() throws IOException {
-    Path pathOfFile = Path.of("../").resolve("res").resolve("base_game_cards.csv");
-    decks[0] = Game.setupCards(pathOfFile);
+    Path pathOfFile = Path.of("../").resolve("res").resolve("normal_game_cards.csv");
+    var cardDeckByLevel = Game.setupCards(pathOfFile).groupByLevel();
+    
+    /*TODO: change the array to a map*/
+    decks[0] = cardDeckByLevel.get(Level.LEVEL_1);
+    decks[1] = cardDeckByLevel.get(Level.LEVEL_2);
+    decks[2] = cardDeckByLevel.get(Level.LEVEL_3);
   }
   
-  /**
-   * 
-   */
   private void initTokens() {
-    tokens.add(Map.of(Color.DIAMOND, 4, Color.EMERALD, 4, Color.ONYX, 4, Color.RUBY, 4, Color.SAPPHIRE, 4));
-    tokens.removeColor(Color.GOLD);
+  	var numberOfTokenByColor = NUMBER_OF_TOKEN_PER_COLOR - NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER;
+  	
+    tokens.add(Map.of(Color.DIAMOND, numberOfTokenByColor, 
+    		Color.EMERALD, numberOfTokenByColor, 
+    		Color.ONYX, numberOfTokenByColor, 
+    		Color.RUBY, numberOfTokenByColor, 
+    		Color.SAPPHIRE, numberOfTokenByColor,
+    		Color.GOLD, NUMBER_OF_GOLD_TOKEN));
   }
   
-  /**
-   * 
-   * @throws IOException
-   */
   public void initGame() throws IOException {
   	initCardDecks();
 	  initBoard();
@@ -95,25 +101,14 @@ public class SimpleGame implements Game {
 	  initTokens();
   }
   
-  /**
-   * 
-   */
   public void displayGame() {
 		displayer.display(players, decks, tokens, board);
 	}
   
-  /**
-   * 
-   * @return
-   */
   public Displayer getDisplayer() {
 		return displayer;
 	}
   
-  /**
-   * 
-   * @param playerID
-   */
   public void buyCard(int playerID) {
     var coordinates = displayer.getCoordinates();
     
@@ -135,14 +130,6 @@ public class SimpleGame implements Game {
     }
   }
   
-  /*public void doActionA() {
-		
-	}*/
-  
-  /**
-   * 
-   * @param playerID
-   */
   public void takeThreeTokens(int playerID) {
     var colors = displayer.getThreeColor();
     
@@ -166,10 +153,7 @@ public class SimpleGame implements Game {
 		}
   }
   
-  /**
-   * 
-   * @param playerID
-   */
+
   public void takeTwoTokens(int playerID) {
     var color = displayer.getUniqueColor();
     
@@ -196,10 +180,7 @@ public class SimpleGame implements Game {
     }
   }
   
-  /**
-   * 
-   * @param playerID
-   */
+
   private void doTour(int playerID) {
     //displayer.display(players, decks, tokens, board);
     /*Display which player's turn it is*/
@@ -213,10 +194,6 @@ public class SimpleGame implements Game {
   }
   
   
-  /**
-   * 
-   * @return
-   */
   private int getMaxPrestige() {
     return Arrays.stream(players)
                  .map(player -> player.prestigePoints())
@@ -224,10 +201,6 @@ public class SimpleGame implements Game {
                  .orElse(0);
   }
   
-  /**
-   * 
-   * @return
-   */
   private List<Integer> getWinner() {
     var maxPrestige = this.getMaxPrestige();
     
@@ -237,10 +210,6 @@ public class SimpleGame implements Game {
                  .toList();
   }
   
-  /**
-   * 
-   * @return
-   */
   public List<Integer> run() {
     var playerID = 0;    
     
@@ -259,5 +228,5 @@ public class SimpleGame implements Game {
     
     return getWinner();
   }
- 
+  
 }

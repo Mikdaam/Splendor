@@ -3,10 +3,12 @@ package fr.uge.splendor.main;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.card.*;
 import fr.uge.splendor.game.Game;
+import fr.uge.splendor.game.NormalGame;
 import fr.uge.splendor.game.SimpleGame;
 import fr.uge.splendor.level.*;
 import fr.uge.splendor.player.HumanPlayer;
@@ -137,9 +139,21 @@ public class Main {
      
      System.out.println(board.toString());*/
   	
-  	var mainGame = new SimpleGame();
-  	mainGame.initGame();
-  	var winners = mainGame.run();
-  	winners.forEach(winner -> System.out.println("Player " + (winner + 1) + " wins!"));
+  	Game game;
+  	Scanner mainInput = new Scanner(System.in);
+  	
+  	System.out.println("1. SimpleGame");
+  	System.out.println("2. NormalGame");
+  	System.out.println("Choose the version of the game: ");
+    var gameChoice = mainInput.nextInt();
+  	
+    if(gameChoice == 1) {
+    	game = new SimpleGame();
+    } else {
+    	game = new NormalGame(2);
+    }
+    
+    game.initGame();
+  	var winners = game.run();
   }
 }

@@ -6,6 +6,12 @@ import java.util.HashMap;
 import fr.uge.splendor.color.*;
 import fr.uge.splendor.level.*;
 
+/**
+ * This record represent a development card of the game
+ * 
+ * @author Mikdaam BADAROU
+ * @author Yunen SNACEL
+ */
 public record DevelopmentCard(Level level, 
                               Color color,
                               int prestigePoint, 
@@ -19,6 +25,10 @@ public record DevelopmentCard(Level level,
 	}
 	
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String priceToCardString() {
 	  var sb = new StringBuilder();
 	  
@@ -44,6 +54,10 @@ public record DevelopmentCard(Level level,
 	  return sb.toString();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String colorToCardString() {
 	  var sb = new StringBuilder("│ ");
 	  var colorText = color.toString();
@@ -58,21 +72,29 @@ public record DevelopmentCard(Level level,
 	  return sb.toString();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String prestigeToCardString() {
-   var sb = new StringBuilder("│         ");
-   
-   if (prestigePoint != 0) {
-     sb.append(prestigePoint);
-   } else {
-     sb.append(" ");
-   }
-   
-   sb.append(" ░│\n");
-   
-   
-   return sb.toString();
- }
+	 var sb = new StringBuilder("│         ");
+	 
+	 if (prestigePoint != 0) {
+	   sb.append(prestigePoint);
+	 } else {
+	   sb.append(" ");
+	 }
+	 
+	 sb.append(" ░│\n");
+	 
+	 
+	 	return sb.toString();
+	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static String emptyCardToString() {
 	  var sb = new StringBuilder();
 	  
@@ -83,6 +105,9 @@ public record DevelopmentCard(Level level,
 	  return sb.append("              ").toString();
 	}
 	
+	/*
+	 * 
+	 */
 	@Override
 	public String toString() {
 	  var sb = new StringBuilder("╭────────────╮\n");

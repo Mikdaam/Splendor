@@ -13,4 +13,7 @@ public interface Game {
 	  return FileLoader.createCards(pathOfFile);
 	}
 	
+	void initGame() throws IOException;
+	
+	
 }

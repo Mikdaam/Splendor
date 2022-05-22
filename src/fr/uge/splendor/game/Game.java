@@ -15,5 +15,5 @@ public interface Game {
 	
 	void initGame() throws IOException;
 	
-	
+	void run();
 }

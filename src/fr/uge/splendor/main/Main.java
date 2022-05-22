@@ -1,6 +1,7 @@
 package fr.uge.splendor.main;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import fr.uge.splendor.game.*;
 
@@ -142,9 +143,6 @@ public class Main {
     }
     
     game.initGame();
-  	var winners = game.run();
-  	var mainGame = new SimpleGame();
-  	mainGame.initGame();
-  	mainGame.run();
+    game.run();
   }
 }

@@ -6,6 +6,7 @@ package fr.uge.splendor.game;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,10 @@ import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.token.BaseToken;
+import fr.uge.splendor.action.Action;
+import fr.uge.splendor.action.BuyCardBoardAction;
+import fr.uge.splendor.action.ThreeTokensAction;
+import fr.uge.splendor.action.TwoTokensAction;
 
 /**
  * 
@@ -35,6 +40,7 @@ public class NormalGame implements Game {
 	private final CardDeck[] decks;
 	private final TokenDeck tokens;
 	private final Player[] players;
+	private final Action[] actions;
 	
 	private final Displayer displayer; /* View */
 	
@@ -48,6 +54,7 @@ public class NormalGame implements Game {
     this.tokens = new TokenDeck();
     this.players = new Player[numberOfPlayer];
     this.displayer = new ConsoleDisplayer();
+    actions = new Action[3];
     
     if (numberOfPlayer == 2) {
     	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 3;
@@ -61,8 +68,8 @@ public class NormalGame implements Game {
 	private void initBoard() {
     for (int i = 0; i < board.rows(); i++) {
       for (int j = 0; j < board.colums(); j++) {
-        decks[0].shuffleCardDeck();
-        board.add(decks[0].removeFirstCard(), i, j);
+        decks[i].shuffleCardDeck();
+        board.add(decks[i].removeFirstCard(), i, j);
       }
     }
   }
@@ -74,13 +81,13 @@ public class NormalGame implements Game {
   }
   
   private void initCardDecks() throws IOException {
-    Path pathOfFile = Path.of("../").resolve("res").resolve("normal_game_cards.csv");
+    Path pathOfFile = Path.of("res").resolve("normal_game_cards.csv");
     var cardDeckByLevel = Game.setupCards(pathOfFile).groupByLevel();
     
     /*TODO: change the array to a map*/
-    decks[0] = cardDeckByLevel.get(Level.LEVEL_1);
+    decks[0] = cardDeckByLevel.get(Level.LEVEL_3);
     decks[1] = cardDeckByLevel.get(Level.LEVEL_2);
-    decks[2] = cardDeckByLevel.get(Level.LEVEL_3);
+    decks[2] = cardDeckByLevel.get(Level.LEVEL_1);
   }
   
   private void initTokens() {
@@ -94,80 +101,194 @@ public class NormalGame implements Game {
     		Color.GOLD, NUMBER_OF_GOLD_TOKEN));
   }
   
+  /**
+   * This method initializes the three Actions possible for a SimpleGame.
+   */
+  private void initActions() {
+    actions[0] = new ThreeTokensAction();
+    actions[1] = new TwoTokensAction();
+    actions[2] = new BuyCardBoardAction();
+  }
+  
   public void initGame() throws IOException {
   	initCardDecks();
 	  initBoard();
 	  initPlayers();
 	  initTokens();
+	  initActions();
   }
   
-  public void displayGame() {
-		displayer.display(players, decks, tokens, board);
-	}
+ /* -- MECHANISMS -- */
   
-  public Displayer getDisplayer() {
-		return displayer;
-	}
+  /**
+   * This method calls the SimpleGame's Displayer to display it.
+   */
+  private void displayGame() {
+		  displayer.display(players, decks, tokens, board, cardsColorsList());
+	 }
   
-  public void buyCard(int playerID) {
+  /**
+   * This method returns the list of the cards colors authorized in the SimpleGame.
+   * 
+   * @return the list of the cards colors authorized in the SimpleGame.
+   */
+  private static List<Color> cardsColorsList() {
+    return Color.getCardsColorsList();
+  }
+  
+  
+  
+  
+  /* -- ACTIONS -- */
+  
+  /**
+   * This method executes the action of buying a Card for a player, described by its ID.
+   * 
+   * @param playerID - The player's ID.
+   * @return true if the action has been performed correctly, false otherwise.
+   */
+  private boolean buyCard(int playerID) {
     var coordinates = displayer.getCoordinates();
     
     if (coordinates[0] != 0) {
-      throw new IllegalArgumentException("You've entered a wrong row number");
-    }
-    if (coordinates[1] < 0 || coordinates[1] >= 4) {
-      throw new IllegalArgumentException("You've entered a wrong column number");
+      displayer.displayActionError("You've entered a wrong row number");
+      return false;
+    } else if (coordinates[1] < 0 || coordinates[1] >= 4) {
+      displayer.displayActionError("You've entered a wrong column number");
+      return false;
     }
     
     var card = board.remove(coordinates[0], coordinates[1]);
     if (players[playerID].canBuyCard(card)) {
-      tokens.add(players[playerID].buyCard(card));
+      tokens.add(players[playerID].buyCard(card, cardsColorsList()));
       board.add(decks[0].removeFirstCard(), coordinates[0], coordinates[1]);
-    }
-    else {
+    } else {
       board.add(card, coordinates[0], coordinates[1]);
-      doTour(playerID);
+      displayer.displayActionError("You are not able to buy the Card.");
+      return false;
     }
+    
+    return true;
   }
   
-  public void takeThreeTokens(int playerID) {
+  /**
+   * This method checks if a player has 10 tokens or less.
+   * 
+   * @param playerID - the player's ID
+   * @return true if the player has less than 10 tokens, false otherwise.
+   */
+  private boolean checkPlayersTokensNumber(int playerID) {
+    if (players[playerID].getNumberOfTokens() == 10) {
+      /*Exchange the tokens maybe?*/
+      displayer.displayActionError("You already have 10 tokens. You cannot get more than that.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * This method checks if there is at least 1 token of the given Color in the TokenDeck.
+   * 
+   * @param color - the color of the token we want to check on.
+   * @return true if the color has at least 1 token, false otherwise.
+   */
+  private boolean checkTokensNumber(Color color) {
+    if (tokens.getColorNumber(color) <= 0) {
+      displayer.displayActionError("Not enough tokens to perform the action.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * This method checks if the color isn't an UNKNOWN Color.
+   * 
+   * @param color - the Color to check.
+   * @return true if the color is not UNKNOWN, false otherwise.
+   */
+  private boolean checkTokenColor(Color color) {
+    if (color == Color.UNKNOWN || color == Color.GOLD) {
+      displayer.displayActionError("Unknown Color.");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * This method checks, for a list of tokens' colors, if the color is well defined
+   * and if there is at least 1 token of this color in the TokenDeck.
+   * 
+   * @param colors - the list of colors to check
+   * @return true if the list is correct, false otherwise.
+   */
+  private boolean checkTokensColorsList(List<Color> colors) {
+    for (var color : colors) {
+      if (!checkTokenColor(color) || !checkTokensNumber(color)) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
+  /**
+   * This method checks if a list of colors effectively contains 3 distinct colors.
+   * 
+   * @param colors - the list of colors to check.
+   * @return true if there is three distinct colors in the list, false otherwise.
+   */
+  private boolean checkThreeDistinctColors(List<Color> colors) {
+    if(colors.stream().distinct().count() != 3) {
+      displayer.displayActionError("You have not entered three distinct colors");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * This method executes the action of taking two tokens of the same color for a player, described by its ID.
+   * 
+   * @param playerID - The player's ID.
+   * @return true if the action has been performed correctly, false otherwise.
+   */
+  private boolean takeThreeTokens(int playerID) {
     var colors = displayer.getThreeColor();
-    
-    if(colors.stream().distinct().count() != 3 || players[playerID].getNumberOfTokens() >= 10) {
-    	doTour(playerID);
-  		return;
+    if (!checkPlayersTokensNumber(playerID) || !checkThreeDistinctColors(colors) || !checkTokensColorsList(colors)) {
+      return false;
     }
     
     for (var color : colors) {
-    	if (color == Color.UNKNOWN || tokens.getColorNumber(color) <= 0) {
-    		doTour(playerID);
-    		return;
-    	}
-    }
+     	if(players[playerID].getNumberOfTokens() < 10) {
+      		players[playerID].takeToken(new BaseToken(color));
+      		tokens.remove(Map.of(color, 1));
+     	}			
+		  }
     
-    for (var color : colors) {
-    	if(players[playerID].getNumberOfTokens() < 10) {
-    		players[playerID].takeToken(new BaseToken(color));
-    		tokens.remove(Map.of(color, 1));
-    	}			
-		}
+    return true;
   }
   
-
-  public void takeTwoTokens(int playerID) {
+  /**
+   * This method executes the action of taking three tokens fo different colors each for a player, described by its ID.
+   * 
+   * @param playerID - The player's ID.
+   * @return true if the action has been performed correctly, false otherwise.
+   */
+  private boolean takeTwoTokens(int playerID) {
     var color = displayer.getUniqueColor();
-    
-    if (color == Color.UNKNOWN || players[playerID].getNumberOfTokens() == 10) {
-      doTour(playerID);
-      return;
+    if (!checkPlayersTokensNumber(playerID) || !checkTokenColor(color) || !checkTokensNumber(color)) {
+      return false;
     }
     
     var toTake = 2;
-    if (tokens.getColorNumber(color) < 4) {
+    if (tokens.getColorNumber(color) < 4) { /*Not enough tokens to take two of them*/
       toTake = 1;
     }
     
-    var given = 0;
+    var given = 0; /*To check how much we gave*/
     while(given < toTake && players[playerID].getNumberOfTokens() < 10) {
       players[playerID].takeToken(new BaseToken(color));
       given++;
@@ -176,57 +297,80 @@ public class NormalGame implements Game {
     tokens.remove(Map.of(color, given));
     
     if (given == 0) {
-      doTour(playerID);
+      return false;
     }
-  }
-  
-
-  private void doTour(int playerID) {
-    //displayer.display(players, decks, tokens, board);
-    /*Display which player's turn it is*/
     
-    switch(displayer.getPlayerAction(players[playerID].name())) {
-      case THREE_TOKENS -> takeThreeTokens(playerID);
-      case TWO_TOKENS -> takeTwoTokens(playerID);
-      case BUY_CARD -> buyCard(playerID);
-      default -> this.doTour(playerID);
+    return true;
+  }
+  
+  /**
+   * This method allows the player, described by its ID, to choose an Action.
+   * 
+   * @param playerID - The player's ID.
+   */
+  private void chooseAction(int playerID) {
+    var actionSucceed = false;
+    
+    while(!actionSucceed) {
+      actionSucceed = switch(displayer.getPlayerAction(actions, players[playerID].name())) {
+        case THREE_TOKENS -> takeThreeTokens(playerID);
+        case TWO_TOKENS -> takeTwoTokens(playerID);
+        case BUY_CARD_BOARD -> buyCard(playerID);
+        default -> {displayer.displayActionError("Unkown Action."); yield false;}
+      };
     }
   }
   
   
+  
+  
+  /* -- RUNNING THE GAME -- */
+  
+  /**
+   * This method calculates and returns the maximum of the players' prestige points.
+   * 
+   * @return The maximum of the players' prestige points.
+   */
   private int getMaxPrestige() {
     return Arrays.stream(players)
-                 .map(player -> player.prestigePoints())
+                 .map(Player::prestigePoints)
                  .max(Integer::compare)
                  .orElse(0);
   }
   
-  private List<Integer> getWinner() {
-    var maxPrestige = this.getMaxPrestige();
-    
+  /**
+   * This method returns the ID of the player who has won the game.
+   * 
+   * @return the winner's ID.
+   */
+  private int getWinner() {    
     return Arrays.stream(players)
-                 .filter(player -> player.prestigePoints() == maxPrestige)
-                 .map(player -> player.id())
-                 .toList();
+                 .filter(player -> player.id() == getMaxPrestige())
+                 .sorted(Comparator.comparingInt(player -> player.numberOfDevelopmentCards(cardsColorsList()))).limit(1)
+                 .map(Player::id)
+                 .reduce(0, Integer::sum);
   }
   
-  public List<Integer> run() {
+  /**
+   * This method runs the SimpleGame until one player reaches 15 prestige points.
+   */
+  public void run() {
     var playerID = 0;    
     
     while (getMaxPrestige() < 1) {
-    	displayer.display(players, decks, tokens, board);
-      doTour(playerID);
+    	displayGame();
+      chooseAction(playerID);
       playerID = (playerID + 1) % players.length;
     }
     
     /*LAST RUN*/
     for(var i = 0; i < players.length; i++) {
-    	displayer.display(players, decks, tokens, board);
-      doTour(playerID);
+      displayGame();
+      chooseAction(playerID);
       playerID = (playerID + 1) % players.length;
     }
     
-    return getWinner();
+    System.out.println(getWinner());
+    displayer.displayWinner(players, getWinner());
   }
-  
 }

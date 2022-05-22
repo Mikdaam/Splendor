@@ -51,6 +51,19 @@ public final class HumanPlayer implements Player {
     return ownedCards.getPrestigePoints();
   }
   
+  public int numberOfDevelopmentCards() {
+    var summary = ownedCards.getDeckSummary();
+    var res = 0;
+    
+    for (var color: summary.keySet()) {
+      if (color != Color.NOBLE) {
+        res += summary.getOrDefault(color, 0);
+      }
+    }
+    
+    return res;
+  }
+  
   /*Replace Token with Color?*/
   @Override
   public void takeToken(Token token) {

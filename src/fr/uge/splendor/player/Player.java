@@ -28,5 +28,6 @@ public sealed interface Player permits HumanPlayer {
   int getNumberOfTokens();
 
   void removeTokensColor(Color gold);
-
+  
+  int numberOfDevelopmentCards();
 }

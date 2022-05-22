@@ -139,7 +139,6 @@ public class Main {
   	
   	var mainGame = new SimpleGame();
   	mainGame.initGame();
-  	var winners = mainGame.run();
-  	winners.forEach(winner -> System.out.println("Player " + (winner + 1) + " wins!"));
+  	mainGame.run();
   }
 }

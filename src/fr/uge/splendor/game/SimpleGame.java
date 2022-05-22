@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.card.DevelopmentCard;
@@ -55,7 +57,7 @@ public class SimpleGame implements Game {
   }
    
   private void initCardDecks() throws IOException {
-    Path pathOfFile = Path.of("res").resolve("base_game_cards.csv");
+    Path pathOfFile = Path.of("../").resolve("res").resolve("base_game_cards.csv");
     decks[0] = Game.setupCards(pathOfFile);
   }
    
@@ -107,6 +109,11 @@ public class SimpleGame implements Game {
   public void takeThreeTokens(int playerID) {
     var colors = displayer.getThreeColor();
     
+    if(colors.stream().distinct().count() != 3 || players[playerID].getNumberOfTokens() >= 10) {
+    	doTour(playerID);
+  		return;
+    }
+    
     for (var color : colors) {
     	if (color == Color.UNKNOWN || tokens.getColorNumber(color) <= 0) {
     		doTour(playerID);
@@ -125,7 +132,7 @@ public class SimpleGame implements Game {
   public void takeTwoTokens(int playerID) {
     var color = displayer.getUniqueColor();
     
-    if (color == Color.UNKNOWN) {
+    if (color == Color.UNKNOWN || players[playerID].getNumberOfTokens() == 10) {
       doTour(playerID);
       return;
     }
@@ -167,19 +174,19 @@ public class SimpleGame implements Game {
                  .orElse(0);
   }
   
-  private int getWinner() {
+  private List<Integer> getWinner() {
     var maxPrestige = this.getMaxPrestige();
     
     return Arrays.stream(players)
                  .filter(player -> player.prestigePoints() == maxPrestige)
                  .map(player -> player.id())
-                 .reduce(0, Integer::sum);
+                 .toList();
   }
   
-  public int run() {
+  public List<Integer> run() {
     var playerID = 0;    
     
-    while (getMaxPrestige() < 15) {
+    while (getMaxPrestige() < 1) {
     	displayer.display(players, decks, tokens, board);
       doTour(playerID);
       playerID = (playerID + 1) % players.length;

@@ -1,5 +1,7 @@
 package fr.uge.splendor.displayer;
 
+import java.util.List;
+
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
@@ -12,10 +14,12 @@ public sealed interface Displayer permits ConsoleDisplayer {
   
   void clear();
   
-  public ActionType getUserAction();
+  public ActionType getPlayerAction(String name);
   
   public int[] getCoordinates();
 
+  public List<Color> getThreeColor();
+  
   public Color getUniqueColor();
   
 }

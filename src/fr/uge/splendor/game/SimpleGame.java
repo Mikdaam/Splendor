@@ -91,17 +91,35 @@ public class SimpleGame implements Game {
     
     var card = board.remove(coordinates[0], coordinates[1]);
     if (players[playerID].canBuyCard(card)) {
-      players[playerID].buyCard(card);
+      tokens.add(players[playerID].buyCard(card));
       board.add(decks[0].removeFirstCard(), coordinates[0], coordinates[1]);
     }
     else {
       board.add(card, coordinates[0], coordinates[1]);
-      this.doTour(playerID);
+      doTour(playerID);
     }
   }
   
+  /*public void doActionA() {
+		
+	}*/
+  
   public void takeThreeTokens(int playerID) {
+    var colors = displayer.getThreeColor();
     
+    for (var color : colors) {
+    	if (color == Color.UNKNOWN || tokens.getColorNumber(color) <= 0) {
+    		doTour(playerID);
+    		return;
+    	}
+    }
+    
+    for (var color : colors) {
+    	if(players[playerID].getNumberOfTokens() < 10) {
+    		players[playerID].takeToken(new BaseToken(color));
+    		tokens.remove(Map.of(color, 1));
+    	}			
+		}
   }
   
   public void takeTwoTokens(int playerID) {
@@ -109,6 +127,7 @@ public class SimpleGame implements Game {
     
     if (color == Color.UNKNOWN) {
       doTour(playerID);
+      return;
     }
     
     var toTake = 2;
@@ -124,16 +143,16 @@ public class SimpleGame implements Game {
     
     tokens.remove(Map.of(color, given));
     
-    if (toTake == 2) {
+    if (given == 0) {
       doTour(playerID);
     }
   }
   
   private void doTour(int playerID) {
-    displayer.display(players, decks, tokens, board);
+    //displayer.display(players, decks, tokens, board);
     /*Display which player's turn it is*/
     
-    switch(displayer.getUserAction()) {
+    switch(displayer.getPlayerAction(players[playerID].name())) {
       case THREE_TOKENS -> takeThreeTokens(playerID);
       case TWO_TOKENS -> takeTwoTokens(playerID);
       case BUY_CARD -> buyCard(playerID);
@@ -160,18 +179,20 @@ public class SimpleGame implements Game {
   public int run() {
     var playerID = 0;    
     
-    while (this.getMaxPrestige() < 15) {
-      this.doTour(playerID);
+    while (getMaxPrestige() < 15) {
+    	displayer.display(players, decks, tokens, board);
+      doTour(playerID);
       playerID = (playerID + 1) % players.length;
     }
     
     /*LAST RUN*/
     for(var i = 0; i < players.length; i++) {
-      this.doTour(playerID);
+    	displayer.display(players, decks, tokens, board);
+      doTour(playerID);
       playerID = (playerID + 1) % players.length;
     }
     
-    return this.getWinner();
+    return getWinner();
   }
  
 }

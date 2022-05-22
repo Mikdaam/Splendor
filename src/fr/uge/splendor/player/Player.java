@@ -17,6 +17,8 @@ public sealed interface Player permits HumanPlayer {
   
   int id();
   
+  String name();
+  
   int prestigePoints();
   
   HashMap<Color, Integer> buyCard(Card card);

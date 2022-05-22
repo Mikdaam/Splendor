@@ -1,6 +1,8 @@
 package fr.uge.splendor.displayer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import fr.uge.splendor.action.ActionType;
@@ -110,10 +112,32 @@ public final class ConsoleDisplayer implements Displayer {
     
   }
   
-  public ActionType getUserAction() {
+  public List<Color> getThreeColor() {
+  	var colorList = new ArrayList<Color>();
+  	var scan = new Scanner(System.in);
+    var i = 0;
+    
+    while (i < 3) {
+    	System.out.println("Enter the color N°" + (i + 1) + ": ");
+      var colorText = scan.nextLine();
+      switch (colorText.toUpperCase()) {
+			      case "DIAMOND" -> colorList.add(Color.DIAMOND);
+			      case "EMERALD" -> colorList.add(Color.EMERALD);
+			      case "ONYX" -> colorList.add(Color.ONYX); 
+			      case "RUBY" -> colorList.add(Color.RUBY);
+			      case "SAPPHIRE" -> colorList.add(Color.SAPPHIRE);
+			      default -> colorList.add(Color.UNKNOWN); /*We could raise an exception here ?*/
+			};
+			i++;
+		}
+    
+    return colorList;
+	}
+  
+  public ActionType getPlayerAction(String name) {
     
     this.displayActions();
-    System.out.print("Enter your action: ");
+    System.out.print(name + ", enter your action: ");
     
     var scanner = new Scanner(System.in);
     var opt = scanner.next();

@@ -42,6 +42,11 @@ public final class HumanPlayer implements Player {
     return id;
   }
   
+	@Override
+	public String name() {
+		return name;
+	}
+  
   public int prestigePoints() {
     return ownedCards.getPrestigePoints();
   }

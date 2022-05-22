@@ -1,5 +1,12 @@
 package fr.uge.splendor.action;
 
+/**
+ * This enum represents the different types of action possible in all the games.
+ * 
+ * @author Mikdaam Badarou
+ * @author Yunen Snacel
+ *
+ */
 public enum ActionType {
 	 UNKNOWN,
   THREE_TOKENS,

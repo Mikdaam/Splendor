@@ -26,9 +26,10 @@ public final class ConsoleDisplayer implements Displayer {
    * This method displays an array of Players on the console.
    * 
    * @param players
+   * @param colors - the list of cards colors allowed in the game.
    */
-  private void displayPlayers(Player[] players) {
-    Arrays.stream(players).forEach(player -> System.out.println(player));
+  private void displayPlayers(Player[] players, List<Color> colors) {
+    Arrays.stream(players).forEach(player -> System.out.println(player.toString(colors)));
   }
   
   /**
@@ -77,10 +78,11 @@ public final class ConsoleDisplayer implements Displayer {
    * @param cardDecks - the array of CardDecks to display.
    * @param tokenDecks - the TokenDeck to display.
    * @param gameBoard - the Board to display.
+   * @param colors - the list of cards colors allowed in the game.
    */
   @Override
-  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard) {
-    displayPlayers(players);
+  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard, List<Color> colors) {
+    displayPlayers(players, colors);
     displayCardDecks(cardDecks);
     displayTokenDecks(tokenDecks);
     displayBoard(gameBoard);

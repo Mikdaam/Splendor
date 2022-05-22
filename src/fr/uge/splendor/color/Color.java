@@ -45,6 +45,4 @@ public enum Color {
                  .filter(color -> color != GOLD && color != UNKNOWN)
                  .collect(Collectors.toList());
   }
-  
-  /*TODO: add a getGameVersionToken*/
 }

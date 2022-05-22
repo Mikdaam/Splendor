@@ -22,7 +22,13 @@ import fr.uge.splendor.action.ThreeTokensAction;
 import fr.uge.splendor.action.TwoTokensAction;
 
 
-
+/**
+ * This class represents a simple game mode. It implements the mechanisms required to run a simplified version of the 'Splendor' game.
+ * 
+ * @author Mikdaam Badarou
+ * @author Yunen Snacel
+ *
+ */
 public class SimpleGame implements Game {
 	/*TODO: Add an HashMap to the player deck*/
   private final Board board;	 /* Model */
@@ -44,6 +50,8 @@ public class SimpleGame implements Game {
     displayer = new ConsoleDisplayer();
     actions = new Action[3];
   }
+  
+  
   
   
   /* -- INITIALIZATIONS -- */
@@ -111,14 +119,32 @@ public class SimpleGame implements Game {
   }
   
   
+  
+  
   /* -- MECHANISMS -- */
   
   /**
    * This method calls the SimpleGame's Displayer to display it.
    */
   private void displayGame() {
-		  displayer.display(players, decks, tokens, board);
+		  displayer.display(players, decks, tokens, board, cardsColorsList());
 	 }
+  
+  /**
+   * This method returns the list of the cards colors authorized in the SimpleGame.
+   * 
+   * @return the list of the cards colors authorized in the SimpleGame.
+   */
+  private static List<Color> cardsColorsList() {
+    return Color.getCardsColorsList().stream() 
+                                     .filter(color -> color != Color.NOBLE)
+                                     .toList();
+  }
+  
+  
+  
+  
+  /* -- ACTIONS -- */
   
   /**
    * This method executes the action of buying a Card for a player, described by its ID.
@@ -139,7 +165,7 @@ public class SimpleGame implements Game {
     
     var card = board.remove(coordinates[0], coordinates[1]);
     if (players[playerID].canBuyCard(card)) {
-      tokens.add(players[playerID].buyCard(card));
+      tokens.add(players[playerID].buyCard(card, cardsColorsList()));
       board.add(decks[0].removeFirstCard(), coordinates[0], coordinates[1]);
     } else {
       board.add(card, coordinates[0], coordinates[1]);
@@ -196,8 +222,14 @@ public class SimpleGame implements Game {
     return true;
   }
   
-  
-  private boolean checkColorsList(List<Color> colors) {
+  /**
+   * This method checks, for a list of tokens' colors, if the color is well defined
+   * and if there is at least 1 token of this color in the TokenDeck.
+   * 
+   * @param colors - the list of colors to check
+   * @return true if the list is correct, false otherwise.
+   */
+  private boolean checkTokensColorsList(List<Color> colors) {
     for (var color : colors) {
       if (!checkTokenColor(color) || !checkTokensNumber(color)) {
         return false;
@@ -207,8 +239,13 @@ public class SimpleGame implements Game {
     return true;
   }
   
-  
-  private boolean checkDistinctColors(List<Color> colors) {
+  /**
+   * This method checks if a list of colors effectively contains 3 distinct colors.
+   * 
+   * @param colors - the list of colors to check.
+   * @return true if there is three distinct colors in the list, false otherwise.
+   */
+  private boolean checkThreeDistinctColors(List<Color> colors) {
     if(colors.stream().distinct().count() != 3) {
       displayer.displayActionError("You have not entered three distinct colors");
       return false;
@@ -225,7 +262,7 @@ public class SimpleGame implements Game {
    */
   private boolean takeThreeTokens(int playerID) {
     var colors = displayer.getThreeColor();
-    if (!checkPlayersTokensNumber(playerID) || !checkDistinctColors(colors) || !checkColorsList(colors)) {
+    if (!checkPlayersTokensNumber(playerID) || !checkThreeDistinctColors(colors) || !checkTokensColorsList(colors)) {
       return false;
     }
     
@@ -290,6 +327,10 @@ public class SimpleGame implements Game {
   }
   
   
+  
+  
+  /* -- RUNNING THE GAME -- */
+  
   /**
    * This method calculates and returns the maximum of the players' prestige points.
    * 
@@ -302,15 +343,22 @@ public class SimpleGame implements Game {
                  .orElse(0);
   }
   
-  
+  /**
+   * This method returns the ID of the player who has won the game.
+   * 
+   * @return the winner's ID.
+   */
   private int getWinner() {    
     return Arrays.stream(players)
                  .filter(player -> player.id() == getMaxPrestige())
-                 .sorted(Comparator.comparingInt(Player::numberOfDevelopmentCards)).limit(1)
+                 .sorted(Comparator.comparingInt(player -> player.numberOfDevelopmentCards(cardsColorsList()))).limit(1)
                  .map(Player::id)
                  .reduce(0, Integer::sum);
   }
   
+  /**
+   * This method runs the SimpleGame until one player reaches 15 prestige points.
+   */
   public void run() {
     var playerID = 0;    
     

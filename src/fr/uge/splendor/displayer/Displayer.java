@@ -26,8 +26,9 @@ public sealed interface Displayer permits ConsoleDisplayer {
    * @param cardDecks - the array of CardDecks to display.
    * @param tokenDecks - the TokenDeck to display.
    * @param gameBoard - the Board to display.
+   * @param colors - the list of cards colors allowed in the game.
    */
-  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard);
+  public void display(Player[] players, CardDeck[] cardDecks, TokenDeck tokenDecks, Board gameBoard, List<Color> colors);
   
   /**
    * This method displays the error for an action, mostly caused by a player's mistake.

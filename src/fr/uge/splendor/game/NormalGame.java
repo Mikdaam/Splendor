@@ -197,7 +197,7 @@ public class NormalGame implements Game {
     
     if (players[playerID].canBuyCard(card)) {
       tokens.add(players[playerID].buyCard(card, cardsColorsList()));
-      board.add(decks[0].removeFirstCard(), coordinates[0], coordinates[1]);
+      board.add(decks[coordinates[0]].removeFirstCard(), coordinates[0], coordinates[1]);
     } else {
       board.add(card, coordinates[0], coordinates[1]);
       displayer.displayActionError("You are not able to buy the Card.");
@@ -504,7 +504,7 @@ public class NormalGame implements Game {
   public void run() {
     var playerID = 0;    
     
-    while (getMaxPrestige() < 1) {
+    while (getMaxPrestige() < 15) {
     	displayGame();
       chooseAction(playerID);
       visitOfNobles(playerID);

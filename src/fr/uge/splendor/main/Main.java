@@ -139,10 +139,12 @@ public class Main {
     if(gameChoice == 1) {
     	game = new SimpleGame();
     } else {
-    	game = new NormalGame(2);
+    	game = new NormalGame(3);
     }
     
     game.initGame();
     game.run();
+    
+    mainInput.close();
   }
 }

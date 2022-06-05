@@ -26,6 +26,7 @@ public class Board {
   
   private void initBoard() {
     for (var i = 0; i < rows; i++) {
+      
       for (var j = 0; j < columns; j++) {
         board[i][j] = new EmptyCard();
       }

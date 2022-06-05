@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.StringJoiner;
 
 import fr.uge.splendor.action.Action;
 import fr.uge.splendor.action.ActionType;
@@ -13,6 +14,7 @@ import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenDeck;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
+import fr.uge.splendor.utils.Utils;
 
 /**
  * This class represents a Displayer meant to display a Game on the console.
@@ -44,6 +46,20 @@ public final class ConsoleDisplayer implements Displayer {
   }
   
   /**
+   * This method displays an array of CardDecks on the console.
+   * 
+   * @implNote: we will add a better version for this method using a map...
+   * @param decks - the CardDecks to display.
+   */
+  private String cardDecksToString(CardDeck[] decks) {
+    var sb = new StringBuilder();
+    
+    Arrays.stream(decks).forEach(deck -> sb.append(deck));
+    
+    return sb.toString();
+  }
+  
+  /**
    * This method displays a TokenDeck on the console.
    * 
    * @param tokens - the TokenDeck to display.
@@ -58,7 +74,17 @@ public final class ConsoleDisplayer implements Displayer {
    * @param board - the Board to display
    */
   private void displayBoard(Board board) {
+    if(board.numberOfCards() == 0) {
+      return;
+    }
     System.out.println(board.toString());
+  }
+  
+  private void displayerDecksAndBoard(CardDeck[] decks, Board board) {
+    var strings = new String[2];
+    strings[0] = cardDecksToString(decks);
+    strings[1] = board.toString();
+    System.out.println(Utils.computeStringsToLine(strings));
   }
   
   /**
@@ -84,9 +110,10 @@ public final class ConsoleDisplayer implements Displayer {
   @Override
   public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenDeck tokenDecks, Board gameBoard, List<Color> colors) {
     displayPlayers(players, colors);
-    displayCardDecks(cardDecks);
+    //displayCardDecks(cardDecks);
     displayBoard(noblesCards);
-    displayBoard(gameBoard);
+    displayerDecksAndBoard(cardDecks, gameBoard);
+    //displayBoard(gameBoard);
     displayTokenDecks(tokenDecks);
   }
   

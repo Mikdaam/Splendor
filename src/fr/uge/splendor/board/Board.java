@@ -1,5 +1,7 @@
 package fr.uge.splendor.board;
 
+import java.util.ArrayList;
+//import java.util.Arrays;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
@@ -8,7 +10,8 @@ import fr.uge.splendor.color.Color;
 import fr.uge.splendor.utils.Utils;
 
 public class Board {
-  private final Card[][] board;
+  //private final Card[][] board;
+	private final ArrayList<ArrayList<Card>> board;
   private final int rows;
   private final int columns;
   
@@ -19,16 +22,18 @@ public class Board {
     
     this.rows = rows;
     this.columns = columns;
-    board = new Card[rows][columns];
+    //board = new Card[rows][columns];
+    board = new ArrayList<>();
     
     initBoard();
   }
   
   private void initBoard() {
     for (var i = 0; i < rows; i++) {
-      
+      board.add(new ArrayList<Card>());
       for (var j = 0; j < columns; j++) {
-        board[i][j] = new EmptyCard();
+        //board[i][j] = new EmptyCard();
+        board.get(j).add(new EmptyCard());
       }
     }
   }
@@ -43,8 +48,10 @@ public class Board {
       throw new IllegalArgumentException("Your column's index is out of scope");
     }
     
-    if (board[row][column].color() == Color.EMPTY) {
-      board[row][column] = card;
+    //if (board[row][column].color() == Color.EMPTY) {
+    if (board.get(row).get(column).color() == Color.EMPTY) {
+      //board[row][column] = card;
+      board.get(row).add(column, card);
     } else {
       return false;
     }
@@ -57,8 +64,10 @@ public class Board {
     
     for (var i = 0; i < rows; i++) {
       for (var j = 0; j < columns; j++) {
-        if (board[i][j].color() == Color.EMPTY) {
-          board[i][j] = card;
+      //if (board[i][j].color() == Color.EMPTY) {
+        if (board.get(i).get(j).color() == Color.EMPTY) {
+          //board[i][j] = card;
+        	board.get(i).add(j, card);
           return true;
         }
       }
@@ -75,10 +84,13 @@ public class Board {
       throw new IllegalArgumentException("Your column's index is out of scope");
     }
     
-    Objects.requireNonNull(board[row][column]);
+    //Objects.requireNonNull(board[row][column]);
+    Objects.requireNonNull(board.get(row).get(column));
     
-    var card = board[row][column];
-    board[row][column] = new EmptyCard();
+    //var card = board[row][column];
+    var card = board.get(row).get(column);
+    //board[row][column] = new EmptyCard();
+    board.get(row).add(column, new EmptyCard());
     
     return card;
   }
@@ -88,7 +100,8 @@ public class Board {
     
     for (var i = 0; i < rows; i++) {
       for (var j = 0; j < columns; j++) {
-        if (board[i][j].color() != Color.EMPTY) {
+        //if (board[i][j].color() != Color.EMPTY) {
+        if (board.get(i).get(j).color() == Color.EMPTY) {
           res++;
         }
       }
@@ -109,10 +122,14 @@ public class Board {
   public String toString() {
    	var cardString = new StringBuilder();
    	
-   	for (Card[] cards : board) {
-    		String tab[] = new String[cards.length];
-    		for (int i = 0; i < cards.length; i++) {
-    			  tab[i] = cards[i].toString();
+   	//for (Card[] cards : board) {
+   	for (var cards : board) {
+    		//String tab[] = new String[cards.length];
+    		String tab[] = new String[cards.size()];
+    		//for (int i = 0; i < cards.length; i++) {
+    		for (int i = 0; i < cards.size(); i++) {
+    			  //tab[i] = cards[i].toString();
+    			  tab[i] = cards.get(i).toString();
     		}
     		cardString.append(Utils.computeStringsToLine(tab));
    	}

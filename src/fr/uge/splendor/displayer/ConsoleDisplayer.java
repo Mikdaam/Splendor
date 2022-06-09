@@ -11,7 +11,7 @@ import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
-import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.utils.Utils;
@@ -64,7 +64,7 @@ public final class ConsoleDisplayer implements Displayer {
    * 
    * @param tokens - the TokenDeck to display.
    */
-  private void displayTokenDecks(TokenDeck tokens) {
+  private void displayTokenDecks(TokenPurse tokens) {
     System.out.println(tokens);
   }
   
@@ -108,7 +108,7 @@ public final class ConsoleDisplayer implements Displayer {
    * @param colors - the list of cards colors allowed in the game.
    */
   @Override
-  public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenDeck tokenDecks, Board gameBoard, List<Color> colors) {
+  public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenPurse tokenDecks, Board gameBoard, List<Color> colors) {
     displayPlayers(players, colors);
     //displayCardDecks(cardDecks);
     displayBoard(noblesCards);

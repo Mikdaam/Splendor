@@ -5,12 +5,13 @@ import java.util.List;
 
 import fr.uge.splendor.card.Card;
 import fr.uge.splendor.color.Color;
+import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.token.Token;
 
 public sealed interface Player permits HumanPlayer {
   
   /*Check if we need bool*/
-  void takeToken(Token token);
+  void takeToken(Color color);
   
   //boolean reserveCard();
   
@@ -24,7 +25,7 @@ public sealed interface Player permits HumanPlayer {
   
   int prestigePoints();
   
-  HashMap<Color, Integer> buyCard(Card card, List<Color> colors);
+  TokenPurse buyCard(Card card, List<Color> colors);
   
   String toString(List<Color> colors);
 
@@ -35,8 +36,6 @@ public sealed interface Player permits HumanPlayer {
   int numberOfDevelopmentCards(List<Color> colors);
   
   Card removeFromReserved(int row, int col);
-  
-  void addToReserved(Card card, int row, int col);
   
   void pushToReserved(Card card);
   

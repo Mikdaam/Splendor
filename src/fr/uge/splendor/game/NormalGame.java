@@ -13,7 +13,7 @@ import java.util.Map;
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
-import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.displayer.ConsoleDisplayer;
 import fr.uge.splendor.displayer.Displayer;
 import fr.uge.splendor.level.Level;
@@ -43,7 +43,7 @@ public class NormalGame implements Game {
 	private final Board board;
 	private final Board noblesCards;
 	private final CardDeck[] decks;
-	private final TokenDeck tokens;
+	private TokenPurse tokens;
 	private final Player[] players;
 	private final Action[] actions;
 	
@@ -54,12 +54,12 @@ public class NormalGame implements Game {
 			throw new IllegalArgumentException("Number of player should be greater than 2.");
 		}
 		
-		this.board = new Board(3, 4);
-		this.noblesCards = new Board(1, numberOfPlayers + 1);
-    this.decks = new CardDeck[3];
-    this.tokens = new TokenDeck();
-    this.players = new Player[numberOfPlayers];
-    this.displayer = new ConsoleDisplayer();
+		board = new Board(3, 4);
+		noblesCards = new Board(1, numberOfPlayers + 1);
+    decks = new CardDeck[3];
+    tokens = new TokenPurse();
+    players = new Player[numberOfPlayers];
+    displayer = new ConsoleDisplayer();
     actions = new Action[6];
     
     if (numberOfPlayers == 2) {
@@ -107,12 +107,12 @@ public class NormalGame implements Game {
   private void initTokens() {
   	var numberOfTokenByColor = NUMBER_OF_TOKEN_PER_COLOR - NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER;
   	
-    tokens.add(Map.of(Color.DIAMOND, numberOfTokenByColor, 
-    		Color.EMERALD, numberOfTokenByColor, 
-    		Color.ONYX, numberOfTokenByColor, 
-    		Color.RUBY, numberOfTokenByColor, 
-    		Color.SAPPHIRE, numberOfTokenByColor,
-    		Color.GOLD, NUMBER_OF_GOLD_TOKEN));
+    tokens = tokens.addToken(Color.DIAMOND, numberOfTokenByColor);
+    tokens = tokens.addToken(Color.EMERALD, numberOfTokenByColor);
+    tokens = tokens.addToken(Color.ONYX, numberOfTokenByColor);
+    tokens = tokens.addToken(Color.RUBY, numberOfTokenByColor);
+    tokens = tokens.addToken(Color.SAPPHIRE, numberOfTokenByColor);
+    tokens = tokens.addToken(Color.GOLD, NUMBER_OF_GOLD_TOKEN);
   }
   
   /**
@@ -196,7 +196,7 @@ public class NormalGame implements Game {
     var card = board.remove(coordinates[0], coordinates[1]);
     
     if (players[playerID].canBuyCard(card)) {
-      tokens.add(players[playerID].buyCard(card, cardsColorsList()));
+      tokens = tokens.add(players[playerID].buyCard(card, cardsColorsList()));
       board.add(decks[coordinates[0]].removeFirstCard(), coordinates[0], coordinates[1]);
     } else {
       board.add(card, coordinates[0], coordinates[1]);
@@ -223,9 +223,9 @@ public class NormalGame implements Game {
     var card = players[playerID].removeFromReserved(coordinates[0], coordinates[1]);
     
     if (players[playerID].canBuyCard(card)) {
-      tokens.add(players[playerID].buyCard(card, cardsColorsList()));
+      tokens = tokens.add(players[playerID].buyCard(card, cardsColorsList()));
     } else {
-      players[playerID].addToReserved(card, coordinates[0], coordinates[1]);
+      players[playerID].pushToReserved(card);
       displayer.displayActionError("You are not able to buy the Card.");
       return false;
     }
@@ -235,8 +235,8 @@ public class NormalGame implements Game {
   
   private void givePlayerGoldToken(int playerID) {
     if (tokens.getColorNumber(Color.GOLD) > 0) {
-      players[playerID].takeToken(new BaseToken(Color.GOLD));
-      tokens.remove(Map.of(Color.GOLD, 1));
+      players[playerID].takeToken(Color.GOLD);
+      tokens = tokens.remove((new TokenPurse()).addToken(Color.GOLD, 1));
     }
   }
   
@@ -395,8 +395,8 @@ public class NormalGame implements Game {
     
     for (var color : colors) {
      	if(players[playerID].getNumberOfTokens() < 10) {
-      		players[playerID].takeToken(new BaseToken(color));
-      		tokens.remove(Map.of(color, 1));
+      		players[playerID].takeToken(color);
+      		tokens = tokens.remove((new TokenPurse()).addToken(color, 1));
      	}			
 		  }
     
@@ -422,11 +422,11 @@ public class NormalGame implements Game {
     
     var given = 0; /*To check how much we gave*/
     while(given < toTake && players[playerID].getNumberOfTokens() < 10) {
-      players[playerID].takeToken(new BaseToken(color));
+      players[playerID].takeToken(color);
       given++;
     }
     
-    tokens.remove(Map.of(color, given));
+    tokens = tokens.remove((new TokenPurse()).addToken(color, given));
     
     if (given == 0) {
       return false;

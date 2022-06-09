@@ -19,7 +19,7 @@ import fr.uge.splendor.player.Player;
  * @author Yunen Snacel
  *
  */
-public sealed interface Displayer permits ConsoleDisplayer {
+public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
   /**
    * This method displays a Game, with its players, its CardDecks, it TokenDeck and its Board.
    * 

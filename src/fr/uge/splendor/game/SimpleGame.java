@@ -379,7 +379,7 @@ public class SimpleGame implements Game {
   public void run() {
     var playerID = 0;    
     
-    while (getMaxPrestige() < 1) {
+    while (getMaxPrestige() < 15) {
     	 displayGame();
       chooseAction(playerID);
       playerID = (playerID + 1) % players.length;

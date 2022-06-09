@@ -10,7 +10,7 @@ import java.util.Map;
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
-import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.displayer.ConsoleDisplayer;
 import fr.uge.splendor.displayer.Displayer;
 import fr.uge.splendor.player.HumanPlayer;
@@ -34,7 +34,7 @@ public class SimpleGame implements Game {
 	/*TODO: Add an HashMap to the player deck*/
   private final Board board;	 /* Model */
   private final CardDeck[] decks;
-  private final TokenDeck tokens;
+  private TokenPurse tokens;
   private final Player[] players;
   private final Action[] actions;
   private final Displayer displayer; /* View */
@@ -47,7 +47,7 @@ public class SimpleGame implements Game {
   public SimpleGame() {
     board = new Board(1, 4);
     decks = new CardDeck[1];
-    tokens = new TokenDeck();
+    tokens = new TokenPurse();
     players = new Player[2];
     displayer = new ConsoleDisplayer();
     actions = new Action[3];
@@ -68,6 +68,7 @@ public class SimpleGame implements Game {
   private void initCardDecks() throws IOException {
     Path pathOfFile = Path.of("res").resolve("base_game_cards.csv");
     decks[0] = Game.setupCards(pathOfFile);
+    decks[0].shuffleCardDeck();
   }
   
   /**
@@ -76,7 +77,6 @@ public class SimpleGame implements Game {
   private void initBoard() {
     for (int i = 0; i < board.rows(); i++) {
       for (int j = 0; j < board.colums(); j++) {
-        decks[0].shuffleCardDeck();
         board.add(decks[0].removeFirstCard(), i, j);
       }
     }
@@ -95,9 +95,14 @@ public class SimpleGame implements Game {
   /**
    * This method initializes the TokenDeck for a SimpleGame.
    */
-  private void initTokenDeck() {
-    tokens.add(Map.of(Color.DIAMOND, 4, Color.EMERALD, 4, Color.ONYX, 4, Color.RUBY, 4, Color.SAPPHIRE, 4));
-    tokens.removeColor(Color.GOLD);
+  private void initTokenDeck() { 
+    //tokens = tokens.removeColor(Color.GOLD);
+    
+    tokens = tokens.addToken(Color.DIAMOND, 4);
+    tokens = tokens.addToken(Color.EMERALD, 4);
+    tokens = tokens.addToken(Color.ONYX, 4);
+    tokens = tokens.addToken(Color.RUBY, 4);
+    tokens = tokens.addToken(Color.SAPPHIRE, 4);    
   }
   
   /**
@@ -168,6 +173,10 @@ public class SimpleGame implements Game {
     var coordinates = displayer.getCoordinates();
     
     if (!checkCoordinates(coordinates, board.rows(), board.colums())) {
+      return false;
+    }
+    if (!board.canRemove(coordinates[0], coordinates[1])) {
+      displayer.displayActionError("There is no card to buy here...");
       return false;
     }
     
@@ -276,8 +285,8 @@ public class SimpleGame implements Game {
     
     for (var color : colors) {
      	if(players[playerID].getNumberOfTokens() < 10) {
-      		players[playerID].takeToken(new BaseToken(color));
-      		tokens.remove(Map.of(color, 1));
+      		players[playerID].takeToken(color);
+          tokens = tokens.remove((new TokenPurse()).addToken(color, 1));
      	}			
 		  }
     
@@ -303,11 +312,11 @@ public class SimpleGame implements Game {
     
     var given = 0; /*To check how much we gave*/
     while(given < toTake && players[playerID].getNumberOfTokens() < 10) {
-      players[playerID].takeToken(new BaseToken(color));
+      players[playerID].takeToken(color);
       given++;
     }
     
-    tokens.remove(Map.of(color, given));
+    tokens = tokens.remove((new TokenPurse()).addToken(color, given));
     
     if (given == 0) {
       return false;

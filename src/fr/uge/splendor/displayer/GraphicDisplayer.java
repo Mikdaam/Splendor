@@ -9,7 +9,7 @@ import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
-import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 import fr.umlv.zen5.ApplicationContext;
@@ -17,7 +17,7 @@ import fr.umlv.zen5.ApplicationContext;
 public final class GraphicDisplayer implements Displayer{
 
 	@Override
-	public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenDeck tokenDecks, Board gameBoard,
+	public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenPurse tokenDecks, Board gameBoard,
 			List<Color> colors) {
 	}
 

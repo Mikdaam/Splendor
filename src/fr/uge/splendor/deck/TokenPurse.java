@@ -7,68 +7,96 @@ import java.util.Objects;
 import fr.uge.splendor.color.Color;
 
 /**
- * This class represents a TokenDeck.
+ * This class represents a TokenPurse.
  * It's represented by a HashMap that has Colors as keys and Integers as values.
  * 
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  *
  */
-public class TokenDeck {
+public class TokenPurse {
   private final HashMap<Color, Integer> deck;
   
   /**
-   * This constructor creates the HashMap that describes a TokenDeck and initializes it
+   * This constructor creates the HashMap that describes a TokenPurse and initializes it
    * with all the colors and zero tokens in it.
    */
-  public TokenDeck() {
-    this.deck = new HashMap<Color, Integer>(); /* copyOf */
+  public TokenPurse() {
+    this.deck = new HashMap<Color, Integer>();
     
-    Color.getTokensColorsList().stream()
-                               .forEach(color -> deck.put(color, 0));
+    /*Color.getTokensColorsList().stream()
+                               .forEach(color -> deck.put(color, 0));*/
   }
  
   /**
-   * This method adds some tokens to a TokenDeck.
+   * This method adds some tokens to a TokenPurse.
    * 
-   * @param tokens - The HashMap describing the tokens to add to the TokenDeck.
+   * @param tokens - The HashMap describing the tokens to add to the TokenPurse.
    */
-  public void add(Map<Color, Integer> tokens) {
+  public TokenPurse add(TokenPurse tokens) {
     Objects.requireNonNull(tokens, "You have to add at least 1 token, your map cannot be null!");
     
-    tokens.forEach((color, number) -> deck.merge(color, number, Integer::sum));
+    var res = new TokenPurse();
+    
+    tokens.deck.forEach((color, number) -> res.deck.merge(color, number, Integer::sum));
+    
+    return res;
+  }
+  
+  public TokenPurse addToken(Color color, int number) {
+    Objects.requireNonNull(color);
+    var res = (new TokenPurse()).add(this);
+    
+    res.deck.merge(color, number, Integer::sum);
+    
+    return res;    
   }
 
   /**
-   * This method removes some tokens from a TokenDeck.
+   * This method removes some tokens from a TokenPurse.
    * 
-   * @param tokens - The HashMap describing the tokens to remove from the TokenDeck.
+   * @param tokens - The HashMap describing the tokens to remove from the TokenPurse.
    */
-  public void remove(Map<Color, Integer> tokens) {
+  public TokenPurse remove(TokenPurse tokens) {
     Objects.requireNonNull(tokens, "Your map of tokens to remove cannot be null");
     
-    tokens.forEach((color, number) -> {
-      
+    var res = new TokenPurse();
+    
+    tokens.deck.forEach((color, number) -> {
       if (number >= 0 && number <= deck.getOrDefault(color, 0)) {
-        deck.computeIfPresent(color, (key, oldValue) -> oldValue - number);
+        res.deck.put(color, deck.getOrDefault(color, 0) - number);
+        //deck.computeIfPresent(color, (key, oldValue) -> oldValue - number);
       } else {
-        throw new IllegalArgumentException("You're trying to withdraw too much or too less from your TokenDeck!");
+        throw new IllegalArgumentException("You're trying to withdraw too much or too less from your TokenPurse!");
       }
       
     });
+    
+    return res;
   }
   
   /**
-   * This method creates the summary of a TokenDeck and computes it into an HashMap.
+   * This method creates the summary of a TokenPurse and computes it into an HashMap.
    * 
-   * @return The HashMap describing the TokenDeck
+   * @return The HashMap describing the TokenPurse
    */
-  public HashMap<Color, Integer> getDeckSummary() {
-    var res = new HashMap<Color, Integer>();
+  public TokenPurse getDeckSummary() {
+    var res = new TokenPurse();
     
-    deck.forEach((color, amount) -> res.merge(color, amount, Integer::sum));
+    deck.forEach((color, amount) -> res.deck.merge(color, amount, Integer::sum));
     
     return res;    
+  }
+  
+  
+  public int numberOfTokens() {
+    int res = 0;
+    
+    for (int value : deck.values()) {
+      res += value;
+    }
+     
+    return res;
   }
   
   /**
@@ -82,18 +110,23 @@ public class TokenDeck {
   }
   
   /**
-   * This method remove a given color from the tokenDeck.
+   * This method remove a given color from the TokenPurse.
    * 
    * @param color
    */
-  public void removeColor(Color color) {
-		  deck.remove(color);
+  public TokenPurse removeColor(Color color) {
+      var res = new TokenPurse();
+      
+      res = res.add(this);
+		  res.deck.remove(color);
+		  
+		  return res;
 	 }
   
   /**
-   * This method computes a TokenDeck's colors into a row for the TokenDeck's String format.
+   * This method computes a TokenPurse's colors into a row for the TokenPurse's String format.
    * 
-   * @return The colors computed into a row for the TokenDeck's String.
+   * @return The colors computed into a row for the TokenPurse's String.
    */
   private String colorsToString() {
     var sb = new StringBuilder();
@@ -112,10 +145,10 @@ public class TokenDeck {
   }
 
   /**
-   * This method computes a TokenDeck's values (the number of tokens for each Color) into a row for
-   * the TokenDeck's String format.
+   * This method computes a TokenPurse's values (the number of tokens for each Color) into a row for
+   * the TokenPurse's String format.
    * 
-   * @return The values computed into a row for the TokenDeck's String.
+   * @return The values computed into a row for the TokenPurse's String.
    */
   private String valuesToString() {
     var sb = new StringBuilder();
@@ -130,13 +163,13 @@ public class TokenDeck {
   }
   
   /**
-   * This method creates a full row for a TokenDeck's String format.
+   * This method creates a full row for a TokenPurse's String format.
    * It takes in parameters a start, mid and end character to match the line's position.
    * 
    * @param start - The row's starting character
    * @param mid - The row's mid character (between all cells)
    * @param end - The row's ending character
-   * @return A TokenDeck's row computed with the given characters.
+   * @return A TokenPurse's row computed with the given characters.
    */
   private String rowToString(String start, String mid, String end) {
     var sb = new StringBuilder(start);
@@ -151,9 +184,9 @@ public class TokenDeck {
   }
   
   /**
-   * This method returns the data of the TokenDeck into a fancy String format.
+   * This method returns the data of the TokenPurse into a fancy String format.
    * 
-   * @return The TokenDeck computed into a String
+   * @return The TokenPurse computed into a String
    */
   public String toString() {    
     var sb = new StringBuilder();

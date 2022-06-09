@@ -5,7 +5,7 @@ import fr.uge.splendor.card.*;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.token.*;
 import fr.uge.splendor.deck.CardDeck;
-import fr.uge.splendor.deck.TokenDeck;
+import fr.uge.splendor.deck.TokenPurse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,31 +16,42 @@ public final class HumanPlayer implements Player {
   private final int id;
   private final String name;
   private final CardDeck ownedCards;
-  private final TokenDeck ownedTokens;
+  private TokenPurse ownedTokens;
   private final Board reservedCards;
   
   
   public HumanPlayer(int id, String name) {
-    Objects.requireNonNull(name, "The player's name cannot be null!");
-    
     if (id < 0) {
       throw new IllegalArgumentException("The ID should be zero or positive!");
     }
+    Objects.requireNonNull(name, "The player's name cannot be null!");
     
     this.id = id;
     this.name = name;
     ownedCards = new CardDeck();
-    ownedTokens = new TokenDeck();
     reservedCards = new Board(1, 3);
+    ownedTokens = new TokenPurse();
+    this.initTokens();
+    
+  }
+  
+  private void initTokens() {
+    ownedTokens = ownedTokens.addToken(Color.DIAMOND, 0);
+    ownedTokens = ownedTokens.addToken(Color.EMERALD, 0);
+    ownedTokens = ownedTokens.addToken(Color.ONYX, 0);
+    ownedTokens = ownedTokens.addToken(Color.RUBY, 0);
+    ownedTokens = ownedTokens.addToken(Color.SAPPHIRE, 0);
+    ownedTokens = ownedTokens.addToken(Color.GOLD, 0);
   }
   
   public void removeTokensColor(Color color) {
     Objects.requireNonNull(color);
-    ownedTokens.removeColor(color);
+    ownedTokens = ownedTokens.removeColor(color);
   }
   
   public int getNumberOfTokens() {
-    return ownedTokens.getDeckSummary().values().stream().reduce(0, Integer::sum);
+    return ownedTokens.numberOfTokens();
+    //return ownedTokens.getDeckSummary().values().stream().reduce(0, Integer::sum);
   }
   
   public int id() {
@@ -73,13 +84,10 @@ public final class HumanPlayer implements Player {
   public Card removeFromReserved(int row, int col) {
     return reservedCards.remove(row, col);
   }
-  
-  public void addToReserved(Card card, int row, int col) {
-    reservedCards.add(card, row, col);
-  }
+ 
   
   public void pushToReserved(Card card) {
-    reservedCards.push(card);
+    reservedCards.push(card, 0);
   }
   
   public int numberOfReservedCards() {
@@ -88,9 +96,9 @@ public final class HumanPlayer implements Player {
   
   /*Replace Token with Color?*/
   @Override
-  public void takeToken(Token token) {
-    Objects.requireNonNull(token);
-    ownedTokens.add(Map.of(token.color(), 1));
+  public void takeToken(Color color) {
+    Objects.requireNonNull(color);
+    ownedTokens = ownedTokens.addToken(color, 1);
   }
   
   public boolean canGetNoble(Card noble) {
@@ -127,10 +135,10 @@ public final class HumanPlayer implements Player {
   }
   
   @Override
-  public HashMap<Color, Integer> buyCard(Card card, List<Color> colors) {
+  public TokenPurse buyCard(Card card, List<Color> colors) {
     Objects.requireNonNull(card);
     
-    var tokensToGiveBack = new HashMap<Color, Integer>();
+    var tokensToGiveBack = new TokenPurse();
     var deckSummary = ownedCards.getDeckSummary(colors);
     var jokers = 0;
     
@@ -143,17 +151,17 @@ public final class HumanPlayer implements Player {
           potentialJoker = price - ownedTokens.getColorNumber(color) - deckSummary.getOrDefault(colors, 0); /*Calculating the jokers to use there*/
         }
         
-        tokensToGiveBack.put(color, price - deckSummary.getOrDefault(color, 0) - potentialJoker); /*tokens = price - bonus - potentialJoker*/
+        tokensToGiveBack.addToken(color, price - deckSummary.getOrDefault(color, 0) - potentialJoker); /*tokens = price - bonus - potentialJoker*/
         jokers += potentialJoker;
       }
     }
     
     if (jokers != 0) {
-      tokensToGiveBack.put(Color.GOLD, jokers);
+      tokensToGiveBack.addToken(Color.GOLD, jokers);
     }
     
     ownedCards.add(card);
-    ownedTokens.remove(tokensToGiveBack);
+    ownedTokens = ownedTokens.remove(tokensToGiveBack);
     return tokensToGiveBack;
   }
   
@@ -192,7 +200,6 @@ public final class HumanPlayer implements Player {
     }
     
     var sb = new StringBuilder();
-    
     sb.append(" RESERVED CARDS:\n")
       .append(reservedCards)
       .append("\n");
@@ -200,7 +207,7 @@ public final class HumanPlayer implements Player {
     return sb.toString();
   }
   
-  
+
   @Override
   public String toString(List<Color> colors) {
     Objects.requireNonNull(colors);

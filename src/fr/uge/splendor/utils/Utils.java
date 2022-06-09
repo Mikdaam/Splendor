@@ -1,5 +1,9 @@
 package fr.uge.splendor.utils;
 
+import java.util.List;
+
+import fr.uge.splendor.color.Color;
+
 /**
  * This class contains some utilitary functions used in different parts of the program.
  * 
@@ -8,6 +12,17 @@ package fr.uge.splendor.utils;
  *
  */
 public class Utils {
+  
+  /**
+   * This method returns the list of the cards colors authorized in the SimpleGame.
+   * 
+   * @return the list of the cards colors authorized in the SimpleGame.
+   */
+  public static List<Color> cardsColorsList() {
+    return Color.getCardsColorsList().stream() 
+                                     .filter(color -> color != Color.NOBLE)
+                                     .toList();
+  }
   
   /**
    * This static method computes an array's strings into a single line.

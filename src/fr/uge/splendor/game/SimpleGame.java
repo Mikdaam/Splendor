@@ -16,6 +16,7 @@ import fr.uge.splendor.displayer.Displayer;
 import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.token.BaseToken;
+import fr.uge.splendor.utils.Utils;
 import fr.uge.splendor.action.Action;
 import fr.uge.splendor.action.BuyCardBoardAction;
 import fr.uge.splendor.action.ThreeTokensAction;
@@ -38,6 +39,7 @@ public class SimpleGame implements Game {
   private final Action[] actions;
   private final Displayer displayer; /* View */
   
+  private final GameData gameData;
   
   /**
    * This constructor creates a SimpleGame. It must be initialized with {@code initGame}.
@@ -49,6 +51,8 @@ public class SimpleGame implements Game {
     players = new Player[2];
     displayer = new ConsoleDisplayer();
     actions = new Action[3];
+    
+    gameData = new GameData(new Board(3, 4), new CardDeck[3], new TokenDeck(), new Player[2], new Action[6], new ConsoleDisplayer());
   }
   
   
@@ -130,19 +134,6 @@ public class SimpleGame implements Game {
 		  displayer.display(players, decks, new Board(1, 1),tokens, board, cardsColorsList());
 	 }
   
-  /**
-   * This method returns the list of the cards colors authorized in the SimpleGame.
-   * 
-   * @return the list of the cards colors authorized in the SimpleGame.
-   */
-  private static List<Color> cardsColorsList() {
-    return Color.getCardsColorsList().stream() 
-                                     .filter(color -> color != Color.NOBLE)
-                                     .toList();
-  }
-  
-  
-  
   
   /* -- ACTIONS -- */
   
@@ -182,7 +173,7 @@ public class SimpleGame implements Game {
     
     var card = board.remove(coordinates[0], coordinates[1]);
     if (players[playerID].canBuyCard(card)) {
-      tokens.add(players[playerID].buyCard(card, cardsColorsList()));
+      tokens.add(players[playerID].buyCard(card, Utils.cardsColorsList()));
       board.add(decks[0].removeFirstCard(), coordinates[0], coordinates[1]);
     } else {
       board.add(card, coordinates[0], coordinates[1]);
@@ -344,7 +335,9 @@ public class SimpleGame implements Game {
   }
   
   
-  
+  public GameData getGameState() {
+    return gameData;
+  }
   
   /* -- RUNNING THE GAME -- */
   

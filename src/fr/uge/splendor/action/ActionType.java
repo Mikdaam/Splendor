@@ -9,7 +9,7 @@ package fr.uge.splendor.action;
  */
 public enum ActionType {
 	 UNKNOWN,
-  THREE_TOKENS,
+	 THREE_TOKENS,
 	 TWO_TOKENS,
 	 BUY_CARD_BOARD,
 	 BUY_RESERVED_CARD,

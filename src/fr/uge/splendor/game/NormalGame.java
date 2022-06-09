@@ -5,6 +5,7 @@ package fr.uge.splendor.game;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -47,9 +48,11 @@ public class NormalGame implements Game {
 	private final Player[] players;
 	private final Action[] actions;
 	
+	private final GameData gameData;
+	
 	private final Displayer displayer; /* View */
 	
-	public NormalGame(int numberOfPlayers) {
+  public NormalGame(int numberOfPlayers) {
 		if(numberOfPlayers < 2 && numberOfPlayers > 4) {
 			throw new IllegalArgumentException("Number of player should be greater than 2.");
 		}
@@ -61,6 +64,8 @@ public class NormalGame implements Game {
     this.players = new Player[numberOfPlayers];
     this.displayer = new ConsoleDisplayer();
     actions = new Action[6];
+    
+    gameData = new GameData(new Board(3, 4), new CardDeck[3], new TokenDeck(), new Player[numberOfPlayers], new Action[6], new ConsoleDisplayer());
     
     if (numberOfPlayers == 2) {
     	NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 3;
@@ -468,7 +473,9 @@ public class NormalGame implements Game {
     }
   }
   
-  
+  public GameData getGameState() {
+    return gameData;
+  }
   
   
   /* -- RUNNING THE GAME -- */

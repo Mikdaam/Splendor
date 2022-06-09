@@ -22,7 +22,7 @@ public class TokenDeck {
    * with all the colors and zero tokens in it.
    */
   public TokenDeck() {
-    this.deck = new HashMap<Color, Integer>();
+    this.deck = new HashMap<Color, Integer>(); /* copyOf */
     
     Color.getTokensColorsList().stream()
                                .forEach(color -> deck.put(color, 0));

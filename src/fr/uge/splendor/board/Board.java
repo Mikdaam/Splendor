@@ -1,7 +1,6 @@
 package fr.uge.splendor.board;
 
 import java.util.ArrayList;
-//import java.util.Arrays;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
@@ -23,46 +22,50 @@ public class Board {
     this.columns = columns;
     board = new ArrayList<>();
     
-    initBoard();
-  }
-  
-  private void initBoard() {
     for (var i = 0; i < rows; i++) {
       board.add(new ArrayList<Card>());
     }
-  }
+  }  
   
+  public int rows() {
+    return rows;
+   }
+   
+  public int colums() {
+    return columns;
+  }
+     
   public boolean add(Card card, Coordinate coordinate) {
     Objects.requireNonNull(card);
+    Objects.requireNonNull(coordinate);
     
     var row = coordinate.row();
     var column = coordinate.column();
     
-    if (row < 0 || row >= rows) {
-      //throw new IllegalArgumentException("Your row's index is out of scope");
-      return false;
-    }
-    if (column < 0 || column >= columns) {
-      //throw new IllegalArgumentException("Your column's index is out of scope");
+    if (card.color().equals(Color.EMPTY) || row < 0 || row >= rows || column < 0 || column >= columns) {
       return false;
     }
     
-    if (board.get(row).size() <= column) {
-      board.get(row).add(column, card);
-    } else {
+    if (board.get(row).size() > column) {
       return false;
     }
     
+    board.get(row).add(column, card);
     return true;    
   }
   
+  /*TODO: Delete the push method -> useless and nonsense*/
   public boolean push(Card card) {
     Objects.requireNonNull(card);
+    
+    if (card.color().equals(Color.EMPTY)) {
+      return false;
+    }
     
     for (var i = 0; i < rows; i++) {
       for (var j = 0; j < columns; j++) {
         if (board.get(i).get(j).color() == Color.EMPTY) {
-        	board.get(i).add(j, card);
+        	 board.get(i).add(j, card);
           return true;
         }
       }
@@ -72,25 +75,21 @@ public class Board {
   }
   
   public boolean push(Card card, int row) {
-    if (row < 0 || row >= rows) {
+    Objects.requireNonNull(card);
+    
+    if (card.color().equals(Color.EMPTY) || row < 0 || row >= rows || board.get(row).size() >= columns) {
       return false;
     }
-    Objects.requireNonNull(card);
-
-    board.get(row).add(card);
     
+    board.get(row).add(card);
     return true;
   }
   
   public boolean canRemove(Coordinate coordinate) {
-  	
   	 var row = coordinate.row();
-     var column = coordinate.column();
+    var column = coordinate.column();
   	
-    if (row < 0 || row >= rows) {
-      return false;
-    }
-    if (column < 0 || column >= columns) {
+    if (row < 0 || row >= rows || column < 0 || column >= columns) {
       return false;
     }
     
@@ -101,26 +100,19 @@ public class Board {
     return true;
   }
   
-  public Card remove(Coordinate coordinate) {
-  	
-  	 var row = coordinate.row();
-     var column = coordinate.column();
-  	
-    return board.get(row).remove(column);
+  public Card remove(Coordinate coordinate) {  	
+    return board.get(coordinate.row()).remove(coordinate.column());
   }
   
   public int numberOfCards() {
     var res = 0;
     
     for (var i = 0; i < rows; i++) {
-      for (var j = 0; j < columns; j++) {
-        res += board.get(i).size();
-      }
+      res += board.get(i).size();
     }
     
     return res;
   }
-  
 
   public boolean rowIsInBoard(Coordinate coordinate) {    
     return coordinate.row() > 0 || coordinate.row() < rows;
@@ -130,14 +122,7 @@ public class Board {
     return coordinate.column() > 0 || coordinate.column() < columns;
   }
   
-  public int rows() {
-	  return rows;
-  }
-  
-  public int colums() {
-	  return columns;
-  }
-    
+ 
   @Override
   public String toString() {
    	var cardString = new StringBuilder();

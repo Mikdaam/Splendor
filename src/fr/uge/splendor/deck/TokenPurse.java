@@ -37,6 +37,7 @@ public class TokenPurse {
     Objects.requireNonNull(tokens, "You have to add at least 1 token, your map cannot be null!");
     
     var res = new TokenPurse();
+    deck.forEach((color, number) -> res.deck.put(color, number));
     
     tokens.deck.forEach((color, number) -> res.deck.merge(color, number, Integer::sum));
     

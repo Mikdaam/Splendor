@@ -44,14 +44,17 @@ public class SimpleGame implements Game {
   public SimpleGame() {
     actions = new EnumMap<>(ActionType.class);
     displayer = new ConsoleDisplayer();
-    
-    gameData = new GameData(new Board(1, 4), new EnumMap<>(Level.class), new Board(0, 0), new TokenPurse(), new ArrayList<Player>(), new ConsoleDisplayer(), false);
+    gameData = new GameData(new Board(1, 4), new EnumMap<>(Level.class), new Board(0, 0), new TokenPurse(), new ArrayList<Player>(), new ConsoleDisplayer(), new EnumMap<>(Level.class), false);
   }
   
   
   
   
   /* -- INITIALIZATIONS -- */
+  
+  private void initLevelConverter() {
+    gameData.levelToInteger().put(Level.LEVEL_1, 0);
+  }
   
   /**
    * This method initializes the unique CardDeck for a SimpleGame.
@@ -98,7 +101,7 @@ public class SimpleGame implements Game {
     tokens = tokens.addToken(Color.RUBY, 4);
     tokens = tokens.addToken(Color.SAPPHIRE, 4);
     
-    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), displayer, gameData.actionSucceed());
+    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), displayer, gameData.levelToInteger(), gameData.actionSucceed());
     
   }
   
@@ -122,6 +125,7 @@ public class SimpleGame implements Game {
 	  initPlayers();
 	  initTokenDeck();
 	  initActions();
+	  initLevelConverter();
   }
   
   
@@ -347,7 +351,7 @@ public class SimpleGame implements Game {
       	gameData = actions.get(choosenActionType).apply(playerID, gameData);
       }
 		}
-    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), displayer, false);
+    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), displayer, gameData.levelToInteger(), false);
     
   }
   

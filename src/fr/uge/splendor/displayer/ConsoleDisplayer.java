@@ -59,12 +59,11 @@ public final class ConsoleDisplayer implements Displayer {
    */
   private String cardDecksToString(EnumMap<Level, CardDeck> decks) {
     var sb = new StringBuilder();
+    var decksLevelsList = decks.keySet().stream().sorted().toList();
     
-    for (var entry : decks.entrySet()) {
-			sb.append(entry.getValue());
-		}
-    
-    //decks.stream().forEach(deck -> sb.append(deck));
+    for (var i = decksLevelsList.size()-1; i >= 0; i--) {
+		  	 sb.append(decks.get(decksLevelsList.get(i)));
+		  }
     
     return sb.toString();
   }

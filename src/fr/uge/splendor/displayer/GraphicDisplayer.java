@@ -23,6 +23,7 @@ public final class GraphicDisplayer implements Displayer{
 
 	@Override
 	public void display(GameData gameData, List<Color> colors) {
+	  
 	}
 
 	@Override

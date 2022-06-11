@@ -4,6 +4,7 @@ import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.game.GameData;
+import fr.uge.splendor.level.Level;
 
 /**
  * This class represents an action to perform in the game.
@@ -43,10 +44,10 @@ public interface Action {
 		 var board = (isReservedCards) ? gameData.players().get(playerId).reservedCards() : gameData.board();
 		 	   
 		 if (!board.rowIsInBoard(coordinate)) {
-	  	 gameData.displayer().displayActionError("You've entered a wrong row number");
+	  	  gameData.displayer().displayActionError("You've entered a wrong row number");
 	     return false;
 	   } else if (!board.colIsInBoard(coordinate)) {
-	  	 gameData.displayer().displayActionError("You've entered a wrong column number");
+	  	  gameData.displayer().displayActionError("You've entered a wrong column number");
 	     return false;
 	   }
 	    
@@ -59,23 +60,33 @@ public interface Action {
 	   * @param playerID - the player's ID
 	   * @return true if the player has less than 10 tokens, false otherwise.
 	   */
-	  default boolean checkPlayersTokensNumber(GameData gameData, int playerId) {
+	 default boolean checkPlayersTokensNumber(GameData gameData, int playerId) {
 	    if (gameData.players().get(playerId).getNumberOfTokens() == 10) {
 	      /*Exchange the tokens maybe?*/
-	    	gameData.displayer().displayActionError("You already have 10 tokens. You cannot get more than that.");
+	    	 gameData.displayer().displayActionError("You already have 10 tokens. You cannot get more than that.");
 	      return false;
 	    }
 	    
 	    return true;
 	 }
 	 
+	 default boolean checkLevel(GameData gameData, Level level) {
+	   if (level.equals(Level.UNKNOWN)) {
+	     gameData.displayer().displayActionError("This level does not exist");
+	     return false;
+	   }
+	   
+	   return true;
+	 }
 	 
-	 default void givePlayerGoldToken(GameData gameData, int playerId) {
-		 if (gameData.tokens().getColorNumber(Color.GOLD) > 0) {
-			 gameData.players().get(playerId).takeToken(Color.GOLD);
-			 var tokens = gameData.tokens().remove((new TokenPurse()).addToken(Color.GOLD, 1));
-			 gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.actionSucceed());
-		 }
+	 default TokenPurse givePlayerGoldToken(GameData gameData, int playerId) {
+	   var tokens = gameData.tokens();
+		  if (gameData.tokens().getColorNumber(Color.GOLD) > 0) {
+			   gameData.players().get(playerId).takeToken(Color.GOLD);
+			   tokens = gameData.tokens().remove((new TokenPurse()).addToken(Color.GOLD, 1));
+		  }
+		 
+		  return tokens;
 	 }
 	 
 	 
@@ -87,7 +98,7 @@ public interface Action {
 	   */
 	  default boolean checkTokensNumber(GameData gameData, Color color) {
 	    if (gameData.tokens().getColorNumber(color) <= 0) {
-	    	gameData.displayer().displayActionError("Not enough tokens to perform the action.");
+	    	 gameData.displayer().displayActionError("Not enough tokens to perform the action.");
 	      return false;
 	    }
 	    
@@ -102,7 +113,7 @@ public interface Action {
 	   */
 	  default boolean checkTokenColor(GameData gameData, Color color) {
 	    if (color == Color.UNKNOWN || color == Color.GOLD) {
-	    	gameData.displayer().displayActionError("Unknown Color.");
+	    	 gameData.displayer().displayActionError("Unknown Color.");
 	      return false;
 	    }
 	    

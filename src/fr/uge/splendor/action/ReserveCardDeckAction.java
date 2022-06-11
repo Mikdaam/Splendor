@@ -3,6 +3,7 @@ package fr.uge.splendor.action;
 import java.util.Objects;
 
 import fr.uge.splendor.game.GameData;
+import fr.uge.splendor.level.Level;
 
 /**
  * This record represents the action of reserving a card from a deck.
@@ -28,19 +29,24 @@ public record ReserveCardDeckAction() implements Action {
   	Objects.requireNonNull(gameData, "Game can't be null");
     
   	var level = gameData.displayer().getDeckLevel();
-    
-    var card = gameData.decks().get(level).removeFirstCard();
-    
-    if (gameData.players().get(playerId).numberOfReservedCards() < 3) {
-    	gameData.players().get(playerId).pushToReserved(card);
-      givePlayerGoldToken(gameData, playerId);
-    } else {
+  	
+  	if (!checkLevel(gameData, level)) {
+     return gameData;
+   }
+  	
+   var card = gameData.decks().get(level).removeFirstCard();
+   var tokens = gameData.tokens();
+   
+   if (gameData.players().get(playerId).numberOfReservedCards() < 3) {
+   	 gameData.players().get(playerId).pushToReserved(card);
+     tokens = givePlayerGoldToken(gameData, playerId);
+   } else {
     	gameData.decks().get(level).add(card);
     	gameData.displayer().displayActionError("You cannot reserve any more Card.");
-      return gameData;
-    }
-    
-    return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), gameData.displayer(), true);
+     return gameData;
+   }
+   
+   return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
 	}
   
   /**

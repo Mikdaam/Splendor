@@ -151,13 +151,13 @@ public final class HumanPlayer implements Player {
           potentialJoker = price - ownedTokens.getColorNumber(color) - deckSummary.getOrDefault(colors, 0); /*Calculating the jokers to use there*/
         }
         
-        tokensToGiveBack.addToken(color, price - deckSummary.getOrDefault(color, 0) - potentialJoker); /*tokens = price - bonus - potentialJoker*/
+        tokensToGiveBack = tokensToGiveBack.addToken(color, price - deckSummary.getOrDefault(color, 0) - potentialJoker); /*tokens = price - bonus - potentialJoker*/
         jokers += potentialJoker;
       }
     }
     
     if (jokers != 0) {
-      tokensToGiveBack.addToken(Color.GOLD, jokers);
+      tokensToGiveBack = tokensToGiveBack.addToken(Color.GOLD, jokers);
     }
     
     ownedCards.add(card);

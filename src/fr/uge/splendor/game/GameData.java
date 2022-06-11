@@ -12,9 +12,24 @@ import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 
 // TODO: Change array to ArrayList here
-public record GameData(Board board, EnumMap<Level, CardDeck> decks, Board noblesCards, TokenPurse tokens, ArrayList<Player> players, Displayer displayer, boolean actionSucceed) {
+public record GameData(Board board,
+                       EnumMap<Level, CardDeck> decks,
+                       Board noblesCards,
+                       TokenPurse tokens,
+                       ArrayList<Player> players,
+                       Displayer displayer,
+                       EnumMap<Level, Integer> levelToInteger,
+                       boolean actionSucceed) {
   public GameData {
-    Objects.requireNonNull(board, "Board can't be null");
-    /*TODO: Check the entry */
+    Objects.requireNonNull(board, "board can't be null");
+    Objects.requireNonNull(decks, "decks can't be null");
+    Objects.requireNonNull(noblesCards, "noblesCards can't be null");
+    Objects.requireNonNull(tokens, "tokens can't be null");
+    Objects.requireNonNull(players, "players can't be null");
+    Objects.requireNonNull(displayer, "displayer can't be null");
+    Objects.requireNonNull(levelToInteger, "level converter can't be null");
+    
+    players.forEach(player -> Objects.requireNonNull(player, "player can't be null"));
+    decks.keySet().forEach(level -> Objects.requireNonNull(decks.get(level), "deck lv. " + level + " can't be null"));
   }
 }

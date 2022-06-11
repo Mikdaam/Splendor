@@ -1,13 +1,14 @@
 package fr.uge.splendor.displayer;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 import fr.uge.splendor.action.Action;
 import fr.uge.splendor.action.ActionType;
-import fr.uge.splendor.board.Board;
+import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
-import fr.uge.splendor.deck.CardDeck;
-import fr.uge.splendor.deck.TokenPurse;
+import fr.uge.splendor.game.GameData;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 
@@ -29,7 +30,7 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * @param gameBoard - the Board to display.
    * @param colors - the list of cards colors allowed in the game.
    */
-  void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenPurse tokenDecks, Board gameBoard, List<Color> colors);
+  void display(GameData gameData, List<Color> colors);
   
   /**
    * This method displays the error for an action, mostly caused by a player's mistake.
@@ -44,7 +45,7 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * @param players - the array of players of the Game.
    * @param winnerID - the winner's ID.
    */
-  void displayWinner(Player[] players, int winnerID);
+  void displayWinner(ArrayList<Player> players, int winnerID);
   
   /**
    * This method clears the output.
@@ -56,7 +57,7 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * 
    * @return A couple of coordinates stored into an int array.
    */
-  int[] getCoordinates();
+  Coordinate getCoordinates();
   
   /**
    * This method gets and returns the player's input for a unique Color.
@@ -85,6 +86,6 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * @param actions - the array of Actions possible.
    * @param name - the player's name.
    */
-  ActionType getPlayerAction(Action[] actions, String name);
+  ActionType getPlayerAction(EnumMap<ActionType, Action> actions, String name);
   
 }

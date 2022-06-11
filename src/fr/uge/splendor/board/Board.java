@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Card;
-import fr.uge.splendor.card.EmptyCard;
+import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.utils.Utils;
 
@@ -15,8 +15,8 @@ public class Board {
   private final int columns;
   
   public Board(int rows, int columns) {
-    if (rows <= 0 || columns <= 0) {
-      throw new IllegalArgumentException("Your rows and columns number must be strictly positive");
+    if (rows < 0 || columns < 0) {
+      throw new IllegalArgumentException("Your rows and columns number must be positive");
     }
     
     this.rows = rows;
@@ -32,8 +32,11 @@ public class Board {
     }
   }
   
-  public boolean add(Card card, int row, int column) {
+  public boolean add(Card card, Coordinate coordinate) {
     Objects.requireNonNull(card);
+    
+    var row = coordinate.row();
+    var column = coordinate.column();
     
     if (row < 0 || row >= rows) {
       //throw new IllegalArgumentException("Your row's index is out of scope");
@@ -79,7 +82,11 @@ public class Board {
     return true;
   }
   
-  public boolean canRemove(int row, int column) {
+  public boolean canRemove(Coordinate coordinate) {
+  	
+  	 var row = coordinate.row();
+     var column = coordinate.column();
+  	
     if (row < 0 || row >= rows) {
       return false;
     }
@@ -94,7 +101,11 @@ public class Board {
     return true;
   }
   
-  public Card remove(int row, int column) {
+  public Card remove(Coordinate coordinate) {
+  	
+  	 var row = coordinate.row();
+     var column = coordinate.column();
+  	
     return board.get(row).remove(column);
   }
   
@@ -108,6 +119,15 @@ public class Board {
     }
     
     return res;
+  }
+  
+
+  public boolean rowIsInBoard(Coordinate coordinate) {    
+    return coordinate.row() > 0 || coordinate.row() < rows;
+  }
+  
+  public boolean colIsInBoard(Coordinate coordinate) {    
+    return coordinate.column() > 0 || coordinate.column() < columns;
   }
   
   public int rows() {

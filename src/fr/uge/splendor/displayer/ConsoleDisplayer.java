@@ -2,16 +2,22 @@ package fr.uge.splendor.displayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
 import fr.uge.splendor.action.Action;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
+import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenPurse;
+import fr.uge.splendor.game.GameData;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.utils.Utils;
@@ -31,8 +37,8 @@ public final class ConsoleDisplayer implements Displayer {
    * @param players
    * @param colors - the list of cards colors allowed in the game.
    */
-  private void displayPlayers(Player[] players, List<Color> colors) {
-    Arrays.stream(players).forEach(player -> System.out.println(player.toString(colors)));
+  private void displayPlayers(ArrayList<Player> players, List<Color> colors) {
+    players.stream().forEach(player -> System.out.println(player.toString(colors)));
   }
   
   /**
@@ -51,10 +57,14 @@ public final class ConsoleDisplayer implements Displayer {
    * @implNote: we will add a better version for this method using a map...
    * @param decks - the CardDecks to display.
    */
-  private String cardDecksToString(CardDeck[] decks) {
+  private String cardDecksToString(EnumMap<Level, CardDeck> decks) {
     var sb = new StringBuilder();
     
-    Arrays.stream(decks).forEach(deck -> sb.append(deck));
+    for (var entry : decks.entrySet()) {
+			sb.append(entry.getValue());
+		}
+    
+    //decks.stream().forEach(deck -> sb.append(deck));
     
     return sb.toString();
   }
@@ -80,7 +90,7 @@ public final class ConsoleDisplayer implements Displayer {
     System.out.println(board.toString());
   }
   
-  private void displayerDecksAndBoard(CardDeck[] decks, Board board) {
+  private void displayerDecksAndBoard(EnumMap<Level, CardDeck> decks, Board board) {
     var strings = new String[2];
     strings[0] = cardDecksToString(decks);
     strings[1] = board.toString();
@@ -92,10 +102,14 @@ public final class ConsoleDisplayer implements Displayer {
    * 
    * @param actions - the Actions to display.
    */
-  private void displayActions(Action[] actions) {
-    for (var i = 0; i < actions.length; i++) {
-      System.out.println((i + 1) + ": " + actions[i]);
-    }
+  private void displayActions(EnumMap<ActionType, Action> actions) {
+  	Objects.requireNonNull(actions, "Actions can't be null");
+  	
+  	int i = 0;
+    for (var key : actions.keySet()) {
+    	System.out.println((i + 1) + ": " + actions.get(key));
+    	i++;
+		}
   }
   
   /**
@@ -108,13 +122,13 @@ public final class ConsoleDisplayer implements Displayer {
    * @param colors - the list of cards colors allowed in the game.
    */
   @Override
-  public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenPurse tokenDecks, Board gameBoard, List<Color> colors) {
-    displayPlayers(players, colors);
+  public void display(GameData gameData, List<Color> colors) {
+    displayPlayers(gameData.players(), colors);
     //displayCardDecks(cardDecks);
-    displayBoard(noblesCards);
-    displayerDecksAndBoard(cardDecks, gameBoard);
+    displayBoard(gameData.noblesCards());
+    displayerDecksAndBoard(gameData.decks(), gameData.board());
     //displayBoard(gameBoard);
-    displayTokenDecks(tokenDecks);
+    displayTokenDecks(gameData.tokens());
   }
   
   /**
@@ -127,12 +141,12 @@ public final class ConsoleDisplayer implements Displayer {
   }
   
   
-  public void displayWinner(Player[] players, int winnerID) {
-    if (winnerID > players.length) {
+  public void displayWinner(ArrayList<Player> players, int winnerID) {
+    if (winnerID > players.size()) {
       throw new IllegalArgumentException("The winner doesn't exist");
     }
     
-    System.out.println(players[winnerID - 1].name() + " has won the game! Congratulations!");
+    System.out.println(players.get(winnerID - 1).name() + " has won the game! Congratulations!");
   }
   
   /**
@@ -153,19 +167,15 @@ public final class ConsoleDisplayer implements Displayer {
    * @return A couple of coordinates stored into an int array.
    */
   @Override
-  public int[] getCoordinates() {
-    var coordinates = new int[2];
+  public Coordinate getCoordinates() {
     var scanner = new Scanner(System.in);
     
-    System.out.println("Enter your card's row number (starting from zero, from top to bottom): ");
+    System.out.println("Enter your card's level (starting from one, from bottom to top): ");
     var row = scanner.nextInt();
     System.out.println("Enter your card's column number (starting from zero, from left to right): ");
     var col = scanner.nextInt();
-    
-    coordinates[0] = row;
-    coordinates[1] = col;
-    
-    return coordinates;
+   
+    return new Coordinate(row, col);
   }
   
   /**
@@ -231,7 +241,8 @@ public final class ConsoleDisplayer implements Displayer {
    * @param name - the player's name.
    */
   @Override
-  public ActionType getPlayerAction(Action[] actions, String name) {
+  public ActionType getPlayerAction(EnumMap<ActionType, Action> actions, String name) {
+  	Objects.requireNonNull(actions, "Actions can't be null");
     displayActions(actions);
     System.out.print(name + ", enter your action: ");
     

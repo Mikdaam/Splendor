@@ -18,4 +18,15 @@ public enum Level {
       default -> throw new IllegalArgumentException("Unexpected value: " + levelString);
     };
   }
+  
+  
+  public static Level getLevel(int level) {
+    return switch (level) {
+      case 1 -> LEVEL_1;
+      case 2 -> LEVEL_2;
+      case 3 -> LEVEL_3;
+      default -> UNKNOWN;
+    };
+  }
+  
 }

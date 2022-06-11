@@ -2,6 +2,8 @@ package fr.uge.splendor.displayer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenPurse;
+import fr.uge.splendor.game.GameData;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 import fr.umlv.zen5.ApplicationContext;
@@ -19,8 +22,8 @@ import fr.umlv.zen5.ApplicationContext;
 public final class GraphicDisplayer implements Displayer{
 
 	@Override
-	public void display(Player[] players, CardDeck[] cardDecks, Board noblesCards, TokenPurse tokenDecks, Board gameBoard,
-			List<Color> colors) {
+	public void display(GameData gameData, List<Color> colors) {
+	  
 	}
 
 	@Override
@@ -29,7 +32,7 @@ public final class GraphicDisplayer implements Displayer{
 	}
 
 	@Override
-	public void displayWinner(Player[] players, int winnerID) {
+	public void displayWinner(ArrayList<Player> players, int winnerID) {
 
 	}
 
@@ -59,7 +62,7 @@ public final class GraphicDisplayer implements Displayer{
 	}
 
 	@Override
-	public ActionType getPlayerAction(HashMap<ActionType, Action> actions, String name) {
+	public ActionType getPlayerAction(EnumMap<ActionType, Action> actions, String name) {
 		return null;
 	}
 	

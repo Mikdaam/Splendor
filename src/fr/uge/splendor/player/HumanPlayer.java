@@ -81,8 +81,8 @@ public final class HumanPlayer implements Player {
     return res;
   }
   
-  public Card removeFromReserved(int row, int col) {
-    return reservedCards.remove(row, col);
+  public Card removeFromReserved(Coordinate coordinate) {
+    return reservedCards.remove(coordinate);
   }
  
   
@@ -164,6 +164,10 @@ public final class HumanPlayer implements Player {
     ownedTokens = ownedTokens.remove(tokensToGiveBack);
     return tokensToGiveBack;
   }
+  
+  public Board reservedCards() {
+		return reservedCards;
+	}
   
   private String firstRowToString() {
     var sb = new StringBuilder("┌───────────────────────────────────┐\n");

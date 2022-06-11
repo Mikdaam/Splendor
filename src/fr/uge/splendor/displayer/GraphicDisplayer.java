@@ -2,11 +2,13 @@ package fr.uge.splendor.displayer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.uge.splendor.action.Action;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
+import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenPurse;
@@ -37,7 +39,7 @@ public final class GraphicDisplayer implements Displayer{
 	}
 
 	@Override
-	public int[] getCoordinates() {
+	public Coordinate getCoordinates() {
 		return null;
 	}
 
@@ -57,7 +59,7 @@ public final class GraphicDisplayer implements Displayer{
 	}
 
 	@Override
-	public ActionType getPlayerAction(Action[] actions, String name) {
+	public ActionType getPlayerAction(HashMap<ActionType, Action> actions, String name) {
 		return null;
 	}
 	

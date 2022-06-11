@@ -15,13 +15,6 @@ import fr.uge.splendor.level.Level;
  *
  */
 public interface Action {
-  
-  /**
-   * This method returns the ActionType of the action.
-   * 
-   * @return the ActionType of the action.
-   */
-	 ActionType type();
 	 
 	 /**
 	  * Apply an action to the game
@@ -54,21 +47,6 @@ public interface Action {
 	   return true;
 	 }
 	 
-	 /**
-	   * This method checks if a player has 10 tokens or less.
-	   * 
-	   * @param playerID - the player's ID
-	   * @return true if the player has less than 10 tokens, false otherwise.
-	   */
-	 default boolean checkPlayersTokensNumber(GameData gameData, int playerId) {
-	    if (gameData.players().get(playerId).getNumberOfTokens() == 10) {
-	      /*Exchange the tokens maybe?*/
-	    	 gameData.displayer().displayActionError("You already have 10 tokens. You cannot get more than that.");
-	      return false;
-	    }
-	    
-	    return true;
-	 }
 	 
 	 default boolean checkLevel(GameData gameData, Level level) {
 	   if (level.equals(Level.UNKNOWN)) {

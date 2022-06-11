@@ -11,18 +11,7 @@ import fr.uge.splendor.level.Level;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record ReserveCardDeckAction() implements Action {  
-  
-  /**
-   * This method returns the type (ActionType) of reserving a card from a deck.
-   * 
-   * @return - ActionType describing the action of reserving a card from a deck.
-   */
-  @Override
-  public ActionType type() {
-    return ActionType.RESERVE_CARD_DECK;
-  }
-  
+public record ReserveCardDeckAction() implements Action {    
   
   @Override
 	public GameData apply(int playerId, GameData gameData) {

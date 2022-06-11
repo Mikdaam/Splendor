@@ -3,7 +3,6 @@ package fr.uge.splendor.action;
 import java.util.Objects;
 
 import fr.uge.splendor.card.Coordinate;
-import fr.uge.splendor.deck.TokenPurse;
 import fr.uge.splendor.game.GameData;
 import fr.uge.splendor.utils.Utils;
 
@@ -14,17 +13,7 @@ import fr.uge.splendor.utils.Utils;
  * @author Yunen Snacel
  */
 public record BuyReservedCardAction() implements Action {  
-  
-  /**
-   * This method returns the type (ActionType) of the action of buying a reserved card.
-   * 
-   * @return - ActionType describing the action of buying a reserved card.
-   */
-  @Override
-  public ActionType type() {
-    return ActionType.BUY_RESERVED_CARD;
-  }
-  
+    
   @Override
 	public GameData apply(int playerId, GameData gameData) {
   	Objects.requireNonNull(gameData, "Game can't be null");

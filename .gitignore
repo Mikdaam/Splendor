@@ -116,3 +116,6 @@ replay_pid*
 
 # compiled class folder
 /bin/
+
+#docx files
+*.docx

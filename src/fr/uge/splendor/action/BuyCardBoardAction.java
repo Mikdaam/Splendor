@@ -2,8 +2,8 @@ package fr.uge.splendor.action;
 
 import java.util.Objects;
 
-import fr.uge.splendor.game.Game;
 import fr.uge.splendor.game.GameData;
+import fr.uge.splendor.level.Level;
 import fr.uge.splendor.utils.Utils;
 
 /**
@@ -29,22 +29,29 @@ public record BuyCardBoardAction() implements Action {
    * TODO: Make Yunen change ..... (add variable which contains possible colors ) ????
    */
   @Override
-  public boolean apply(int playerId, GameData gameData) {
+  public GameData apply(int playerId, GameData gameData) {
     Objects.requireNonNull(gameData, "Game can't be null");
     
     var cardPosition = gameData.displayer().getCoordinates();
+    var level = Level.getLevel(cardPosition.row());
     
-    var card = gameData.board().remove(cardPosition[0], cardPosition[1]);
-    if(gameData.players()[playerId].canBuyCard(card)) {
-      gameData.tokens().add(gameData.players()[playerId].buyCard(card, Utils.cardsColorsList()));
-      gameData.board().add(gameData.decks()[0].removeFirstCard(), cardPosition[0], cardPosition[1]);
-    } else {
-      gameData.board().add(card, cardPosition[0], cardPosition[1]);
-      gameData.displayer().displayActionError("You are not able to buy the Card.");
-      return false;
+    if (level.equals(Level.UNKNOWN) || !gameData.board().canRemove(cardPosition)) {
+      gameData.displayer().displayActionError("There is no card to buy here...");
+      return gameData;
     }
     
-    return true;
+    var card = gameData.board().remove(cardPosition);
+    
+    if(gameData.players().get(playerId).canBuyCard(card)) {
+      gameData.tokens().add(gameData.players().get(playerId).buyCard(card, Utils.cardsColorsList()));
+      gameData.board().add(gameData.decks().get(level).removeFirstCard(), cardPosition);
+    } else {
+      gameData.board().add(card, cardPosition);
+      gameData.displayer().displayActionError("You are not able to buy the Card.");
+      return gameData;
+    }
+    
+    return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), gameData.displayer(), true);
   }
   
   /**

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	BUILD FILE - SPLENDOR
+
+	Mikdaam BADAROU
+	Yunen SNACEL
+
+	ESIPE - INFO 1
+-->
+
+<project name="Splendor" basedir="." default="compile">
+
+	<!-- TARGET TO COMPILE THE PROJECT -->
+	<target name="compile">
+		<delete dir="classes"/>
+		<mkdir dir="classes"/>
+		<javac srcdir="src" destdir="classes" classpath="lib/zen5.jar"/>
+	</target>
+
+	<!-- TARGET TO CREATE THE PROJECT'S JAR FILE -->
+	<target name="jar">
+		<jar manifest="MANIFEST.MF" destfile="splendor.jar" basedir="classes"/>
+	</target>
+
+	<!-- TARGET TO GENERATE THE PROJECT'S JAVADOC -->
+	<target name="javadoc">
+		<mkdir dir="docs/doc"/>
+		<javadoc destdir="docs/doc" sourcepath="src" author="true" version="true" use="true">
+			<classpath>
+				<fileset dir="lib">
+					<include name="zen5.jar"/>
+				</fileset>
+			</classpath>
+		</javadoc>
+	</target>
+
+	<!-- TARGET TO CLEAN THE PROJECT -->
+	<target name="clean">
+		<delete dir="classes"/>
+		<mkdir dir="classes"/>
+		<!-- We also delete the javadoc since it wasn't
+		asked in the documents in the first place -->
+		<delete dir="docs/doc"/>
+	</target>
+
+</project>

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: Mikdaam BADAROU Yunen SNACEL
+Main-Class: fr.uge.splendor.main.Main
+Class-Path: lib/zen5.jar

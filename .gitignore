@@ -81,7 +81,7 @@ local.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.nar
 *.ear
@@ -116,3 +116,6 @@ replay_pid*
 
 # compiled class folder
 /bin/
+
+#docx files
+*.docx

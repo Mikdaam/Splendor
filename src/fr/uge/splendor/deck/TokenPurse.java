@@ -61,10 +61,11 @@ public class TokenPurse {
     Objects.requireNonNull(tokens, "Your map of tokens to remove cannot be null");
     
     var res = new TokenPurse();
+    deck.forEach((color, number) -> res.deck.put(color, deck.get(color)));
     
     tokens.deck.forEach((color, number) -> {
       if (number >= 0 && number <= deck.getOrDefault(color, 0)) {
-        res.deck.put(color, deck.getOrDefault(color, 0) - number);
+        res.deck.merge(color, -number, Integer::sum);
         //deck.computeIfPresent(color, (key, oldValue) -> oldValue - number);
       } else {
         throw new IllegalArgumentException("You're trying to withdraw too much or too less from your TokenPurse!");

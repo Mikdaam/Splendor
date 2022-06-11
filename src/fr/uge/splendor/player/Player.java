@@ -1,6 +1,5 @@
 package fr.uge.splendor.player;
 
-import java.util.HashMap;
 import java.util.List;
 
 import fr.uge.splendor.board.Board;
@@ -8,7 +7,6 @@ import fr.uge.splendor.card.Card;
 import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.TokenPurse;
-import fr.uge.splendor.token.Token;
 
 public sealed interface Player permits HumanPlayer {
   
@@ -35,7 +33,9 @@ public sealed interface Player permits HumanPlayer {
   
   public Board reservedCards();
 
-  void removeTokensColor(Color gold);
+  void removeTokensColor(Color color);
+  
+  int removeTokens(Color color, int number);
   
   int numberOfDevelopmentCards(List<Color> colors);
   

@@ -51,7 +51,7 @@ public record TwoTokensAction() implements Action {
       return false;
     }*/
     
-    return  new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), true);
+    return  new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
 	}
   
   /**

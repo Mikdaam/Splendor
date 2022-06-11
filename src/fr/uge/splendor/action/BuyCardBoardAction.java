@@ -2,6 +2,8 @@ package fr.uge.splendor.action;
 
 import java.util.Objects;
 
+import fr.uge.splendor.card.Coordinate;
+import fr.uge.splendor.color.Color;
 import fr.uge.splendor.game.GameData;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.utils.Utils;
@@ -35,23 +37,33 @@ public record BuyCardBoardAction() implements Action {
     var cardPosition = gameData.displayer().getCoordinates();
     var level = Level.getLevel(cardPosition.row());
     
-    if (level.equals(Level.UNKNOWN) || !gameData.board().canRemove(cardPosition)) {
+    if (!checkLevel(gameData, level)) {
+      return gameData;
+    }
+    
+    cardPosition = new Coordinate(gameData.levelToInteger().get(level), cardPosition.column());
+    
+    if (!gameData.board().canRemove(cardPosition)) {
       gameData.displayer().displayActionError("There is no card to buy here...");
       return gameData;
     }
     
     var card = gameData.board().remove(cardPosition);
+    var tokens = gameData.tokens();
     
     if(gameData.players().get(playerId).canBuyCard(card)) {
-      gameData.tokens().add(gameData.players().get(playerId).buyCard(card, Utils.cardsColorsList()));
-      gameData.board().add(gameData.decks().get(level).removeFirstCard(), cardPosition);
+      tokens = tokens.add(gameData.players().get(playerId).buyCard(card, Utils.cardsColorsList()));
+      var newCard = gameData.decks().get(level).removeFirstCard();
+      if (!newCard.color().equals(Color.EMPTY)) {
+        gameData.board().push(newCard, cardPosition.row());
+      }
     } else {
-      gameData.board().add(card, cardPosition);
+      gameData.board().push(card, cardPosition.row());
       gameData.displayer().displayActionError("You are not able to buy the Card.");
       return gameData;
     }
     
-    return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), gameData.displayer(), true);
+    return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
   }
   
   /**

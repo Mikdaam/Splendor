@@ -1,5 +1,10 @@
 package fr.uge.splendor.game;
 
+import java.awt.AlphaComposite;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,7 +21,12 @@ import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.utils.Utils;
-import fr.uge.splendor.action.Action;
+import fr.umlv.zen5.Application;
+import fr.umlv.zen5.Event;
+import fr.umlv.zen5.KeyboardKey;
+import fr.umlv.zen5.Event.Action;
+import fr.umlv.zen5.ScreenInfo;
+import fr.uge.splendor.action.GameAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.action.BuyCardBoardAction;
 import fr.uge.splendor.action.GiveBackTokensAction;
@@ -33,8 +43,9 @@ import fr.uge.splendor.action.TwoTokensAction;
  */
 public class SimpleGame implements Game {
 	private final int nbOfPlayers = 2;
-  private final EnumMap<ActionType, Action> actions;
+  private final EnumMap<ActionType, GameAction> actions;
   
+  private final boolean isGraphicalMode;
   private final Displayer displayer; /* View */
   
   private GameData gameData;
@@ -42,9 +53,10 @@ public class SimpleGame implements Game {
   /**
    * This constructor creates a SimpleGame. It must be initialized with {@code initGame}.
    */
-  public SimpleGame() {
+  public SimpleGame(boolean isGraphicalMode) {
+  	this.isGraphicalMode = isGraphicalMode;
+  	displayer = new ConsoleDisplayer();
     actions = new EnumMap<>(ActionType.class);
-    displayer = new ConsoleDisplayer();
     gameData = new GameData(new Board(1, 4), new EnumMap<>(Level.class), new Board(0, 0), new TokenPurse(), new ArrayList<Player>(), new ConsoleDisplayer(), new EnumMap<>(Level.class), false);
   }
   
@@ -200,13 +212,13 @@ public class SimpleGame implements Game {
     //System.out.println("Players : " + gameData.players());
     //System.out.println("Tokens : " + gameData.tokens() + "\n");
     
-    while (getMaxPrestige() < 15) {
+    /*while (getMaxPrestige() < 15) {
     	displayGame();
       chooseAction(playerID);
       playerID = (playerID + 1) % nbOfPlayers;
     }
     
-    /*LAST RUN*/
+    /*LAST RUN*
     for(int i = 0; i < nbOfPlayers; i++) {
       displayGame();
       chooseAction(playerID);
@@ -214,6 +226,75 @@ public class SimpleGame implements Game {
     }
     
     System.out.println(getWinner());
-    displayer.displayWinner(gameData.players(), getWinner());
-  } 
+    displayer.displayWinner(gameData.players(), getWinner());*/
+    
+   if (!isGraphicalMode) {    	
+      while (getMaxPrestige() < 15) {
+      	displayGame();
+        chooseAction(playerID);
+        playerID = (playerID + 1) % nbOfPlayers;
+      }
+      
+      /*LAST RUN*/
+      for(int i = 0; i < nbOfPlayers; i++) {
+        displayGame();
+        chooseAction(playerID);
+        playerID = (playerID + 1) % nbOfPlayers;
+      }
+      
+      System.out.println(getWinner());
+      displayer.displayWinner(gameData.players(), getWinner());
+		} else {
+			Application.run(java.awt.Color.BLACK, context -> {
+			ScreenInfo screenInfo = context.getScreenInfo();
+			int width = (int)screenInfo.getWidth();
+			int height = (int)screenInfo.getHeight();
+			System.out.println("size of the screen (" + width + " x " + height + ")");
+				
+			
+			
+			while (true) {
+				Event event = context.pollOrWaitEvent(10);
+				if (event == null) { // no event
+					continue;
+				}
+				
+				Action action = event.getAction();
+				if (action == Action.KEY_PRESSED || action == Action.KEY_RELEASED) {
+					if(event.getKey() == KeyboardKey.Q) {
+						System.out.println("GoodBye, see you soon");
+						context.exit(0);
+						return;							
+					}
+				}
+				
+				if (action != Action.POINTER_DOWN) {
+					continue;
+				}
+				
+				context.renderFrame(graphics -> {
+					var background = Toolkit.getDefaultToolkit().getImage("./res/img/background.jpg");
+					graphics.drawImage(background, 0, 0, width, height, null);
+					
+					var cardTest = Toolkit.getDefaultToolkit().getImage("./res/img/cards/row-1-column-1.jpg");
+					graphics.setColor(java.awt.Color.WHITE);
+					graphics.drawRoundRect(49, 49, 250, 350, 2, 2);
+					graphics.drawImage(cardTest, 50, 50, 251, 351, null);
+					
+					graphics.setColor(java.awt.Color.BLACK);
+					graphics.setFont(new Font("Courgette", Font.ITALIC, 50));
+					graphics.drawString("3", 100, 100);
+					
+					graphics.setColor(java.awt.Color.WHITE);
+					for (int i = 1; i <= 10; i++) {
+						graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, i * 0.1f));
+						graphics.fillRect(50 * i, 50, 50, 50);
+			    }
+				});
+				
+			}
+				
+		});
+	}   
+ } 
 }

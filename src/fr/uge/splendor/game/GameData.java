@@ -11,7 +11,6 @@ import fr.uge.splendor.displayer.Displayer;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
 
-// TODO: Change array to ArrayList here
 public record GameData(Board board,
                        EnumMap<Level, CardDeck> decks,
                        Board noblesCards,

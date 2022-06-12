@@ -1,7 +1,6 @@
 package fr.uge.splendor.deck;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 import java.util.Objects;
 
 import fr.uge.splendor.color.Color;
@@ -15,115 +14,122 @@ import fr.uge.splendor.color.Color;
  *
  */
 public class TokenPurse {
-  private final HashMap<Color, Integer> deck;
+  private final EnumMap<Color, Integer> deck;
   
   /**
-   * This constructor creates the HashMap that describes a TokenPurse and initializes it
+   * This constructor creates the EnumMap that describes a TokenPurse and initializes it
    * with all the colors and zero tokens in it.
    */
   public TokenPurse() {
-    this.deck = new HashMap<Color, Integer>();
-    
-    /*Color.getTokensColorsList().stream()
-                               .forEach(color -> deck.put(color, 0));*/
+    deck = new EnumMap<Color, Integer>(Color.class);
   }
  
+  
   /**
    * This method adds some tokens to a TokenPurse.
    * 
    * @param tokens - The HashMap describing the tokens to add to the TokenPurse.
+   * @return A new updated TokenPurse
    */
   public TokenPurse add(TokenPurse tokens) {
     Objects.requireNonNull(tokens, "You have to add at least 1 token, your map cannot be null!");
     
-    var res = new TokenPurse();
-    deck.forEach((color, number) -> res.deck.put(color, number));
+    var newPurse = new TokenPurse();
+    deck.forEach((color, number) -> newPurse.deck.put(color, number));
     
-    tokens.deck.forEach((color, number) -> res.deck.merge(color, number, Integer::sum));
+    tokens.deck.forEach((color, number) -> newPurse.deck.merge(color, number, Integer::sum));
     
-    return res;
+    return newPurse;
   }
   
-  public TokenPurse addToken(Color color, int number) {
+  /**
+   * Adds a given amount of tokens of a given color.
+   * @param color - the color fo the tokens to add
+   * @param amount - the amount of tokens to add
+   * @return A new updated TokenPurse
+   */
+  public TokenPurse addToken(Color color, int amount) {
     Objects.requireNonNull(color);
-    var res = (new TokenPurse()).add(this);
     
-    res.deck.merge(color, number, Integer::sum);
+    if (amount < 0) {
+      throw new IllegalArgumentException("You cannot add a negative amount");
+    }
     
-    return res;    
+    var newPurse = (new TokenPurse()).add(this);
+    newPurse.deck.merge(color, amount, Integer::sum);
+    
+    return newPurse;    
   }
 
   /**
    * This method removes some tokens from a TokenPurse.
    * 
    * @param tokens - The HashMap describing the tokens to remove from the TokenPurse.
+   * @return A new updated TokenPurse
    */
   public TokenPurse remove(TokenPurse tokens) {
     Objects.requireNonNull(tokens, "Your map of tokens to remove cannot be null");
     
-    var res = new TokenPurse();
-    deck.forEach((color, number) -> res.deck.put(color, deck.get(color)));
+    var newPurse = new TokenPurse();
+    deck.forEach((color, number) -> newPurse.deck.put(color, deck.get(color)));
     
     tokens.deck.forEach((color, number) -> {
       if (number >= 0 && number <= deck.getOrDefault(color, 0)) {
-        res.deck.merge(color, -number, Integer::sum);
-        //deck.computeIfPresent(color, (key, oldValue) -> oldValue - number);
+        newPurse.deck.merge(color, -number, Integer::sum);
       } else {
         throw new IllegalArgumentException("You're trying to withdraw too much or too less from your TokenPurse!");
       }
       
     });
     
-    return res;
-  }
-  
-  /**
-   * This method creates the summary of a TokenPurse and computes it into an HashMap.
-   * 
-   * @return The HashMap describing the TokenPurse
-   */
-  public TokenPurse getDeckSummary() {
-    var res = new TokenPurse();
-    
-    deck.forEach((color, amount) -> res.deck.merge(color, amount, Integer::sum));
-    
-    return res;    
-  }
-  
-  
-  public int numberOfTokens() {
-    int res = 0;
-    
-    for (int value : deck.values()) {
-      res += value;
-    }
-     
-    return res;
-  }
-  
-  /**
-   * This method returns the number of tokens associated to a color.
-   * 
-   * @param color - The color from which we want to get the number of tokens.
-   * @return The number of tokens associated with this color
-   */
-  public int getColorNumber(Color color) {
-    return deck.getOrDefault(color, 0);
+    return newPurse;
   }
   
   /**
    * This method remove a given color from the TokenPurse.
    * 
-   * @param color
+   * @param color - The color to remove
+   * @return A new updated TokenPurse
    */
   public TokenPurse removeColor(Color color) {
-      var res = new TokenPurse();
-      
-      res = res.add(this);
-		  res.deck.remove(color);
-		  
-		  return res;
-	 }
+    Objects.requireNonNull(color);
+    
+    var newPurse = new TokenPurse();
+    newPurse = newPurse.add(this);
+    newPurse.deck.remove(color);
+    
+    return newPurse;
+  }
+  
+  
+  
+  /**
+   * Returns the amount of Tokens in the TokenPurse
+   * @return The amount of Tokens in the TokenPurse
+   */
+  public int amountOfTokens() {
+    int amount = 0;
+    
+    for (int value : deck.values()) {
+      amount += value;
+    }
+     
+    return amount;
+  }
+  
+  /**
+   * This method returns the amount of tokens associated to a color.
+   * 
+   * @param color - The color from which we want to get the number of tokens.
+   * @return The number of tokens associated with this color
+   */
+  public int getColorAmount(Color color) {
+    Objects.requireNonNull(color);
+    return deck.getOrDefault(color, 0);
+  }
+  
+
+  
   
   /**
    * This method computes a TokenPurse's colors into a row for the TokenPurse's String format.
@@ -190,6 +196,7 @@ public class TokenPurse {
    * 
    * @return The TokenPurse computed into a String
    */
+  @Override
   public String toString() {    
     var sb = new StringBuilder();
     

@@ -21,13 +21,11 @@ import fr.uge.splendor.player.Player;
  *
  */
 public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
+  
   /**
-   * This method displays a Game, with its players, its CardDecks, it TokenDeck and its Board.
+   * This method displays a game's data.
    * 
-   * @param players - the array of Players to display.
-   * @param cardDecks - the array of CardDecks to display.
-   * @param tokenDecks - the TokenDeck to display.
-   * @param gameBoard - the Board to display.
+   * @param gameData - the game's data to display
    * @param colors - the list of cards colors allowed in the game.
    */
   void display(GameData gameData, List<Color> colors);
@@ -42,7 +40,7 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
   /**
    * This method displays the winner of the game.
    * 
-   * @param players - the array of players of the Game.
+   * @param players - the list of players of the Game.
    * @param winnerID - the winner's ID.
    */
   void displayWinner(ArrayList<Player> players, int winnerID);
@@ -51,6 +49,7 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * This method clears the output.
    */
   void clear();
+  
   
   /**
    * This method gets and returns the player's inputs for a card's coordinates.
@@ -83,9 +82,8 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
   /**
    * This method asks the player for their action and returns the ActionType for the Action they've chosen.
    * 
-   * @param actions - the array of Actions possible.
+   * @param actions - the map of Actions possible.
    * @param name - the player's name.
    */
   ActionType getPlayerAction(EnumMap<ActionType, GameAction> actions, String name);
-  
 }

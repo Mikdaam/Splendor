@@ -1,10 +1,10 @@
 package fr.uge.splendor.action;
 
 /**
- * This enum represents the different types of action possible in all the games.
+ * This enum represents the different types of action possible in all game modes.
  * 
- * @author Mikdaam Badarou
- * @author Yunen Snacel
+ * @author Mikdaam BADAROU
+ * @author Yunen SNACEL
  *
  */
 public enum ActionType {

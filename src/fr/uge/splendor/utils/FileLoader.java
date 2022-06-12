@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.Objects;
 
 import fr.uge.splendor.card.DevelopmentCard;
 import fr.uge.splendor.color.Color;
@@ -29,6 +30,8 @@ public class FileLoader {
 	 * @return 						a parsed price into an EnumMap
 	 */
   private static EnumMap<Color, Integer> parsePrice(String priceString) {
+    Objects.requireNonNull(priceString);
+    
     var price = new EnumMap<Color, Integer>(Color.class);
     var pricesType = priceString.split("\\+");
     
@@ -50,7 +53,9 @@ public class FileLoader {
    * @throws IOException raise an exception in case of error
    */
   public static CardDeck createCards(Path cardsFile) throws IOException {
-    var gameCards = new CardDeck();
+    Objects.requireNonNull(cardsFile);
+    
+    var gameCards = new CardDeck("LV. ?");
     
      try (var csvReader = Files.newBufferedReader(cardsFile)) {	 
     	 csvReader.lines()

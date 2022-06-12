@@ -9,6 +9,14 @@ import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenPurse;
 
+/**
+ * This class represents a human player.
+ * A HumanPlayer is a human who can play and interact with the game's objects.
+ * 
+ * @author Mikdaam BADAROU
+ * @author Yunen SNACEL
+ *
+ */
 public final class HumanPlayer implements Player {
   private final int id;
   private final String name;
@@ -16,22 +24,29 @@ public final class HumanPlayer implements Player {
   private TokenPurse ownedTokens;
   private final Board reservedCards;
   
-  
+  /**
+   * Creates a HumanPlayer with a given id and name.
+   * @param id - the human player's id
+   * @param name - the human player's name
+   */
   public HumanPlayer(int id, String name) {
     if (id < 0) {
-      throw new IllegalArgumentException("The ID should be zero or positive!");
+      throw new IllegalArgumentException("The ID should be positive!");
     }
     Objects.requireNonNull(name, "The player's name cannot be null!");
     
     this.id = id;
     this.name = name;
-    ownedCards = new CardDeck();
+    ownedCards = new CardDeck("PL. " + id);
     reservedCards = new Board(1, 3);
     ownedTokens = new TokenPurse();
     this.initTokens();
     
   }
   
+  /**
+   * Initializes the human player's TokenPurse with every color to 0.
+   */
   private void initTokens() {
     ownedTokens = ownedTokens.addToken(Color.DIAMOND, 0);
     ownedTokens = ownedTokens.addToken(Color.EMERALD, 0);
@@ -41,78 +56,135 @@ public final class HumanPlayer implements Player {
     ownedTokens = ownedTokens.addToken(Color.GOLD, 0);
   }
   
-  public void removeTokensColor(Color color) {
-    Objects.requireNonNull(color);
-    ownedTokens = ownedTokens.removeColor(color);
-  }
-  
-  public int removeTokens(Color color, int number) {
-    Objects.requireNonNull(color);
-    
-    if (number < 0 || number > ownedTokens.getColorNumber(color)) {
-      return 0;
-    }
-    
-    ownedTokens = ownedTokens.remove(new TokenPurse().addToken(color, number));
-    return number;
-  }
-  
-  public int getNumberOfTokens() {
-    return ownedTokens.numberOfTokens();
-    //return ownedTokens.getDeckSummary().values().stream().reduce(0, Integer::sum);
-  }
-  
+  /**
+   * Returns the player's id number.
+   * @return The player's id number.
+   */
+  @Override
   public int id() {
     return id;
   }
   
- 	@Override
- 	public String name() {
- 	  return name;
- 	}
+  /**
+   * Returns the player's name.
+   * @return The player's name.
+   */
+  @Override
+  public String name() {
+    return name;
+  }
   
+  /**
+   * Returns the player's amount of prestige points.
+   * @return The player's amount of prestige points.
+   */
+  @Override
   public int prestigePoints() {
     return ownedCards.getPrestigePoints();
   }
   
+  /**
+   * Returns the reserved cards a player has.
+   * @return The reserved cards a player has.
+   */
   @Override
-  public int numberOfDevelopmentCards(List<Color> colors) {
-    var summary = ownedCards.getDeckSummary(colors);
-    var res = 0;
-    
-    for (var color: summary.keySet()) {
-      if (color != Color.NOBLE) {
-        res += summary.getOrDefault(color, 0);
-      }
-    }
-    
-    return res;
+  public Board reservedCards() {
+    return reservedCards;
   }
   
-  public Card removeFromReserved(Coordinate coordinate) {
-    return reservedCards.remove(coordinate);
-  }
- 
-  public void pushToReserved(Card card) {
-    reservedCards.push(card, 0);
+  
+  
+  /**
+   * Removes a type (color) of tokens from a player's TokenPurse.
+   * @param color - the color to remove from the player's TokenPurse.
+   */
+  @Override
+  public void removeTokensColor(Color color) {
+    Objects.requireNonNull(color);    
+    ownedTokens = ownedTokens.removeColor(color);
   }
   
-  public int numberOfReservedCards() {
-    return reservedCards.numberOfCards();
-  }
-  
+  /**
+   * A player takes one token of a given color.
+   * @param color - the color of the token to take.
+   */
   @Override
   public void takeToken(Color color) {
     Objects.requireNonNull(color);
+    
+    if (color.equals(Color.EMPTY)) {
+      throw new IllegalArgumentException("You cannot take a Token of an Empty Color");
+    }
+    
     ownedTokens = ownedTokens.addToken(color, 1);
   }
   
+  /**
+   * Removes a given amount of tokens of a certain color from a player's TokenPurse.
+   * @param color - the color of the tokens to remove.
+   * @param amount - the amount of tokens to remove.
+   * @return The real amount of tokens removed.
+   */
+  @Override
+  public int removeTokens(Color color, int amount) {
+    Objects.requireNonNull(color);
+    
+    if (color.equals(Color.EMPTY)) {
+      throw new IllegalArgumentException("You cannot take a Token of an Empty Color");
+    }
+    
+    if (amount < 0 || amount > ownedTokens.getColorAmount(color)) {
+      return 0;
+    }
+    
+    ownedTokens = ownedTokens.remove(new TokenPurse().addToken(color, amount));
+    return amount;
+  }
+  
+  /**
+   * Returns the total amount of tokens a player has.
+   * @return The total amount of tokens a player has.
+   */
+  @Override
+  public int getAmountOfTokens() {
+    return ownedTokens.amountOfTokens();
+  }
+  
+  
+  
+  /**
+   * Returns the amount of development cards a player has.
+   * @param colors - the list of possible card colors for the current game.
+   * @return The amount of development cards a player has.
+   */
+  @Override
+  public int amountOfDevelopmentCards(List<Color> colors) {
+    Objects.requireNonNull(colors);
+    var summary = ownedCards.getDeckSummary(colors);
+    var amount = 0;
+    
+    for (var color: summary.keySet()) {
+      if (color != Color.NOBLE) {
+        amount += summary.getOrDefault(color, 0);
+      }
+    }
+    
+    return amount;
+  }
+  
+  /**
+   * Checks if a player can get a given noble.
+   * 
+   * @param noble - the noble the player wants to get.
+   * @return true if the player can get the given noble, false otherwise.
+   */
+  @Override
   public boolean canGetNoble(Card noble) {
-  	Objects.requireNonNull(noble);
+   Objects.requireNonNull(noble);
     
     for (var color: noble.price().keySet()) {
       var price = noble.price().get(color);
-      if (ownedCards.getColorNumber(color) < price) {
+      if (ownedCards.getColorAmount(color) < price) {
         return false;
       }
     }
@@ -120,17 +192,23 @@ public final class HumanPlayer implements Player {
     return true;
   }
   
+  /**
+   * Checks if a player can buy a given card.
+   * 
+   * @param card - the card the player wants to buy.
+   * @return true if the player can buy the given card, false otherwise.
+   */
   @Override
   public boolean canBuyCard(Card card) {
     Objects.requireNonNull(card);
     
-    var jokers =  ownedTokens.getColorNumber(Color.GOLD);
+    var jokers =  ownedTokens.getColorAmount(Color.GOLD); /*The amount of jokers if the player has some*/
     
     for (var color: card.price().keySet()) {
       var price = card.price().get(color);
-      if (ownedCards.getColorNumber(color) + ownedTokens.getColorNumber(color) < price) {
-        if (ownedCards.getColorNumber(color) + ownedTokens.getColorNumber(color) + jokers >= price) {
-          jokers -= price - ownedCards.getColorNumber(color) - ownedTokens.getColorNumber(color);
+      if (ownedCards.getColorAmount(color) + ownedTokens.getColorAmount(color) < price) {
+        if (ownedCards.getColorAmount(color) + ownedTokens.getColorAmount(color) + jokers >= price) {
+          jokers -= price - ownedCards.getColorAmount(color) - ownedTokens.getColorAmount(color); /*If we have to use some jokers*/
         } else {
           return false;
         }
@@ -140,9 +218,16 @@ public final class HumanPlayer implements Player {
     return true;
   }
   
+  /**
+   * Executes the action of buying a given card for the player.
+   * @param card - the card to buy.
+   * @param colors - the list of possible card colors for the current game.
+   * @return A TokenPurse containing the amount of tokens the player gives back to game.
+   */
   @Override
   public TokenPurse buyCard(Card card, List<Color> colors) {
     Objects.requireNonNull(card);
+    Objects.requireNonNull(colors);
     
     var tokensToGiveBack = new TokenPurse();
     var deckSummary = ownedCards.getDeckSummary(colors);
@@ -153,8 +238,8 @@ public final class HumanPlayer implements Player {
      
       if (deckSummary.getOrDefault(color, 0) < price) { /*Check if there is enough bonus or not*/
         var potentialJoker = 0; /*Potential gold to add*/
-        if (ownedTokens.getColorNumber(color) + deckSummary.getOrDefault(colors, 0) < price) { /*if not enough with tokens + bonuses*/
-          potentialJoker = price - ownedTokens.getColorNumber(color) - deckSummary.getOrDefault(colors, 0); /*Calculating the jokers to use there*/
+        if ((ownedTokens.getColorAmount(color) + deckSummary.getOrDefault(color, 0)) < price) { /*if not enough with tokens + bonuses*/
+          potentialJoker = price - ownedTokens.getColorAmount(color) - deckSummary.getOrDefault(color, 0); /*Calculating the jokers to use there*/
         }
         
         tokensToGiveBack = tokensToGiveBack.addToken(color, price - deckSummary.getOrDefault(color, 0) - potentialJoker); /*tokens = price - bonus - potentialJoker*/
@@ -171,67 +256,49 @@ public final class HumanPlayer implements Player {
     return tokensToGiveBack;
   }
   
-  public Board reservedCards() {
-		return reservedCards;
-	}
   
-  
-  
-  private String firstRowToString() {
-    var sb = new StringBuilder("┌───────────────────────────────────┐\n");
-    
-    sb.append("│  PLAYER ").append(id)
-      .append("  │  ").append(String.format("%02d", this.prestigePoints()))
-      .append(" PRESTIGE POINTS  │\n")
-      .append("└───────────────────────────────────┘\n");
-    
-    return sb.toString();
+  /**
+   * Performs the action of removing a card of given coordinates from the player's
+   * reserved cards board.
+   * @param coordinate - the reserved card's coordinates on the player's board.
+   * @return The removed reserved card.
+   */
+  @Override
+  public Card removeFromReserved(Coordinate coordinate) {
+    Objects.requireNonNull(coordinate);
+    return reservedCards.remove(coordinate);
   }
   
-  private String tokensToString() {
-    var sb = new StringBuilder(" TOKENS:\n");
-    sb.append(ownedTokens.toString())
-      .append("\n");
-    
-    return sb.toString();
+  /**
+   * Performs the action of pushing a card on the player's reserved cards board.
+   * @param card - the reserved card to push.
+   */
+  @Override
+  public void pushToReserved(Card card) {
+    Objects.requireNonNull(card);
+    reservedCards.push(card, 0);
   }
   
-  private String ownedCardsToString(List<Color> colors) {
-    var sb = new StringBuilder();
-    
-    sb.append(" CARDS:\n")
-      .append(ownedCards.deckSummaryToString(colors))
-      .append("\n");
-    
-    return sb.toString();
+  /**
+   * Returns the amount of reserved cards a player has.
+   * @return The amount of reserved cards a player has.
+   */
+  @Override
+  public int amountOfReservedCards() {
+    return reservedCards.amountOfCards();
   }
   
-  private String reservedCardsToString() {
-    if(numberOfReservedCards() == 0) {
-      return "";
-    }
-    
-    var sb = new StringBuilder();
-    sb.append(" RESERVED CARDS:\n")
-      .append(reservedCards)
-      .append("\n");
-    
-    return sb.toString();
-  }
   
-
+   
+  /**
+   * Returns a String describing a player with their id, amount of prestige points,
+   * owned cards, owned tokens and potentially their owned reserved cards if they have some.
+   * @param colors - the list of possible card colors for the current game.
+   * @return A String describing a player
+   */
   @Override
   public String toString(List<Color> colors) {
     Objects.requireNonNull(colors);
-    
-    var sb = new StringBuilder();
-    
-    sb.append(firstRowToString())
-      .append(tokensToString())
-      .append(ownedCardsToString(colors))
-      .append(reservedCardsToString())
-      .append("\n");
-    
-    return sb.toString();
+    return this.playerToString(id, this.prestigePoints(), ownedTokens, ownedCards, reservedCards, colors);
   }
 }

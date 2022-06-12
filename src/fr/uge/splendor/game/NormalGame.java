@@ -55,23 +55,18 @@ public class NormalGame implements Game {
 	
 	private GameData gameData;
 	
-	private final Displayer displayer; /* View */
+	//private final Displayer displayer; /* View */
 	
-  public NormalGame(int numberOfPlayers) {
-  		if(numberOfPlayers < 2 && numberOfPlayers > 4) {
-  		  throw new IllegalArgumentException("Number of player should be greater than 2.");
-  		}
+  public NormalGame(int numberOfPlayers, Displayer displayer) {
+  	if(numberOfPlayers < 2 && numberOfPlayers > 4) {
+  		throw new IllegalArgumentException("Number of player should be greater than 2.");
+  	}
   		
-  		/*board = new Board(3, 4);
-      decks = new CardDeck[3];
-      tokens = new TokenPurse();
-      players = new Player[numberOfPlayers];
-      actions = new Action[6];*/
-  		nbOfPlayers = numberOfPlayers;
-  		displayer = new ConsoleDisplayer();
+  	nbOfPlayers = numberOfPlayers;
+  	//displayer = new ConsoleDisplayer();
     actions = new EnumMap<>(ActionType.class);
     
-    gameData = new GameData(new Board(3, 4), new EnumMap<>(Level.class), new Board(1, numberOfPlayers + 1), new TokenPurse(), new ArrayList<Player>(), new ConsoleDisplayer(), new EnumMap<>(Level.class), false);
+    gameData = new GameData(new Board(3, 4), new EnumMap<>(Level.class), new Board(1, numberOfPlayers + 1), new TokenPurse(), new ArrayList<Player>(), displayer, new EnumMap<>(Level.class), false);
     
     if (numberOfPlayers == 2) {
     	 NUMBER_OF_TOKEN_MISSING_BY_NUM_OF_PLAYER = 3;
@@ -141,7 +136,7 @@ public class NormalGame implements Game {
     tokens = tokens.addToken(Color.SAPPHIRE, numberOfTokenByColor);
     tokens = tokens.addToken(Color.GOLD, NUMBER_OF_GOLD_TOKEN);
     
-    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), displayer, gameData.levelToInteger(), gameData.actionSucceed());
+    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), gameData.actionSucceed());
   }
   
   /**
@@ -171,7 +166,7 @@ public class NormalGame implements Game {
    * This method calls the SimpleGame's Displayer to display it.
    */
   private void displayGame() {
-		  displayer.display(gameData, cardsColorsList());
+  	gameData.displayer().display(gameData, cardsColorsList());
 	 }
   
   /**
@@ -209,17 +204,17 @@ public class NormalGame implements Game {
    */
   private void chooseAction(int playerID) {      
     while (!gameData.actionSucceed()) {
-    	var choosenActionType = displayer.getPlayerAction(actions, gameData.players().get(playerID).name());
+    	var choosenActionType = gameData.displayer().getPlayerAction(actions, gameData.players().get(playerID).name());
 	    
       if(choosenActionType == ActionType.UNKNOWN) {
-      	 displayer.displayActionError("Uknown Action");
+      	gameData.displayer().displayActionError("Uknown Action");
       } else {
       	 gameData = actions.get(choosenActionType).apply(playerID, gameData);
       }
 		  }
     
     gameData = (new GiveBackTokensAction()).apply(playerID, gameData);
-    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), displayer, gameData.levelToInteger(), false);
+    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), gameData.displayer(), gameData.levelToInteger(), false);
   }
   
   public GameData getGameState() {
@@ -280,6 +275,6 @@ public class NormalGame implements Game {
     }
     
     System.out.println(getWinner());
-    displayer.displayWinner(gameData.players(), getWinner());
+    gameData.displayer().displayWinner(gameData.players(), getWinner());
   }
 }

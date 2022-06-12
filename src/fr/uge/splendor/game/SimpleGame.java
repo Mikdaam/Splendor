@@ -45,19 +45,16 @@ public class SimpleGame implements Game {
 	private final int nbOfPlayers = 2;
   private final EnumMap<ActionType, GameAction> actions;
   
-  private final boolean isGraphicalMode;
-  private final Displayer displayer; /* View */
+  //private final Displayer displayer; /* View */
   
   private GameData gameData;
   
   /**
    * This constructor creates a SimpleGame. It must be initialized with {@code initGame}.
    */
-  public SimpleGame(boolean isGraphicalMode) {
-  	this.isGraphicalMode = isGraphicalMode;
-  	displayer = new ConsoleDisplayer();
+  public SimpleGame(Displayer displayer) {
     actions = new EnumMap<>(ActionType.class);
-    gameData = new GameData(new Board(1, 4), new EnumMap<>(Level.class), new Board(0, 0), new TokenPurse(), new ArrayList<Player>(), new ConsoleDisplayer(), new EnumMap<>(Level.class), false);
+    gameData = new GameData(new Board(1, 4), new EnumMap<>(Level.class), new Board(0, 0), new TokenPurse(), new ArrayList<Player>(), displayer, new EnumMap<>(Level.class), false);
   }
   
   
@@ -114,7 +111,7 @@ public class SimpleGame implements Game {
     tokens = tokens.addToken(Color.RUBY, 4);
     tokens = tokens.addToken(Color.SAPPHIRE, 4);
     
-    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), displayer, gameData.levelToInteger(), gameData.actionSucceed());
+    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), gameData.actionSucceed());
     
   }
   
@@ -149,7 +146,7 @@ public class SimpleGame implements Game {
    * This method calls the SimpleGame's Displayer to display it.
    */
   private void displayGame() {
-		  displayer.display(gameData, Utils.cardsColorsList());
+		  gameData.displayer().display(gameData, Utils.cardsColorsList());
 	 }
   
 
@@ -160,16 +157,16 @@ public class SimpleGame implements Game {
    */
   private void chooseAction(int playerID) {    
     while (!gameData.actionSucceed()) {
-    	var choosenActionType = displayer.getPlayerAction(actions, gameData.players().get(playerID).name());
+    	var choosenActionType = gameData.displayer().getPlayerAction(actions, gameData.players().get(playerID).name());
 	    
       if(choosenActionType == ActionType.UNKNOWN) {
-      	 displayer.displayActionError("Uknown Action");
+      	gameData.displayer().displayActionError("Uknown Action");
       } else {
       	 gameData = actions.get(choosenActionType).apply(playerID, gameData);
       }
 		  }
     gameData = (new GiveBackTokensAction()).apply(playerID, gameData);
-    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), displayer, gameData.levelToInteger(), false);
+    gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), gameData.displayer(), gameData.levelToInteger(), false);
   }
   
   public GameData getGameState() {
@@ -227,9 +224,9 @@ public class SimpleGame implements Game {
     
     System.out.println(getWinner());
     displayer.displayWinner(gameData.players(), getWinner());*/
-    
-   if (!isGraphicalMode) {    	
-      while (getMaxPrestige() < 15) {
+    boolean test = false;
+    if (!test) {    	
+    	while (getMaxPrestige() < 15) {
       	displayGame();
         chooseAction(playerID);
         playerID = (playerID + 1) % nbOfPlayers;
@@ -243,7 +240,7 @@ public class SimpleGame implements Game {
       }
       
       System.out.println(getWinner());
-      displayer.displayWinner(gameData.players(), getWinner());
+      gameData.displayer().displayWinner(gameData.players(), getWinner());
 		} else {
 			Application.run(java.awt.Color.BLACK, context -> {
 			ScreenInfo screenInfo = context.getScreenInfo();

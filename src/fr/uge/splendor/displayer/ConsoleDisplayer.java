@@ -29,6 +29,13 @@ import fr.uge.splendor.utils.Utils;
  * @author Yunen Snacel
  */
 public final class ConsoleDisplayer implements Displayer {
+	private final Scanner input;
+	
+	public ConsoleDisplayer(Scanner input) {
+		Objects.requireNonNull(input, "The input scanner can't be null");
+		this.input = input;
+	}
+	
   /* -- DISPLAY METHODS -- */
   
   /**
@@ -167,12 +174,12 @@ public final class ConsoleDisplayer implements Displayer {
    */
   @Override
   public Coordinate getCoordinates() {
-    var scanner = new Scanner(System.in);
+    //var scanner = new Scanner(System.in);
     
     System.out.println("Enter your card's level (starting from one, from bottom to top): ");
-    var row = scanner.nextInt();
+    var row = input.nextInt();
     System.out.println("Enter your card's column number (starting from zero, from left to right): ");
-    var col = scanner.nextInt();
+    var col = input.nextInt();
    
     return new Coordinate(row, col);
   }
@@ -184,9 +191,9 @@ public final class ConsoleDisplayer implements Displayer {
    */
   @Override
   public Color getUniqueColor() {
-    var scanner = new Scanner(System.in);
+    //var scanner = new Scanner(System.in);
     System.out.println("Enter the color you want: ");
-    var colorText = scanner.nextLine();
+    var colorText = input.nextLine();
     
     return switch (colorText.toUpperCase()) {
            case "DIAMOND" -> Color.DIAMOND;
@@ -221,9 +228,9 @@ public final class ConsoleDisplayer implements Displayer {
    */
   @Override
   public Level getDeckLevel() {
-    var scanner = new Scanner(System.in);
+    //var scanner = new Scanner(System.in);
     System.out.println("Enter the level of the deck: ");
-    var colorText = scanner.nextLine();
+    var colorText = input.nextLine();
     
     return switch (colorText.toUpperCase()) {
            case "1" -> Level.LEVEL_1;
@@ -245,8 +252,8 @@ public final class ConsoleDisplayer implements Displayer {
     displayActions(actions);
     System.out.print(name + ", enter your action: ");
     
-    var scanner = new Scanner(System.in);
-    var opt = scanner.next();
+    //var scanner = new Scanner(System.in);
+    var opt = input.next();
     
     return switch(opt) {
              case "1" -> ActionType.THREE_TOKENS;

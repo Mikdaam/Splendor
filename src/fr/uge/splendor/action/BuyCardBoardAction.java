@@ -60,7 +60,8 @@ public record BuyCardBoardAction() implements GameAction {
     var cardPosition = gameData.displayer().getCoordinates();
     var level = Level.getLevel(cardPosition.row());
     
-    if (!checkLevel(gameData, level)) { 
+    if (!checkLevel(gameData, level) || !gameData.decks().containsKey(level)) { 
+      gameData.displayer().displayActionError("You have entered a wrong level...");
       return gameData;
     }
     

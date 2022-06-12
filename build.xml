@@ -13,14 +13,14 @@
 
 	<!-- TARGET TO COMPILE THE PROJECT -->
 	<target name="compile">
-		<delete dir="classes"/>
-		<mkdir dir="classes"/>
-		<javac srcdir="src" destdir="classes" classpath="lib/zen5.jar"/>
+		<delete dir="bin"/>
+		<mkdir dir="bin"/>
+		<javac srcdir="src" destdir="bin" classpath="lib/zen5.jar"/>
 	</target>
 
 	<!-- TARGET TO CREATE THE PROJECT'S JAR FILE -->
 	<target name="jar">
-		<jar manifest="MANIFEST.MF" destfile="splendor.jar" basedir="classes"/>
+		<jar manifest="MANIFEST.MF" destfile="splendor.jar" basedir="bin"/>
 	</target>
 
 	<!-- TARGET TO GENERATE THE PROJECT'S JAVADOC -->
@@ -37,8 +37,8 @@
 
 	<!-- TARGET TO CLEAN THE PROJECT -->
 	<target name="clean">
-		<delete dir="classes"/>
-		<mkdir dir="classes"/>
+		<delete dir="bin"/>
+		<mkdir dir="bin"/>
 		<!-- We also delete the javadoc since it wasn't
 		asked in the documents in the first place -->
 		<delete dir="docs/doc"/>

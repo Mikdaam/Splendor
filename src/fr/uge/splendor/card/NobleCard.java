@@ -1,12 +1,12 @@
 package fr.uge.splendor.card;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.level.Level;
 
 public record NobleCard(int prestigePoint, 
-    										HashMap<Color, Integer> price) 
+    										EnumMap<Color, Integer> price) 
 												implements Card {
 
 	@Override
@@ -104,14 +104,15 @@ public record NobleCard(int prestigePoint,
 	 */
 	@Override
 	public String toString() {
-	  var sb = new StringBuilder("╭────────────╮\n");
+	  /*var sb = new StringBuilder("╭────────────╮\n");
 	  
 	  sb.append(this.colorToCardString())
 	    .append(this.prestigeToCardString())
 	    .append("├────────────┤\n")
 	    .append(this.priceToCardString());
 	  
-	  return sb.append("╰────────────╯").toString();
+	  return sb.append("╰────────────╯").toString();*/
+	  return this.cardToString(color(), prestigePoint, price);
 	}
 
 }

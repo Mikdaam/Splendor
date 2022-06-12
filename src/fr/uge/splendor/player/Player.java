@@ -8,22 +8,44 @@ import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.TokenPurse;
 
+/**
+ * This interface represents a player and the methods it should have.
+ * A Player is a human or a bot who can play and interact with the game's objects.
+ * 
+ * @author Mikdaam BADAROU
+ * @author Yunen SNACEL
+ *
+ */
 public sealed interface Player permits HumanPlayer {
-  
-  /*Check if we need bool*/
-  void takeToken(Color color);
-  
-  //boolean reserveCard();
-  
-  boolean canBuyCard(Card card);
-  
-  boolean canGetNoble(Card noble);
   
   int id();
   
   String name();
   
   int prestigePoints();
+  
+  /**
+   * A player takes one token of a given color.
+   * @param color - the color of the token to take.
+   */
+  void takeToken(Color color);
+  
+  /**
+   * Checks if a player can buy a given card.
+   * 
+   * @param card - the card the player wants to buy.
+   * @return true if the player can buy the given card, false otherwise.
+   */
+  boolean canBuyCard(Card card);
+  
+  /**
+   * Checks if a player can get a given noble.
+   * 
+   * @param noble - the noble the player wants to get.
+   * @return true if the player can get the given noble, false otherwise.
+   */
+  boolean canGetNoble(Card noble);
+
   
   TokenPurse buyCard(Card card, List<Color> colors);
   

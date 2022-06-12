@@ -12,7 +12,7 @@ import fr.uge.splendor.game.GameData;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record ThreeTokensAction() implements Action { 
+public record ThreeTokensAction() implements GameAction { 
   
   /**
    * This method checks, for a list of tokens' colors, if the color is well defined

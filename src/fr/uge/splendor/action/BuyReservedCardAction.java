@@ -12,7 +12,7 @@ import fr.uge.splendor.utils.Utils;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record BuyReservedCardAction() implements Action {  
+public record BuyReservedCardAction() implements GameAction {  
     
   @Override
 	public GameData apply(int playerId, GameData gameData) {

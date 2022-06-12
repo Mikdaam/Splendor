@@ -11,7 +11,7 @@ import fr.uge.splendor.game.GameData;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record GiveBackTokensAction() implements Action {  
+public record GiveBackTokensAction() implements GameAction {  
   
   /**
    * TODO: find a better way to pass the player id;

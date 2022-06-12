@@ -12,7 +12,7 @@ import fr.uge.splendor.level.Level;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record ReserveCardBoardAction() implements Action {
+public record ReserveCardBoardAction() implements GameAction {
   
 	@Override
 	public GameData apply(int playerId, GameData gameData) {

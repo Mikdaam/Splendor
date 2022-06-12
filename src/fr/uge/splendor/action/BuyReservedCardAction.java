@@ -9,19 +9,20 @@ import fr.uge.splendor.utils.Utils;
 /**
  * This record represents the action of buying a reserved card.
  * 
- * @author Mikdaam Badarou
- * @author Yunen Snacel
+ * @author Mikdaam BADAROU
+ * @author Yunen SNACEL
  */
 public record BuyReservedCardAction() implements GameAction {  
-    
-  @Override
-	public GameData apply(int playerId, GameData gameData) {
-  	Objects.requireNonNull(gameData, "Game can't be null");
-    
-    var cardPosition = gameData.displayer().getCoordinates();
-    cardPosition = new Coordinate(0, cardPosition.column());
+  
+  /**
+   * Performs the real action of buying a reserved card.
+   * @param playerId - the player's ID
+   * @param gameData - the game's data
+   * @param cardPosition - the card's position
+   * @return the game's data after the action
+   */
+  private static GameData buyReservedCard(int playerId, GameData gameData, Coordinate cardPosition) {
     var card = gameData.players().get(playerId).removeFromReserved(cardPosition);
-    
     var tokens = gameData.tokens();
     
     if (gameData.players().get(playerId).canBuyCard(card)) {      
@@ -33,7 +34,28 @@ public record BuyReservedCardAction() implements GameAction {
     }
     
     return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
-	}
+  }
+  /**
+   * Performs the action of a player buying a card from their reserved cards.
+   * @param playerId - the player's ID
+   * @param gameData - the game's Data
+   * @return the updated game's data after the action
+   */
+  @Override
+ 	public GameData apply(int playerId, GameData gameData) {
+    Objects.requireNonNull(gameData, "Game can't be null");
+    checkPlayerID(gameData, playerId);
+     
+    var cardPosition = gameData.displayer().getCoordinates();
+    cardPosition = new Coordinate(0, cardPosition.column());
+    
+    if (!gameData.players().get(playerId).reservedCards().canRemove(cardPosition)) {
+      gameData.displayer().displayActionError("There is no card to buy here...");
+      return gameData;
+    }
+    
+    return buyReservedCard(playerId, gameData, cardPosition);
+ 	}
   
   /**
    * This method returns a String describing the action of buying a reserved card.

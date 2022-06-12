@@ -1,6 +1,7 @@
 package fr.uge.splendor.action;
 
 import java.util.List;
+import java.util.Objects;
 
 import fr.uge.splendor.color.Color;
 import fr.uge.splendor.deck.TokenPurse;
@@ -9,8 +10,8 @@ import fr.uge.splendor.game.GameData;
 /**
  * This record represents the action of taking three tokens of different colors each.
  * 
- * @author Mikdaam Badarou
- * @author Yunen Snacel
+ * @author Mikdaam BADAROU
+ * @author Yunen SNACEL
  */
 public record ThreeTokensAction() implements GameAction { 
   
@@ -37,31 +38,40 @@ public record ThreeTokensAction() implements GameAction {
    * @param colors - the list of colors to check.
    * @return true if there is three distinct colors in the list, false otherwise.
    */
-  private boolean checkThreeDistinctColors(GameData gameData, List<Color> colors) {
+  private boolean checkThreeDistinctColors(GameData gameData, List<Color> colors) {    
     if(colors.stream().distinct().count() != 3) {
-    	gameData.displayer().displayActionError("You have not entered three distinct colors");
+    	 gameData.displayer().displayActionError("You have not entered three distinct colors");
       return false;
     }
     
     return true;
   }
   
+  /**
+   * Performs the action of a player taking three tokens of different colors.
+   * @param playerId - the player's ID
+   * @param gameData - the game's Data
+   * @return the updated game's data after the action
+   */
   @Override
-	public GameData apply(int playerId, GameData gameData) {
-  	var colors = gameData.displayer().getThreeColor();
-  	
-    if (!checkThreeDistinctColors(gameData, colors) || !checkTokensColorsList(gameData, colors)) {
-      return gameData;
-    }
+ 	public GameData apply(int playerId, GameData gameData) {
+    Objects.requireNonNull(gameData, "Game can't be null");
+    checkPlayerID(gameData, playerId);
     
-    TokenPurse tokens = gameData.tokens();
-    for (var color : colors) {
-    		gameData.players().get(playerId).takeToken(color);
-     	tokens = tokens.remove((new TokenPurse()).addToken(color, 1));
-		  }
-    
-    return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
-	}
+   	var colors = gameData.displayer().getThreeColor();
+   	
+     if (!checkThreeDistinctColors(gameData, colors) || !checkTokensColorsList(gameData, colors)) {
+       return gameData;
+     }
+     
+     TokenPurse tokens = gameData.tokens();
+     for (var color : colors) {
+     		gameData.players().get(playerId).takeToken(color);
+      	tokens = tokens.remove((new TokenPurse()).addToken(color, 1));
+ 		  }
+     
+     return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
+ 	}
   
   /**
    * This method returns a String describing the action of taking three tokens of different colors each.

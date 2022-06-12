@@ -1,6 +1,7 @@
 package fr.uge.splendor.utils;
 
 import java.util.List;
+import java.util.Objects;
 
 import fr.uge.splendor.color.Color;
 
@@ -32,6 +33,8 @@ public class Utils {
    * @return The strings given in parameter aligned on one single line.
    */
   public static String computeStringsToLine (String[] strings) {
+    Objects.requireNonNull(strings);
+    
     var sb = new StringBuilder();
     var splittedStrings = new String[strings.length][];
     

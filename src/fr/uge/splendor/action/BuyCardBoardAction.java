@@ -16,15 +16,6 @@ import fr.uge.splendor.utils.Utils;
  */
 public record BuyCardBoardAction() implements GameAction {  
   
-  /**
-   * This method returns the type (ActionType) of the action of buying a card from the board.
-   * 
-   * @return - ActionType describing the action of buying a card from the board.
-   */
-  @Override
-  public ActionType type() {
-    return ActionType.BUY_CARD_BOARD;
-  }
   
   /**
    * TODO: find a better way to pass the player id;

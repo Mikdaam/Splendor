@@ -1,16 +1,13 @@
 package fr.uge.splendor.player;
 
+import java.util.List;
+import java.util.Objects;
+
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.card.*;
 import fr.uge.splendor.color.Color;
-import fr.uge.splendor.token.*;
 import fr.uge.splendor.deck.CardDeck;
 import fr.uge.splendor.deck.TokenPurse;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public final class HumanPlayer implements Player {
   private final int id;
@@ -49,6 +46,17 @@ public final class HumanPlayer implements Player {
     ownedTokens = ownedTokens.removeColor(color);
   }
   
+  public int removeTokens(Color color, int number) {
+    Objects.requireNonNull(color);
+    
+    if (number < 0 || number > ownedTokens.getColorNumber(color)) {
+      return 0;
+    }
+    
+    ownedTokens = ownedTokens.remove(new TokenPurse().addToken(color, number));
+    return number;
+  }
+  
   public int getNumberOfTokens() {
     return ownedTokens.numberOfTokens();
     //return ownedTokens.getDeckSummary().values().stream().reduce(0, Integer::sum);
@@ -85,7 +93,6 @@ public final class HumanPlayer implements Player {
     return reservedCards.remove(coordinate);
   }
  
-  
   public void pushToReserved(Card card) {
     reservedCards.push(card, 0);
   }
@@ -94,7 +101,6 @@ public final class HumanPlayer implements Player {
     return reservedCards.numberOfCards();
   }
   
-  /*Replace Token with Color?*/
   @Override
   public void takeToken(Color color) {
     Objects.requireNonNull(color);
@@ -168,6 +174,8 @@ public final class HumanPlayer implements Player {
   public Board reservedCards() {
 		return reservedCards;
 	}
+  
+  
   
   private String firstRowToString() {
     var sb = new StringBuilder("┌───────────────────────────────────┐\n");

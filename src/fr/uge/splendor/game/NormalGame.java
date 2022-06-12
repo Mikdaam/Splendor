@@ -25,6 +25,7 @@ import fr.uge.splendor.action.GameAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.action.BuyCardBoardAction;
 import fr.uge.splendor.action.BuyReservedCardAction;
+import fr.uge.splendor.action.GiveBackTokensAction;
 import fr.uge.splendor.action.ReserveCardBoardAction;
 import fr.uge.splendor.action.ReserveCardDeckAction;
 import fr.uge.splendor.action.ThreeTokensAction;
@@ -206,28 +207,18 @@ public class NormalGame implements Game {
    * 
    * @param playerID - The player's ID.
    */
-  private void chooseAction(int playerID) {    
-    /*while(!actionSucceed) {
-      actionSucceed = switch(displayer.getPlayerAction(actions, players[playerID].name())) {
-        case THREE_TOKENS -> takeThreeTokens(playerID);
-        case TWO_TOKENS -> takeTwoTokens(playerID);
-        case BUY_CARD_BOARD -> buyCard(playerID);
-        case BUY_RESERVED_CARD -> buyReservedCard(playerID);
-        case RESERVE_CARD_BOARD -> reserveCardBoard(playerID);
-        case RESERVE_CARD_DECK -> reserveCardDeck(playerID);
-        default -> {displayer.displayActionError("Unkown Action."); yield false;}
-      };*/
-      
-      
+  private void chooseAction(int playerID) {      
     while (!gameData.actionSucceed()) {
     	var choosenActionType = displayer.getPlayerAction(actions, gameData.players().get(playerID).name());
 	    
       if(choosenActionType == ActionType.UNKNOWN) {
-      	displayer.displayActionError("Uknown Action");
+      	 displayer.displayActionError("Uknown Action");
       } else {
-      	gameData = actions.get(choosenActionType).apply(playerID, gameData);
+      	 gameData = actions.get(choosenActionType).apply(playerID, gameData);
       }
-		}
+		  }
+    
+    gameData = (new GiveBackTokensAction()).apply(playerID, gameData);
     gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), gameData.tokens(), gameData.players(), displayer, gameData.levelToInteger(), false);
   }
   

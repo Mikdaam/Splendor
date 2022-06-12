@@ -12,17 +12,7 @@ import fr.uge.splendor.game.GameData;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record ThreeTokensAction() implements GameAction {  
-  
-  /**
-   * This method returns the type (ActionType) of the action of taking three tokens of different colors each.
-   * 
-   * @return - ActionType describing the action of taking three tokens of different colors each.
-   */
-  @Override
-  public ActionType type() {
-    return ActionType.THREE_TOKENS;
-  }
+public record ThreeTokensAction() implements Action { 
   
   /**
    * This method checks, for a list of tokens' colors, if the color is well defined
@@ -60,18 +50,15 @@ public record ThreeTokensAction() implements GameAction {
 	public GameData apply(int playerId, GameData gameData) {
   	var colors = gameData.displayer().getThreeColor();
   	
-    if (!checkPlayersTokensNumber(gameData, playerId) || !checkThreeDistinctColors(gameData, colors) || !checkTokensColorsList(gameData, colors)) {
+    if (!checkThreeDistinctColors(gameData, colors) || !checkTokensColorsList(gameData, colors)) {
       return gameData;
     }
     
     TokenPurse tokens = gameData.tokens();
     for (var color : colors) {
-     	if(gameData.players().get(playerId).getNumberOfTokens() < 10) {
-     		gameData.players().get(playerId).takeToken(color);
-      	tokens = tokens.remove((new TokenPurse()).addToken(color, 1));
- 			 	//gameData = new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer());
-     	}			
-		}
+    		gameData.players().get(playerId).takeToken(color);
+     	tokens = tokens.remove((new TokenPurse()).addToken(color, 1));
+		  }
     
     return new GameData(gameData.board(), gameData.decks(), gameData.noblesCards(), tokens, gameData.players(), gameData.displayer(), gameData.levelToInteger(), true);
 	}

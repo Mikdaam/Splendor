@@ -3,7 +3,6 @@ package fr.uge.splendor.displayer;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +14,6 @@ import fr.uge.splendor.color.Color;
 import fr.uge.splendor.game.GameData;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.Player;
-import fr.uge.splendor.utils.Utils;
 import fr.umlv.zen5.ApplicationContext;
 
 public final class GraphicDisplayer implements Displayer{
@@ -75,4 +73,9 @@ public final class GraphicDisplayer implements Displayer{
  	  Objects.requireNonNull(view);
  		 context.renderFrame(graphics -> view.draw(graphics));
  	}
+ 	
+ 	/**
+   * This method closes the resources before quitting the program
+   */
+  public void close() {}
 }

@@ -152,8 +152,11 @@ public interface Game {
     while (!gameData.actionSucceed()) {
      var chosenActionType = gameData.displayer().getPlayerAction(actions, gameData.players().get(playerID).name());
      
-      if(chosenActionType == ActionType.UNKNOWN) {
+      if(chosenActionType.equals(ActionType.UNKNOWN) || !actions.containsKey(chosenActionType)) {
         gameData.displayer().displayActionError("Uknown Action");
+      } else if (chosenActionType.equals(ActionType.QUIT)) {
+      	System.out.println("Bye bye, see you soon!!");
+      	System.exit(1);
       } else {
         gameData = actions.get(chosenActionType).apply(playerID, gameData);
       }

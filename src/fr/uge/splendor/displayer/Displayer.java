@@ -86,4 +86,9 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * @param name - the player's name.
    */
   ActionType getPlayerAction(EnumMap<ActionType, GameAction> actions, String name);
+  
+  /**
+   * This method closes the resources before quitting the program
+   */
+  void close();
 }

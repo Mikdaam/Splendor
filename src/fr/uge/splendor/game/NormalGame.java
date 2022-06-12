@@ -15,6 +15,7 @@ import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.action.GameAction;
+import fr.uge.splendor.action.QuitAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.action.BuyCardBoardAction;
 import fr.uge.splendor.action.BuyReservedCardAction;
@@ -173,6 +174,7 @@ public class NormalGame implements Game {
     actions.put(ActionType.BUY_RESERVED_CARD, new BuyReservedCardAction());
     actions.put(ActionType.RESERVE_CARD_BOARD, new ReserveCardBoardAction());
     actions.put(ActionType.RESERVE_CARD_DECK, new ReserveCardDeckAction());
+    actions.put(ActionType.QUIT, new QuitAction());
   }
 
 

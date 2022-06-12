@@ -16,6 +16,7 @@ import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
 import fr.uge.splendor.utils.Utils;
 import fr.uge.splendor.action.GameAction;
+import fr.uge.splendor.action.QuitAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.action.BuyCardBoardAction;
 import fr.uge.splendor.action.ThreeTokensAction;
@@ -136,6 +137,7 @@ public class SimpleGame implements Game {
     actions.put(ActionType.THREE_TOKENS, new ThreeTokensAction());
     actions.put(ActionType.TWO_TOKENS, new TwoTokensAction());
     actions.put(ActionType.BUY_CARD_BOARD, new BuyCardBoardAction());
+    actions.put(ActionType.QUIT, new QuitAction());
   }
 
   

@@ -260,7 +260,15 @@ public final class ConsoleDisplayer implements Displayer {
              case "4" -> ActionType.BUY_RESERVED_CARD;
              case "5" -> ActionType.RESERVE_CARD_BOARD;
              case "6" -> ActionType.RESERVE_CARD_DECK;
+             case "q" -> ActionType.QUIT;
              default -> ActionType.UNKNOWN;
     };
   } 
+  
+  /**
+   * This method closes the resources before quitting the program
+   */
+  public void close() {
+  	scanner.close();
+  }
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 
 import fr.uge.splendor.card.DevelopmentCard;
 import fr.uge.splendor.color.Color;
@@ -23,13 +23,13 @@ import fr.uge.splendor.level.Level;
 public class FileLoader {
   
 	/**
-	 * Parse a given string into an HashMap
+	 * Parse a given string into an EnumMap
 	 * 
 	 * @param priceString	the string represented the price
-	 * @return 						a parsed price into an HashMap
+	 * @return 						a parsed price into an EnumMap
 	 */
-  private static HashMap<Color, Integer> parsePrice(String priceString) {
-    var price = new HashMap<Color, Integer>();
+  private static EnumMap<Color, Integer> parsePrice(String priceString) {
+    var price = new EnumMap<Color, Integer>(Color.class);
     var pricesType = priceString.split("\\+");
     
     Arrays.stream(pricesType)

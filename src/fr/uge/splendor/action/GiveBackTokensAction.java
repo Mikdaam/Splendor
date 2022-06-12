@@ -20,12 +20,15 @@ public record GiveBackTokensAction() implements GameAction {
   @Override
   public GameData apply(int playerId, GameData gameData) {
     Objects.requireNonNull(gameData, "Game can't be null");
+    if (playerId < 0) {
+      return gameData;
+    }
     
     var tokens = gameData.tokens();
     var player = gameData.players().get(playerId);
-    gameData.displayer().displayActionError("You have more than 10 tokens, please give back some tokens...");
     
     while (player.getNumberOfTokens() > 10) {
+      gameData.displayer().displayActionError("You have more than 10 tokens, please give back some tokens...");
       var color = gameData.displayer().getUniqueColor();
       var number = player.removeTokens(color, 1);
       tokens = tokens.add(new TokenPurse().addToken(color, number));

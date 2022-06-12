@@ -1,5 +1,6 @@
 package fr.uge.splendor.card;
 
+import java.util.EnumMap;
 import java.awt.Graphics2D;
 import java.util.HashMap;
 
@@ -20,8 +21,8 @@ public record EmptyCard() implements Card {
     return 0;
   }
 
-  public HashMap<Color, Integer> price() {
-    return new HashMap<Color, Integer>();
+  public EnumMap<Color, Integer> price() {
+    return new EnumMap<Color, Integer>(Color.class);
   }
 
   @Override
@@ -42,4 +43,5 @@ public record EmptyCard() implements Card {
 
     return sb.append("              ").toString();
   }
+    
 }

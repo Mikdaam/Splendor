@@ -1,6 +1,7 @@
 package fr.uge.splendor.card;
 
 import java.util.Objects;
+import java.util.EnumMap;
 import java.awt.AlphaComposite;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -21,7 +22,7 @@ import fr.umlv.zen5.ApplicationContext;
 public record DevelopmentCard(Level level, 
                               Color color,
                               int prestigePoint, 
-                              HashMap<Color, Integer> price)
+                              EnumMap<Color, Integer> price)
                               implements Card {
 	
 	public DevelopmentCard {
@@ -152,14 +153,15 @@ public record DevelopmentCard(Level level,
 	 */
 	@Override
 	public String toString() {
-	  var sb = new StringBuilder("╭────────────╮\n");
+	  /*var sb = new StringBuilder("╭────────────╮\n");
 	  
 	  sb.append(this.colorToCardString())
 	    .append(this.prestigeToCardString())
 	    .append("├────────────┤\n")
 	    .append(this.priceToCardString());
 	  
-	  return sb.append("╰────────────╯").toString();
+	  return sb.append("╰────────────╯").toString();*/
+	  return this.cardToString(color, prestigePoint, price);
 	}
 	
 }

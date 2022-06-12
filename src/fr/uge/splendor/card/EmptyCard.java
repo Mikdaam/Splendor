@@ -1,5 +1,6 @@
 package fr.uge.splendor.card;
 
+import java.awt.Graphics2D;
 import java.util.HashMap;
 
 import fr.uge.splendor.color.Color;
@@ -23,6 +24,14 @@ public record EmptyCard() implements Card {
     return new HashMap<Color, Integer>();
   }
 
+  @Override
+	public void render(Graphics2D graphic, int x, int y) {
+		int width = 75, height = 100;
+		// draw the board
+		graphic.setColor(java.awt.Color.WHITE);
+		graphic.drawRoundRect(x, y, width, height, 5, 5);
+	}
+  
   @Override
   public String toString() {
     var sb = new StringBuilder();

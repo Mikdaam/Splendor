@@ -13,7 +13,7 @@ import fr.uge.splendor.utils.Utils;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record BuyReservedCardAction() implements Action {  
+public record BuyReservedCardAction() implements GameAction {  
   
   /**
    * This method returns the type (ActionType) of the action of buying a reserved card.

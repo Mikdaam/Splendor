@@ -14,7 +14,7 @@ import fr.uge.splendor.utils.Utils;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record BuyCardBoardAction() implements Action {  
+public record BuyCardBoardAction() implements GameAction {  
   
   /**
    * This method returns the type (ActionType) of the action of buying a card from the board.

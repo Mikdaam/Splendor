@@ -15,7 +15,6 @@ import fr.uge.splendor.utils.Utils;
 
 public class CardDeck {
   private final ArrayList<Card> deck;
-  /* TODO: Add a name */
   
   public CardDeck() {
     this.deck = new ArrayList<Card>();

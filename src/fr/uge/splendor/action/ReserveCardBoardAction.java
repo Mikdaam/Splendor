@@ -12,7 +12,7 @@ import fr.uge.splendor.level.Level;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record ReserveCardBoardAction() implements Action {  
+public record ReserveCardBoardAction() implements GameAction {  
   
   /**
    * This method returns the type (ActionType) of the action of reserving a card from the board.

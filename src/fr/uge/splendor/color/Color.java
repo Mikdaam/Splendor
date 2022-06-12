@@ -35,6 +35,18 @@ public enum Color {
     };
   }
   
+  public static java.awt.Color getScreenColor(Color color) {
+  	return switch (color) {
+	    case DIAMOND -> java.awt.Color.WHITE;
+	    case EMERALD -> java.awt.Color.GREEN;
+	    case GOLD -> java.awt.Color.YELLOW;
+	    case ONYX -> java.awt.Color.BLACK;
+	    case RUBY -> java.awt.Color.RED;
+	    case SAPPHIRE -> java.awt.Color.BLUE;
+	    default -> throw new IllegalArgumentException("Unexpected value: " + color);
+  	};
+	}
+  
   public static List<Color> getTokensColorsList() {
     return Arrays.stream(Color.values())
                  .filter(color -> color != NOBLE && color != UNKNOWN && color != EMPTY)

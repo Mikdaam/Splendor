@@ -14,7 +14,7 @@ import fr.uge.splendor.level.Level;
  * @author Yunen Snacel
  *
  */
-public interface Action {
+public interface GameAction {
   
   /**
    * This method returns the ActionType of the action.

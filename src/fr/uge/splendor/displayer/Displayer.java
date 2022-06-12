@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import fr.uge.splendor.action.Action;
+import fr.uge.splendor.action.GameAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.card.Coordinate;
 import fr.uge.splendor.color.Color;
@@ -86,6 +86,6 @@ public sealed interface Displayer permits ConsoleDisplayer, GraphicDisplayer {
    * @param actions - the array of Actions possible.
    * @param name - the player's name.
    */
-  ActionType getPlayerAction(EnumMap<ActionType, Action> actions, String name);
+  ActionType getPlayerAction(EnumMap<ActionType, GameAction> actions, String name);
   
 }

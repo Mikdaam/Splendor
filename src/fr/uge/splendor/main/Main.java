@@ -8,6 +8,9 @@ import fr.uge.splendor.game.*;
 public class Main {
   public static void main(String[] args) throws IOException {  	
    	Game game;
+   	/*var mode;
+   	var players;
+   	var displayMode;*/
    	Scanner mainInput = new Scanner(System.in);
    	
    	System.out.println("1. SimpleGame");
@@ -16,7 +19,7 @@ public class Main {
     var gameChoice = mainInput.nextInt();
   	
     if(gameChoice == 1) {
-    	 game = new SimpleGame();
+    	 game = new SimpleGame(true);
     } else {
     	 game = new NormalGame(2);
     }

@@ -21,7 +21,7 @@ import fr.uge.splendor.displayer.Displayer;
 import fr.uge.splendor.level.Level;
 import fr.uge.splendor.player.HumanPlayer;
 import fr.uge.splendor.player.Player;
-import fr.uge.splendor.action.Action;
+import fr.uge.splendor.action.GameAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.action.BuyCardBoardAction;
 import fr.uge.splendor.action.BuyReservedCardAction;
@@ -50,7 +50,7 @@ public class NormalGame implements Game {
 	private TokenPurse tokens;
 	private final Player[] players;
 	private final Action[] actions;*/
-	private final EnumMap<ActionType, Action> actions;
+	private final EnumMap<ActionType, GameAction> actions;
 	
 	private GameData gameData;
 	

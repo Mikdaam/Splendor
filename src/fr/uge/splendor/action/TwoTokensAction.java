@@ -9,7 +9,7 @@ import fr.uge.splendor.game.GameData;
  * @author Mikdaam Badarou
  * @author Yunen Snacel
  */
-public record TwoTokensAction() implements Action {  
+public record TwoTokensAction() implements GameAction {  
   
   /**
    * This method returns the type (ActionType) of the action of taking two tokens of the same color.

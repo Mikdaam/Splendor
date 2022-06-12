@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
-import fr.uge.splendor.action.Action;
+import fr.uge.splendor.action.GameAction;
 import fr.uge.splendor.action.ActionType;
 import fr.uge.splendor.board.Board;
 import fr.uge.splendor.card.Coordinate;
@@ -101,7 +101,7 @@ public final class ConsoleDisplayer implements Displayer {
    * 
    * @param actions - the Actions to display.
    */
-  private void displayActions(EnumMap<ActionType, Action> actions) {
+  private void displayActions(EnumMap<ActionType, GameAction> actions) {
   	Objects.requireNonNull(actions, "Actions can't be null");
   	
   	int i = 0;
@@ -240,7 +240,7 @@ public final class ConsoleDisplayer implements Displayer {
    * @param name - the player's name.
    */
   @Override
-  public ActionType getPlayerAction(EnumMap<ActionType, Action> actions, String name) {
+  public ActionType getPlayerAction(EnumMap<ActionType, GameAction> actions, String name) {
   	Objects.requireNonNull(actions, "Actions can't be null");
     displayActions(actions);
     System.out.print(name + ", enter your action: ");

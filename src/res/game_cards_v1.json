@@ -1,0 +1,149 @@
+{
+    "cards": [
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "1",
+                "SAPPHIRE": "1",
+                "EMERALD": "1",
+                "RUBY": "1",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "1",
+                "SAPPHIRE": "2",
+                "EMERALD": "1",
+                "RUBY": "1",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "2",
+                "SAPPHIRE": "2",
+                "EMERALD": "0",
+                "RUBY": "1",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "0",
+                "EMERALD": "1",
+                "RUBY": "3",
+                "ONYX": "1"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "0",
+                "EMERALD": "2",
+                "RUBY": "1",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "2",
+                "SAPPHIRE": "0",
+                "EMERALD": "2",
+                "RUBY": "0",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "0",
+                "EMERALD": "3",
+                "RUBY": "0",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "4",
+                "EMERALD": "0",
+                "RUBY": "0",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "4",
+                "EMERALD": "0",
+                "RUBY": "0",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "4",
+                "EMERALD": "0",
+                "RUBY": "0",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+        {
+            "level": "1",
+            "color": "ONYX",
+            "prestige": "1",
+            "price" :{
+                "DIAMOND": "0",
+                "SAPPHIRE": "4",
+                "EMERALD": "0",
+                "RUBY": "0",
+                "ONYX": "0"
+            },
+            "image" : "../path/to/image"
+        },
+    ]
+}
+

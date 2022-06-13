@@ -19,8 +19,10 @@
 	</target>
 
 	<!-- TARGET TO CREATE THE PROJECT'S JAR FILE -->
-	<target name="jar">
-		<jar manifest="MANIFEST.MF" destfile="splendor.jar" basedir="bin"/>
+	<target name="jar" depends="compile">
+		<jar manifest="MANIFEST.MF" destfile="splendor.jar" basedir="bin">
+			<fileset dir="src"/>
+		</jar>
 	</target>
 
 	<!-- TARGET TO GENERATE THE PROJECT'S JAVADOC -->

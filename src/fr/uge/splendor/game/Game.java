@@ -1,7 +1,6 @@
 package fr.uge.splendor.game;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -81,12 +80,12 @@ public interface Game {
  	
  	
  	/**
-   * Returns a CardDeck parsed from a given file, described by a Path.
+   * Returns a CardDeck parsed from a given file, described by a String.
    * @param pathOfFile - the path to the file containing the cards information.
    * @return The CardDeck obtained by parsing the cards' file.
    * @throws IOException - if the file has not been found.
    */
-  static CardDeck setupCards(Path pathOfFile) throws IOException {
+  static CardDeck setupCards(String pathOfFile) throws IOException {
     Objects.requireNonNull(pathOfFile);
     return FileLoader.createCards(pathOfFile);
   }

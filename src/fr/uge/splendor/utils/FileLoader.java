@@ -1,8 +1,8 @@
 package fr.uge.splendor.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Objects;
@@ -45,27 +45,27 @@ public class FileLoader {
   }
   
   /**
-   * Create a cardDeck from the given file. The file must be exist in certain
+   * Create a cardDeck from the given file. The file must have a certain
    * format in order to create the right cards.
    * 
    * @param cardsFile	the path of the file
    * @return 					the cardDeck of the file
    * @throws IOException raise an exception in case of error
    */
-  public static CardDeck createCards(Path cardsFile) throws IOException {
+  public static CardDeck createCards(String cardsFile) throws IOException {
     Objects.requireNonNull(cardsFile);
     
     var gameCards = new CardDeck("LV. ?");
-    
-     try (var csvReader = Files.newBufferedReader(cardsFile)) {	 
+    var in = FileLoader.class.getResourceAsStream(cardsFile);
+    try (var csvReader = new BufferedReader(new InputStreamReader(in))) {	 
     	 csvReader.lines()
-    	 				.skip(1) /* Skip the first line of the file */
-    	 				.forEach(line -> {
-    	 					var cardComponents = line.split(",");
-    	          int cardPrestige = Integer.parseInt(cardComponents[2]);
-    	          var price = parsePrice(cardComponents[3]);
-    	          gameCards.add(new DevelopmentCard(Level.getLevel(cardComponents[0]), Color.getColor(cardComponents[1]), cardPrestige, price));
-    	 				});
+         	 				.skip(1) /* Skip the first line of the file */
+         	 				.forEach(line -> {
+         	 					var cardComponents = line.split(",");
+         	          int cardPrestige = Integer.parseInt(cardComponents[2]);
+         	          var price = parsePrice(cardComponents[3]);
+         	          gameCards.add(new DevelopmentCard(Level.getLevel(cardComponents[0]), Color.getColor(cardComponents[1]), cardPrestige, price));
+         	 				});
      }
      
      return gameCards;

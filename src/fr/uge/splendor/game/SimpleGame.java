@@ -2,7 +2,6 @@ package fr.uge.splendor.game;
 
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -76,8 +75,7 @@ public class SimpleGame implements Game {
    */
   @Override
   public void initCardDecks() throws IOException {
-    Path pathOfFile = Path.of("res").resolve("base_game_cards.csv");
-    var cardDeckByLevel = Game.setupCards(pathOfFile).groupByLevel();
+    var cardDeckByLevel = Game.setupCards("/res/base_game_cards.csv").groupByLevel();
     
     cardDeckByLevel.get(Level.LEVEL_1).shuffleCardDeck();
     gameData.decks().put(Level.LEVEL_1, cardDeckByLevel.get(Level.LEVEL_1));
